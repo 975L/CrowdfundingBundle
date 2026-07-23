@@ -1,0 +1,52 @@
+{
+    "name": "c975l/crowdfunding-bundle",
+    "type": "symfony-bundle",
+    "description": "Symfony bundle for crowdfunding campaigns (counterparts, contributors, news, media) and lottery, checkout out via c975l/payment-bundle",
+    "keywords": ["symfony", "bundle", "crowdfunding", "lottery"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Laurent Marquet",
+            "email": "laurent.marquet@laposte.net",
+            "homepage": "https://github.com/LaurentMarquet",
+            "role": "Developer"
+        },
+        {
+            "name": "975L Community",
+            "homepage": "https://github.com/975L"
+        }
+    ],
+    "require": {
+        "php": ">=8.0",
+        "c975l/config-bundle": "*",
+        "c975l/ui-bundle": "*",
+        "c975l/payment-bundle": "*",
+        "c975l/shop-bundle": "*",
+        "doctrine/orm": "*",
+        "easycorp/easyadmin-bundle": "^5.1",
+        "imagine/imagine": "*",
+        "knplabs/knp-paginator-bundle": "*",
+        "symfony/routing": "*",
+        "symfony/security-bundle": "*",
+        "symfony/translation": "*",
+        "vich/uploader-bundle": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "*"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "c975L\\CrowdfundingBundle\\": "src/"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "support": {
+        "email": "contact@975l.com",
+        "source": "https://github.com/975L/CrowdfundingBundle",
+        "issues": "https://github.com/975L/CrowdfundingBundle/issues"
+    }
+}

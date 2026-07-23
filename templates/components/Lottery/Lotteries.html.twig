@@ -1,0 +1,7 @@
+{% if lotteries is not empty %}
+    <div id="lotteries">
+        {% for lottery in lotteries %}
+            <twig:c975LCrowdfunding:Lottery:Lottery lottery="{{ lottery }}"/>
+        {% endfor %}
+    </div>
+{% endif %}
