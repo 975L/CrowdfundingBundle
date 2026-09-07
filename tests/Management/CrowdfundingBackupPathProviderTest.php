@@ -55,7 +55,7 @@ class CrowdfundingBackupPathProviderTest extends TestCase
         }
     }
 
-    // The legacy "medias/shop/..." folders are deliberately left out: they are what MigrateLegacyTablesCommand moves, and declaring both would let a site never run that migration
+    // The legacy "medias/shop/..." folders of the ShopBundle era are deliberately left out: this bundle uploads nothing there any more
     public function testTheLegacyShopFoldersAreNotDeclared(): void
     {
         foreach (new CrowdfundingBackupPathProvider()->getBackupPaths() as $path) {

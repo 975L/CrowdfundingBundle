@@ -24,7 +24,7 @@ Add CrowdfundingBundle on top of the shared [UiBundle](https://github.com/975L/U
 ## Contents
 
 - **Setup** — [requirements](#requirements) · [installation](#installation) · [assets](#install-assets) · [config values](#load-configuration-values) · [routes](#enable-routes)
-- **Using it** — [commands](#commands) · [sitemap](#sitemap) · [linking a campaign](#linking-a-campaign-from-a-menu) · [status report](#status-report) · [emails](#emails) · [backup](#backup) · [translations](#translations) · [what it does not contribute](#what-this-bundle-deliberately-does-not-contribute) · [AI agent skills](#ai-agent-skills) · [data compatibility with ShopBundle](#data-compatibility-with-existing-shopbundle-installations)
+- **Using it** — [sitemap](#sitemap) · [linking a campaign](#linking-a-campaign-from-a-menu) · [status report](#status-report) · [emails](#emails) · [backup](#backup) · [translations](#translations) · [what it does not contribute](#what-this-bundle-deliberately-does-not-contribute) · [AI agent skills](#ai-agent-skills) · [data compatibility with ShopBundle](#data-compatibility-with-existing-shopbundle-installations)
 
 ## Features
 
@@ -121,14 +121,6 @@ barrel — nothing to do here for them.
 
 ---
 
-## Commands
-
-| Command | Description |
-| --- | --- |
-| `php bin/console c975l:crowdfunding:migrate-legacy-tables` | One-time upgrade step, see [Data compatibility](#data-compatibility-with-existing-shopbundle-installations) below |
-
----
-
 ## Sitemap
 
 The urls are declared by `CrowdfundingSitemapProvider` (ConfigBundle's `SitemapProviderInterface`): the
@@ -194,9 +186,8 @@ the basket at payment, a lottery being drawn long after the contributor's own vi
 
 `Management\CrowdfundingBackupPathProvider` declares `public/medias/crowdfunding` to ConfigBundle's backup,
 mirrored rather than archived. Nothing to register — the provider is picked up automatically. The legacy
-`medias/shop/crowdfundings|counterparts` folders are deliberately **not** declared: they are what
-`c975l:crowdfunding:migrate-legacy-tables` moves, and a site that has not run it yet has its uploads backed
-up nowhere — an argument for running the migration, not for declaring both.
+`medias/shop/crowdfundings|counterparts` folders of the ShopBundle era are deliberately **not** declared:
+this bundle uploads nothing there any more.
 
 ---
 
@@ -245,29 +236,14 @@ finds it.
 
 ## Data compatibility with existing ShopBundle installations
 
-This bundle was extracted from ShopBundle (07/2026), initially keeping its entities' original table names
-(`shop_crowdfunding`, `shop_crowdfunding_counterpart`, `shop_lottery`, ...) — only the PHP namespace changed
-(`c975L\ShopBundle\Entity\*` → `c975L\CrowdfundingBundle\Entity\*`). Those tables have since been renamed to
-`crowdfunding_*` to match the bundle they now belong to, and the `medias/shop/crowdfundings`/`medias/shop/counterparts`
-upload folders to `medias/crowdfunding/crowdfundings`/`medias/crowdfunding/counterparts`.
+This bundle was extracted from ShopBundle (07/2026): the PHP namespace changed
+(`c975L\ShopBundle\Entity\*` → `c975L\CrowdfundingBundle\Entity\*`), the tables were renamed
+`shop_*` → `crowdfunding_*` and the uploads moved from `medias/shop/crowdfundings|counterparts` to
+`medias/crowdfunding/crowdfundings|counterparts`. `Media`/`CrowdfundingMedia`/`CrowdfundingCounterpartMedia`/`CrowdfundingVideo`/`LotteryVideo`
+live in this bundle's own `SINGLE_TABLE` hierarchy (`crowdfunding_media`), separate from ShopBundle's `Media` table.
 
-For a site that installed CrowdfundingBundle before this rename, run once after updating:
-
-```bash
-php bin/console c975l:crowdfunding:migrate-legacy-tables
-```
-
-This renames the tables, moves the media folders, and rewrites the stored filenames in `crowdfunding_media`
-accordingly. Idempotent — each step only runs when the old state exists and the new one doesn't, so re-running
-(or running on a fresh install) is a safe no-op. Run it right after `composer update`/`composer install`, before
-any other command touches these entities — Doctrine's own metadata expects the new table names as soon as this
-bundle version is installed.
-
-`Media`/`CrowdfundingMedia`/`CrowdfundingCounterpartMedia`/`CrowdfundingVideo`/`LotteryVideo` now live in this
-bundle's own `SINGLE_TABLE` hierarchy (`crowdfunding_media`), separate from ShopBundle's `Media` table — the
-ShopBundle dependency for these entities has been dropped. Existing installations need a data migration to move
-rows for these owner types out of ShopBundle's media table into `crowdfunding_media`. **Not yet built** — this is
-a separate migration from the table/folder rename above.
+No upgrade command is shipped: the only site running the bundle from before the rename has been migrated,
+and any installation from this version on is written with the current names.
 
 ---
 

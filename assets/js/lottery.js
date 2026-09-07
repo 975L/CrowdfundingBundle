@@ -140,8 +140,9 @@ export default class extends Controller {
             );
 
             if (winnerNameElement) {
-                const contributorName = data.name || Handlers.translate("anonymous");
-                winnerNameElement.innerHTML = `${Handlers.translate("name")}: <strong>${contributorName}</strong>`;
+                const nameElement = document.createElement("strong");
+                nameElement.textContent = data.name || Handlers.translate("anonymous");
+                winnerNameElement.replaceChildren(document.createTextNode(`${Handlers.translate("name")}: `), nameElement);
             }
         }
     }
@@ -154,8 +155,9 @@ export default class extends Controller {
                 drawDateText.className = "text text-center";
 
                 // Replaces button
-                const formattedDate = Handlers.formatDate(new Date(), "fr-FR");
-                drawDateText.innerHTML = `${Handlers.translate("draw.date")} : <strong>${formattedDate}</strong>`;
+                const dateElement = document.createElement("strong");
+                dateElement.textContent = Handlers.formatDate(new Date(), "fr-FR");
+                drawDateText.append(document.createTextNode(`${Handlers.translate("draw.date")} : `), dateElement);
                 const parentElement = btn.parentElement;
                 parentElement.replaceChild(drawDateText, btn);
             }

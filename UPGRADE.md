@@ -1,10 +1,19 @@
 # Upgrade
 
-## Unreleased
+## v1.1
 
-This bundle has never been tagged: what follows concerns a site running it from its `dev` branch, or one
-whose crowdfunding pages still come from ShopBundle. Everything about the table and media-folder rename is
-in the README, under *Data compatibility with existing ShopBundle installations* — it has not moved.
+### The legacy-tables command is gone [BC-Break]
+
+`c975l:crowdfunding:migrate-legacy-tables` renamed the `shop_*` tables, moved the
+`medias/shop/crowdfundings|counterparts` folders and rewrote the stored filenames for a site installed
+before the rename. The one site concerned has been migrated, so the command and the README walkthrough
+are removed. A site that never ran it renames its own tables and folders by hand, following
+*Data compatibility with existing ShopBundle installations* in the README.
+
+## v1.0.0
+
+What follows concerns a site that was running this bundle from its `dev` branch before the first tag, or
+one whose crowdfunding pages still come from ShopBundle.
 
 ### The labels are this bundle's own, in a `crowdfunding` domain [BC-Break]
 

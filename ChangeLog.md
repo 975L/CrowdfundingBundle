@@ -1,5 +1,14 @@
 # Changelog
 
+## v1.1.0
+
+Drop the legacy-tables migration command
+
+- `MigrateLegacyTablesCommand` and its README walkthrough are removed (07/09/2026) [BC-Break]
+- The winner's name and the draw date are written as text nodes instead of `innerHTML` (07/09/2026)
+- `phpunit.xml.dist` fails on a notice as well (07/09/2026)
+- `composer mess` names how many files PDepend could not read (07/09/2026)
+
 ## v1.0.0
 
 Guided projects, admin procedures and the fixes the review turned up
