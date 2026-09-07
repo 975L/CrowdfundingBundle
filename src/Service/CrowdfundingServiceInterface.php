@@ -10,16 +10,34 @@
 
 namespace c975L\CrowdfundingBundle\Service;
 
-use Symfony\Component\Form\Form;
 use c975L\CrowdfundingBundle\Entity\Crowdfunding;
+use c975L\CrowdfundingBundle\Entity\CrowdfundingNews;
+use Symfony\Component\Form\FormInterface;
 
 interface CrowdfundingServiceInterface
 {
-    public function createForm(string $name, $object): Form;
+    /**
+     * Builds one of the bundle's own forms by name, bound to the given entity.
+     *
+     * @param string $name   the form's short name
+     * @param mixed  $object the entity the form is bound to
+     */
+    public function createForm(string $name, $object): FormInterface;
 
+    /**
+     * @return Crowdfunding[] in no particular order
+     */
     public function findAll();
 
+    /**
+     * @return Crowdfunding[] ordered by their admin-defined position
+     */
     public function findAllSorted();
 
     public function findOneById(int $id): ?Crowdfunding;
+
+    /**
+     * Adds a news to a crowdfunding.
+     */
+    public function addNews(Crowdfunding $crowdfunding, CrowdfundingNews $news): void;
 }

@@ -13,8 +13,9 @@ namespace c975L\CrowdfundingBundle\Message;
 class LotteryWinningTicketMessage
 {
     public function __construct(
-        private int $prizeId
-    ) {}
+        private readonly int $prizeId,
+    ) {
+    }
 
     public function getPrizeId(): int
     {

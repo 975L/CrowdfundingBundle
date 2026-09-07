@@ -17,6 +17,9 @@ use c975L\CrowdfundingBundle\Form\CrowdfundingCounterpartType;
 use c975L\CrowdfundingBundle\Form\CrowdfundingMediaType;
 use c975L\CrowdfundingBundle\Form\CrowdfundingVideoType;
 use c975L\CrowdfundingBundle\Form\LotteryType;
+use c975L\CrowdfundingBundle\Management\CrowdfundingBlockOwnerResolver;
+use c975L\UiBundle\Form\BlockType;
+use c975L\UiBundle\Service\BlockMoveRowAttrBuilder;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -37,6 +40,7 @@ use function Symfony\Component\Translation\t;
 class CrowdfundingCrudController extends AbstractCrudController
 {
     public function __construct(
+        private readonly BlockMoveRowAttrBuilder $blockMoveRowAttrBuilder,
         private readonly ConfigServiceInterface $configService,
         private readonly TranslatorInterface $translator,
     ) {
@@ -49,49 +53,51 @@ class CrowdfundingCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
+        $crowdfunding = $this->getContext()?->getEntity()->getInstance();
+
         return [
             IdField::new('id')
                 ->setFormTypeOption('disabled', 'disabled'),
             TextField::new('title')
-                ->setLabel(t('label.title', [], 'shop')),
+                ->setLabel(t('label.title', [], 'crowdfunding')),
             SlugField::new('slug')
                 ->setTargetFieldName('title')
                 ->hideOnIndex(),
             MoneyField::new('amountGoal')
-                ->setLabel(t('label.goal', [], 'shop'))
+                ->setLabel(t('label.goal', [], 'crowdfunding'))
                 ->setCurrency('EUR')
                 ->setStoredAsCents(true),
             TextField::new('currency')
-                ->setLabel(t('label.currency', [], 'shop')),
+                ->setLabel(t('label.currency', [], 'crowdfunding')),
             MoneyField::new('amountAchieved')
-                ->setLabel(t('label.amount_achieved', [], 'shop'))
+                ->setLabel(t('label.amount_achieved', [], 'crowdfunding'))
                 ->setCurrency('EUR')
                 ->setStoredAsCents(true)
                 ->hideOnForm(),
             DateField::new('beginDate')
-                ->setLabel(t('label.begin_date', [], 'shop')),
+                ->setLabel(t('label.begin_date', [], 'crowdfunding')),
             DateField::new('endDate')
-                ->setLabel(t('label.end_date', [], 'shop')),
+                ->setLabel(t('label.end_date', [], 'crowdfunding')),
             TextEditorField::new('description')
-                ->setLabel(t('label.description', [], 'shop'))
+                ->setLabel(t('label.description', [], 'crowdfunding'))
                 ->hideOnIndex(),
 
             // Author
-            FormField::addFieldset(t('label.author', [], 'shop'))
+            FormField::addFieldset(t('label.author', [], 'crowdfunding'))
                 ->hideOnIndex(),
             TextField::new('authorName')
-                ->setLabel(t('label.author', [], 'shop')),
+                ->setLabel(t('label.author', [], 'crowdfunding')),
             TextEditorField::new('authorPresentation')
-                ->setLabel(t('label.author_presentation', [], 'shop'))
+                ->setLabel(t('label.author_presentation', [], 'crowdfunding'))
                 ->hideOnIndex(),
             TextField::new('authorWebsite')
-                ->setLabel(t('label.website', [], 'shop')),
+                ->setLabel(t('label.website', [], 'crowdfunding')),
             TextEditorField::new('useFor')
-                ->setLabel(t('label.use_for', [], 'shop'))
+                ->setLabel(t('label.use_for', [], 'crowdfunding'))
                 ->hideOnIndex(),
 
             // Media management
-            FormField::addFieldset(t('label.media', [], 'shop'))
+            FormField::addFieldset(t('label.media', [], 'crowdfunding'))
                 ->hideOnIndex(),
             CollectionField::new('medias')
                 ->hideOnIndex()
@@ -101,28 +107,42 @@ class CrowdfundingCrudController extends AbstractCrudController
                 ->setEntryType(CrowdfundingVideoType::class),
 
             // Counterpart management
-            FormField::addFieldset(t('label.counterparts', [], 'shop'))
-                ->setHelp(t('text.items_management', [], 'shop'))
+            FormField::addFieldset(t('label.counterparts', [], 'crowdfunding'))
+                ->setHelp(t('text.items_management', [], 'crowdfunding'))
                 ->hideOnIndex(),
             CollectionField::new('counterparts')
                 ->hideOnIndex()
                 ->setEntryType(CrowdfundingCounterpartType::class),
 
             // Lottery management
-            FormField::addFieldset(t('label.lottery', [], 'shop'))
+            FormField::addFieldset(t('label.lottery', [], 'crowdfunding'))
                 ->hideOnIndex(),
             CollectionField::new('lotteries')
                 ->hideOnIndex()
                 ->setEntryType(LotteryType::class),
 
+            // What an admin composes the rest of the page with, on top of the fields above
+            FormField::addFieldset(t('label.blocks', [], 'crowdfunding'))
+                ->hideOnIndex(),
+            CollectionField::new('blocks')
+                ->setLabel(false)
+                ->hideOnIndex()
+                // CollectionField's "col-md-8 col-xxl-7" default would leave a nested block editor working in 7/12 of the row
+                ->setColumns('col-12')
+                ->setEntryType(BlockType::class)
+                ->allowAdd()
+                ->allowDelete()
+                ->setFormTypeOption('by_reference', false)
+                ->setFormTypeOption('row_attr', $this->blockMoveRowAttrBuilder->build(CrowdfundingBlockOwnerResolver::TYPE_CROWDFUNDING, $crowdfunding instanceof Crowdfunding ? $crowdfunding->getId() : null)),
+
             // Dates
             DateTimeField::new('creation')
-                ->setLabel(t('label.creation', [], 'shop'))
+                ->setLabel(t('label.creation', [], 'crowdfunding'))
                 ->hideOnIndex()
                 ->setFormTypeOption('disabled', 'disabled')
                 ->onlyOnDetail(),
             DateTimeField::new('modification')
-                ->setLabel(t('label.modification', [], 'shop'))
+                ->setLabel(t('label.modification', [], 'crowdfunding'))
                 ->hideOnIndex()
                 ->setFormTypeOption('disabled', 'disabled')
                 ->onlyOnDetail(),

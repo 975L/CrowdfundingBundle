@@ -10,16 +10,15 @@
 
 namespace c975L\CrowdfundingBundle\Entity;
 
-use DateTimeInterface;
+use c975L\CrowdfundingBundle\Repository\LotteryTicketRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use c975L\CrowdfundingBundle\Repository\LotteryTicketRepository;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: LotteryTicketRepository::class)]
-#[ORM\Table(name: 'shop_lottery_ticket')]
+#[ORM\Table(name: 'crowdfunding_lottery_ticket')]
 #[UniqueEntity('number')]
-class LotteryTicket
+class LotteryTicket implements \Stringable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -42,11 +41,11 @@ class LotteryTicket
     private ?CrowdfundingCounterpart $counterpart = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?DateTimeInterface $creation = null;
+    private ?\DateTimeInterface $creation = null;
 
-    public function __toString()
+    public function __toString(): string
     {
-        return $this->getNumber();
+        return (string) $this->getNumber();
     }
 
     public function getId(): ?int
@@ -102,12 +101,12 @@ class LotteryTicket
         return $this;
     }
 
-    public function getCreation(): ?DateTimeInterface
+    public function getCreation(): ?\DateTimeInterface
     {
         return $this->creation;
     }
 
-    public function setCreation(DateTimeInterface $creation): self
+    public function setCreation(\DateTimeInterface $creation): self
     {
         $this->creation = $creation;
 

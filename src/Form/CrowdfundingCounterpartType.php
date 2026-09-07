@@ -10,17 +10,16 @@
 
 namespace c975L\CrowdfundingBundle\Form;
 
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
 use c975L\CrowdfundingBundle\Entity\CrowdfundingCounterpart;
-use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\MoneyType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use c975L\CrowdfundingBundle\Form\CrowdfundingCounterpartMediaType;
-use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class CrowdfundingCounterpartType extends AbstractType
 {
@@ -42,8 +41,8 @@ class CrowdfundingCounterpartType extends AbstractType
                 'label' => 'label.description',
                 'required' => false,
                 'attr' => [
-                    'rows' => 3
-                ]
+                    'rows' => 3,
+                ],
             ])
             ->add('lotteryTickets', ChoiceType::class, [
                 'label' => 'label.lottery_tickets',
@@ -59,7 +58,7 @@ class CrowdfundingCounterpartType extends AbstractType
                     '7 tickets' => 7,
                     '8 tickets' => 8,
                     '9 tickets' => 9,
-                    '10 tickets' => 10
+                    '10 tickets' => 10,
                 ],
                 'placeholder' => 'Choisir un nombre de tickets',
                 'attr' => [
@@ -74,39 +73,28 @@ class CrowdfundingCounterpartType extends AbstractType
                 'required' => true,
                 'label' => 'label.price',
                 'divisor' => 100,
-                'attr' => [
-                    'placeholder' => 'label.price',
-                ],
             ])
             ->add('currency', TextType::class, [
                 'required' => true,
                 'empty_data' => 'eur',
                 'label' => 'label.currency',
                 'attr' => [
-                    'placeholder' => 'label.currency',
                     'value' => 'eur',
                 ],
             ])
             ->add('expectedDelivery', TextType::class, [
                 'required' => true,
                 'label' => 'label.expected_delivery',
-                'attr' => [
-                    'placeholder' => 'label.expected_delivery',
-                ],
             ])
             ->add('limitedQuantity', IntegerType::class, [
                 'label' => 'label.limited_quantity',
                 'required' => false,
-                'attr' => [
-                    'placeholder' => 'label.limited_quantity',
-                ],
-                ])
+            ])
             ->add('orderedQuantity', IntegerType::class, [
                 'label' => 'label.ordered_quantity',
                 'required' => false,
                 'empty_data' => '',
                 'attr' => [
-                    'placeholder' => 'label.ordered_quantity',
                     'readonly' => true,
                 ],
             ])
@@ -121,7 +109,7 @@ class CrowdfundingCounterpartType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => CrowdfundingCounterpart::class,
-            'translation_domain' => 'shop'
+            'translation_domain' => 'crowdfunding',
         ]);
     }
 }

@@ -10,20 +10,15 @@
 
 namespace c975L\CrowdfundingBundle\Entity;
 
-use App\Entity\User;
-use DateTimeInterface;
+use c975L\ConfigBundle\Contract\UserInterface;
+use c975L\CrowdfundingBundle\Repository\LotteryRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use c975L\CrowdfundingBundle\Entity\Crowdfunding;
-use c975L\CrowdfundingBundle\Entity\LotteryPrize;
-use c975L\CrowdfundingBundle\Entity\LotteryTicket;
-use c975L\ShopBundle\Entity\LotteryVideo;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\Common\Collections\ArrayCollection;
-use c975L\CrowdfundingBundle\Repository\LotteryRepository;
 
 #[ORM\Entity(repositoryClass: LotteryRepository::class)]
-#[ORM\Table(name: 'shop_lottery')]
+#[ORM\Table(name: 'crowdfunding_lottery')]
 class Lottery
 {
     #[ORM\Id]
@@ -39,7 +34,7 @@ class Lottery
     private ?string $identifier = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?DateTimeInterface $drawDate = null;
+    private ?\DateTimeInterface $drawDate = null;
 
     #[ORM\Column(type: 'boolean')]
     private bool $isActive = true;
@@ -57,13 +52,13 @@ class Lottery
     private Collection $videos;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?DateTimeInterface $creation = null;
+    private ?\DateTimeInterface $creation = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?DateTimeInterface $modification = null;
+    private ?\DateTimeInterface $modification = null;
 
     #[ORM\ManyToOne]
-    private ?User $user = null;
+    private ?UserInterface $user = null;
 
     public function __construct()
     {
@@ -101,12 +96,12 @@ class Lottery
         return $this;
     }
 
-    public function getDrawDate(): ?DateTimeInterface
+    public function getDrawDate(): ?\DateTimeInterface
     {
         return $this->drawDate;
     }
 
-    public function setDrawDate(?DateTimeInterface $drawDate): self
+    public function setDrawDate(?\DateTimeInterface $drawDate): self
     {
         $this->drawDate = $drawDate;
 
@@ -162,6 +157,7 @@ class Lottery
             $this->tickets->add($ticket);
             $ticket->setLottery($this);
         }
+
         return $this;
     }
 
@@ -172,6 +168,7 @@ class Lottery
                 $ticket->setLottery(null);
             }
         }
+
         return $this;
     }
 
@@ -186,6 +183,7 @@ class Lottery
             $this->videos->add($video);
             $video->setLottery($this);
         }
+
         return $this;
     }
 
@@ -196,39 +194,40 @@ class Lottery
                 $video->setLottery(null);
             }
         }
+
         return $this;
     }
 
-    public function getCreation(): ?DateTimeInterface
+    public function getCreation(): ?\DateTimeInterface
     {
         return $this->creation;
     }
 
-    public function setCreation(?DateTimeInterface $creation): self
+    public function setCreation(?\DateTimeInterface $creation): self
     {
         $this->creation = $creation;
 
         return $this;
     }
 
-    public function getModification(): ?DateTimeInterface
+    public function getModification(): ?\DateTimeInterface
     {
         return $this->modification;
     }
 
-    public function setModification(?DateTimeInterface $modification): self
+    public function setModification(?\DateTimeInterface $modification): self
     {
         $this->modification = $modification;
 
         return $this;
     }
 
-    public function getUser(): ?User
+    public function getUser(): ?UserInterface
     {
         return $this->user;
     }
 
-    public function setUser(?User $user): static
+    public function setUser(?UserInterface $user): static
     {
         $this->user = $user;
 

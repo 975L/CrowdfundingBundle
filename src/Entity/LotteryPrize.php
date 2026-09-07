@@ -10,14 +10,13 @@
 
 namespace c975L\CrowdfundingBundle\Entity;
 
-use App\Entity\User;
-use DateTimeInterface;
+use c975L\ConfigBundle\Contract\UserInterface;
+use c975L\CrowdfundingBundle\Repository\LotteryPrizeRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use c975L\CrowdfundingBundle\Repository\LotteryPrizeRepository;
 
 #[ORM\Entity(repositoryClass: LotteryPrizeRepository::class)]
-#[ORM\Table(name: 'shop_lottery_prize')]
+#[ORM\Table(name: 'crowdfunding_lottery_prize')]
 class LotteryPrize
 {
     #[ORM\Id]
@@ -43,16 +42,16 @@ class LotteryPrize
     private ?LotteryTicket $winningTicket = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?DateTimeInterface $drawDate = null;
+    private ?\DateTimeInterface $drawDate = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?DateTimeInterface $creation = null;
+    private ?\DateTimeInterface $creation = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?DateTimeInterface $modification = null;
+    private ?\DateTimeInterface $modification = null;
 
     #[ORM\ManyToOne]
-    private ?User $user = null;
+    private ?UserInterface $user = null;
 
     public function getId(): ?int
     {
@@ -120,48 +119,48 @@ class LotteryPrize
         return $this;
     }
 
-    public function getDrawDate(): ?DateTimeInterface
+    public function getDrawDate(): ?\DateTimeInterface
     {
         return $this->drawDate;
     }
 
-    public function setDrawDate(?DateTimeInterface $drawDate): self
+    public function setDrawDate(?\DateTimeInterface $drawDate): self
     {
         $this->drawDate = $drawDate;
 
         return $this;
     }
 
-    public function getCreation(): ?DateTimeInterface
+    public function getCreation(): ?\DateTimeInterface
     {
         return $this->creation;
     }
 
-    public function setCreation(?DateTimeInterface $creation): self
+    public function setCreation(?\DateTimeInterface $creation): self
     {
         $this->creation = $creation;
 
         return $this;
     }
 
-    public function getModification(): ?DateTimeInterface
+    public function getModification(): ?\DateTimeInterface
     {
         return $this->modification;
     }
 
-    public function setModification(?DateTimeInterface $modification): self
+    public function setModification(?\DateTimeInterface $modification): self
     {
         $this->modification = $modification;
 
         return $this;
     }
 
-    public function getUser(): ?User
+    public function getUser(): ?UserInterface
     {
         return $this->user;
     }
 
-    public function setUser(?User $user): static
+    public function setUser(?UserInterface $user): static
     {
         $this->user = $user;
 

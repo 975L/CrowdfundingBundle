@@ -10,11 +10,11 @@
 
 namespace c975L\CrowdfundingBundle\MessageHandler;
 
+use c975L\CrowdfundingBundle\Email\CrowdfundingEmailSender;
 use c975L\CrowdfundingBundle\Message\LotteryTicketsMessage;
 use c975L\CrowdfundingBundle\Repository\CrowdfundingContributorRepository;
 use c975L\CrowdfundingBundle\Repository\LotteryTicketRepository;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
-use c975L\CrowdfundingBundle\Service\EmailServiceInterface;
 
 #[AsMessageHandler]
 class LotteryTicketsMessageHandler
@@ -22,26 +22,25 @@ class LotteryTicketsMessageHandler
     public function __construct(
         private readonly CrowdfundingContributorRepository $crowdfundingContributorRepository,
         private readonly LotteryTicketRepository $lotteryTicketRepository,
-        private readonly EmailServiceInterface $emailService,
-    ) {}
+        private readonly CrowdfundingEmailSender $emailSender,
+    ) {
+    }
 
     public function __invoke(LotteryTicketsMessage $message): void
     {
-        $lotterytickets = $this->lotteryTicketRepository->findByContributor($message->getContributorId());
-        if (!$lotterytickets) {
+        $lotteryTickets = $this->lotteryTicketRepository->findBy(['contributor' => $message->getContributorId()]);
+        if (!$lotteryTickets) {
             return;
         }
 
-        $contributor = $this->crowdfundingContributorRepository->findOneById($message->getContributorId());
+        $contributor = $this->crowdfundingContributorRepository->find($message->getContributorId());
         if (!$contributor) {
             return;
         }
 
-        $email = $contributor->getEmail();
-
         // Defines tickets
         $tickets = [];
-        foreach ($lotterytickets as $lotteryTicket) {
+        foreach ($lotteryTickets as $lotteryTicket) {
             $tickets[] = [
                 'lotteryIdentifier' => $lotteryTicket->getLottery()->getIdentifier(),
                 'number' => $lotteryTicket->getNumber(),
@@ -51,9 +50,14 @@ class LotteryTicketsMessageHandler
             ];
         }
 
-        // Sends the email with lottery tickets
-        if (!empty($tickets)) {
-            $this->emailService->lotteryTickets($email, $tickets);
-        }
+        // One email listing every ticket - the handler returned above on a contributor holding none, so there is always at least one here
+        $this->emailSender->send(
+            'lottery_tickets',
+            'label.lottery_tickets',
+            (string) $contributor->getEmail(),
+            ['tickets' => $tickets],
+            $contributor->getLocale(),
+            (string) $tickets[0]['lotteryIdentifier'],
+        );
     }
 }

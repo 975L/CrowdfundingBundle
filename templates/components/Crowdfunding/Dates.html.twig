@@ -12,17 +12,17 @@
 {% set progressPercent = progressPercent > 100 ? 100 : (progressPercent < 0 ? 0 : progressPercent) %}
 
 <section id="dates">
-    <h2>{{ 'label.dates'|trans({}, 'shop') }}</h2>
-    <p><twig:c975LUi:Image:Icon src="bundles/c975lshop/images/calendar-check.svg" width="24" height="24"/> <strong>{{ beginDate|date('d/m/Y') }} - {{ endDate|date('d/m/Y') }}</strong></p>
+    <h2>{{ 'label.dates'|trans({}, 'crowdfunding') }}</h2>
+    <p><twig:c975LUi:Image:Icon src="bundles/c975lcrowdfunding/icons/calendar-check.svg" width="24" height="24"/> <strong>{{ beginDate|date('d/m/Y') }} - {{ endDate|date('d/m/Y') }}</strong></p>
     {% if false == isStarted %}
         {% set progressPercent = 0 %}
-        <p>{{ 'label.crowdfunding_not_started'|trans({}, 'shop') }}, {{ 'label.come_back_on'|trans({}, 'shop') }} {{ beginDate|date('d/m/Y') }}</p>
+        <p>{{ 'label.crowdfunding_not_started'|trans({}, 'crowdfunding') }}, {{ 'label.come_back_on'|trans({}, 'crowdfunding') }} {{ beginDate|date('d/m/Y') }}</p>
     {% elseif isEnded %}
-        <p>{{ 'label.crowdfunding_ended'|trans({}, 'shop') }}</p>
+        <p>{{ 'label.crowdfunding_ended'|trans({}, 'crowdfunding') }}</p>
     {% elseif isLastDay %}
-        <p><twig:c975LUi:Image:Icon src="bundles/c975lshop/images/calendar-days.svg" width="24" height="24"/> <strong>{{ 'label.last_day'|trans({}, 'shop') }}</strong></p>
+        <p><twig:c975LUi:Image:Icon src="bundles/c975lcrowdfunding/icons/calendar-days.svg" width="24" height="24"/> <strong>{{ 'label.last_day'|trans({}, 'crowdfunding') }}</strong></p>
     {% else %}
-        <p><twig:c975LUi:Image:Icon src="bundles/c975lshop/images/calendar-days.svg" width="24" height="24"/> <strong>{{ daysLeft }}</strong> {{ 'label.days_left'|trans({}, 'shop') }}</p>
+        <p><twig:c975LUi:Image:Icon src="bundles/c975lcrowdfunding/icons/calendar-days.svg" width="24" height="24"/> <strong>{{ daysLeft }}</strong> {{ 'label.days_left'|trans({}, 'crowdfunding') }}</p>
     {% endif %}
     <twig:c975LUi:Progress:Bar progressPercent="{{ progressPercent }}" text="false"/>
 </section>

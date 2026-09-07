@@ -10,6 +10,7 @@
 
 namespace c975L\CrowdfundingBundle\Controller;
 
+use c975L\ConfigBundle\Contract\UserInterface;
 use c975L\ConfigBundle\Service\ConfigServiceInterface;
 use c975L\CrowdfundingBundle\Entity\Crowdfunding;
 use c975L\CrowdfundingBundle\Entity\CrowdfundingNews;
@@ -24,7 +25,7 @@ class CrowdfundingController extends AbstractController
 {
     public function __construct(
         private readonly CrowdfundingServiceInterface $crowdfundingService,
-        private readonly ConfigServiceInterface $configService
+        private readonly ConfigServiceInterface $configService,
     ) {
     }
 
@@ -41,7 +42,7 @@ class CrowdfundingController extends AbstractController
             [
                 'crowdfundings' => $this->crowdfundingService->findAllSorted(),
             ]
-        )->setMaxAge(3600);
+        );
     }
 
     // DISPLAY
@@ -54,12 +55,12 @@ class CrowdfundingController extends AbstractController
     public function display(
         Request $request,
         #[MapEntity(expr: 'repository.findOneBySlug(slug)')]
-        Crowdfunding $crowdfunding
-    ): Response
-    {
-        //Defines form
+        Crowdfunding $crowdfunding,
+    ): Response {
+        // Defines form
         $form = null;
-        if (null !== $this->getUser() && ($this->getUser()->getId() === $crowdfunding->getUser()->getId() || $this->isGranted($this->configService->get('site-role-admin')))) {
+        $user = $this->getUser();
+        if ($user instanceof UserInterface && ($user->getId() === $crowdfunding->getUser()->getId() || $this->isGranted($this->configService->get('site-role-admin')))) {
             $news = new CrowdfundingNews();
             $form = $this->crowdfundingService->createForm('news', $news);
             $form->handleRequest($request);
@@ -79,6 +80,6 @@ class CrowdfundingController extends AbstractController
                 'crowdfunding' => $crowdfunding,
                 'form' => $form?->createView(),
             ]
-        )->setMaxAge(3600);
+        );
     }
 }

@@ -1,0 +1,335 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="en" target-language="es" datatype="plaintext" original="crowdfunding.en.xlf">
+        <body>
+            <trans-unit id="Vt2B4j1">
+                <source>label.add_news</source>
+                <target>Añadir la noticia</target>
+            </trans-unit>
+            <trans-unit id="lTw6WbB">
+                <source>label.added</source>
+                <target>¡añadido!</target>
+            </trans-unit>
+            <trans-unit id="PtggqkW">
+                <source>label.allocated</source>
+                <target>Boletos asignados</target>
+            </trans-unit>
+            <trans-unit id="B6_Lxb3">
+                <source>label.amount_achieved</source>
+                <target>Importe recaudado</target>
+            </trans-unit>
+            <trans-unit id="HZi42IB">
+                <source>label.anonymous</source>
+                <target>Anónimo</target>
+            </trans-unit>
+            <trans-unit id="AP6ATeW">
+                <source>label.author</source>
+                <target>Autor</target>
+            </trans-unit>
+            <trans-unit id="YX74SUa">
+                <source>label.author_presentation</source>
+                <target>Presentación del autor</target>
+            </trans-unit>
+            <trans-unit id="vYC15uH">
+                <source>label.begin_date</source>
+                <target>Fecha de inicio</target>
+            </trans-unit>
+            <trans-unit id="CfX6fkN">
+                <source>label.blocks</source>
+                <target>Bloques</target>
+            </trans-unit>
+            <trans-unit id="WsvnGDa">
+                <source>label.come_back_on</source>
+                <target>vuelva el</target>
+            </trans-unit>
+            <trans-unit id="jsVhaPu">
+                <source>label.content</source>
+                <target>Contenido</target>
+            </trans-unit>
+            <trans-unit id="yKgTN6R">
+                <source>label.contribution_counterparts_reminder</source>
+                <target>Recordatorio de las contrapartidas elegidas:</target>
+            </trans-unit>
+            <trans-unit id="3d6iyJ4">
+                <source>label.contribution_thanks</source>
+                <target>¡Le agradecemos su contribución y su confianza!</target>
+            </trans-unit>
+            <trans-unit id="sialHtn">
+                <source>label.contributors</source>
+                <target>Contribuidores</target>
+            </trans-unit>
+            <trans-unit id="PVSfj4w">
+                <source>label.counterpart_entitles</source>
+                <target>Esta contrapartida le da derecho a:</target>
+            </trans-unit>
+            <trans-unit id="Hprwr99">
+                <source>label.counterparts</source>
+                <target>Contrapartidas</target>
+            </trans-unit>
+            <trans-unit id="24uIZJb">
+                <source>label.creation</source>
+                <target>Creación</target>
+            </trans-unit>
+            <trans-unit id="6xR2WhB">
+                <source>label.crowdfunding</source>
+                <target>Financiación colectiva</target>
+            </trans-unit>
+            <trans-unit id="SDxnVE7">
+                <source>label.crowdfunding_contribution</source>
+                <target>Contribución a la financiación colectiva</target>
+            </trans-unit>
+            <trans-unit id="ogIpb8K">
+                <source>label.crowdfunding_ended</source>
+                <target>Financiación terminada</target>
+            </trans-unit>
+            <trans-unit id="nlA_JAm">
+                <source>label.crowdfunding_not_started</source>
+                <target>Financiación no iniciada</target>
+            </trans-unit>
+            <trans-unit id="intx8VO">
+                <source>label.crowdfundings</source>
+                <target>Financiaciones colectivas</target>
+            </trans-unit>
+            <trans-unit id="WeIbrxE">
+                <source>label.currency</source>
+                <target>Moneda</target>
+            </trans-unit>
+            <trans-unit id="_yJxuuN">
+                <source>label.dates</source>
+                <target>Fechas</target>
+            </trans-unit>
+            <trans-unit id="fkGOcvD">
+                <source>label.days_left</source>
+                <target>Días restantes</target>
+            </trans-unit>
+            <trans-unit id="yLDxHe2">
+                <source>label.description</source>
+                <target>Descripción</target>
+            </trans-unit>
+            <trans-unit id="a7PjnQb">
+                <source>label.draw</source>
+                <target>Sorteo</target>
+            </trans-unit>
+            <trans-unit id="w5quAPt">
+                <source>label.draw_date</source>
+                <target>Fecha del sorteo</target>
+            </trans-unit>
+            <trans-unit id="0hCue4f">
+                <source>label.enable_lottery</source>
+                <target>Activar la lotería</target>
+            </trans-unit>
+            <trans-unit id="7SudCae">
+                <source>label.end_date</source>
+                <target>Fecha de fin</target>
+            </trans-unit>
+            <trans-unit id="QDJKUqu">
+                <source>label.expected_delivery</source>
+                <target>Entrega prevista</target>
+            </trans-unit>
+            <trans-unit id="_vpMf6w">
+                <source>label.follow_up</source>
+                <target>Nos ocuparemos de ello muy rápidamente.</target>
+            </trans-unit>
+            <trans-unit id="L487Qeh">
+                <source>label.funding</source>
+                <target>Financiación</target>
+            </trans-unit>
+            <trans-unit id="JeD558W">
+                <source>label.goal</source>
+                <target>Objetivo</target>
+            </trans-unit>
+            <trans-unit id="zoh06Qn">
+                <source>label.good_luck</source>
+                <target>¡Buena suerte!</target>
+            </trans-unit>
+            <trans-unit id="P1LHaIr">
+                <source>label.i_contribute</source>
+                <target>¡Contribuyo!</target>
+            </trans-unit>
+            <trans-unit id="M5fGm6s">
+                <source>label.info_crowdfunding</source>
+                <target>Lista de todas las campañas de financiación participativa. Cree, modifique o elimine una campaña: objetivo, fechas, presentación, contrapartidas, noticias, medios y su lotería.</target>
+            </trans-unit>
+            <trans-unit id="28mFigc">
+                <source>label.last_day</source>
+                <target>¡Último día!</target>
+            </trans-unit>
+            <trans-unit id="dvgScgz">
+                <source>label.limited_quantity</source>
+                <target>Cantidad limitada</target>
+            </trans-unit>
+            <trans-unit id="0__9nyP">
+                <source>label.limited_quantity_reached</source>
+                <target>Cantidad limitada alcanzada</target>
+            </trans-unit>
+            <trans-unit id="S4MzZyq">
+                <source>label.lottery</source>
+                <target>Lotería</target>
+            </trans-unit>
+            <trans-unit id="HppshNh">
+                <source>label.lottery_identifier</source>
+                <target>Identificador de lotería</target>
+            </trans-unit>
+            <trans-unit id="bb8uV6W">
+                <source>label.lottery_tickets</source>
+                <target>Boletos de lotería</target>
+            </trans-unit>
+            <trans-unit id="PG4vZtB">
+                <source>label.media</source>
+                <target>Medios</target>
+            </trans-unit>
+            <trans-unit id="feH1LnI">
+                <source>label.modification</source>
+                <target>Modificación</target>
+            </trans-unit>
+            <trans-unit id="Zu9MEoW">
+                <source>label.news</source>
+                <target>Noticias</target>
+            </trans-unit>
+            <trans-unit id="bSrxrsZ">
+                <source>label.next_smiley</source>
+                <target>¡Contribuyo por el siguiente smiley!</target>
+            </trans-unit>
+            <trans-unit id="bhykuCN">
+                <source>label.no_contributor</source>
+                <target>Sin contribuidores</target>
+            </trans-unit>
+            <trans-unit id="ako4chX">
+                <source>label.no_counterpart</source>
+                <target>Sin contrapartidas</target>
+            </trans-unit>
+            <trans-unit id="BxFJtV7">
+                <source>label.no_crowdfunding</source>
+                <target>Sin financiación colectiva</target>
+            </trans-unit>
+            <trans-unit id="goIdzk0">
+                <source>label.no_more_items_available</source>
+                <target>Ya no hay artículos disponibles, lo sentimos</target>
+            </trans-unit>
+            <trans-unit id="IIeIjIa">
+                <source>label.no_news</source>
+                <target>Sin noticias</target>
+            </trans-unit>
+            <trans-unit id="4aFvk0O">
+                <source>label.not_yet_drawn</source>
+                <target>Aún no sorteado</target>
+            </trans-unit>
+            <trans-unit id="_LlHKem">
+                <source>label.only_those_left_message</source>
+                <target>Solo aparecen aquí quienes dejaron un mensaje</target>
+            </trans-unit>
+            <trans-unit id="lfkT1XY">
+                <source>label.ordered_quantity</source>
+                <target>Cantidad pedida</target>
+            </trans-unit>
+            <trans-unit id="4AAvIlU">
+                <source>label.our_crowdfundings</source>
+                <target>Nuestros financiamientos colectivos</target>
+            </trans-unit>
+            <trans-unit id="mNK2w8R">
+                <source>label.outof</source>
+                <target>de</target>
+            </trans-unit>
+            <trans-unit id="Df9s6eu">
+                <source>label.position</source>
+                <target>Posición</target>
+            </trans-unit>
+            <trans-unit id="HqWSbZ3">
+                <source>label.presentation</source>
+                <target>Presentación</target>
+            </trans-unit>
+            <trans-unit id="reH32Yp">
+                <source>label.price</source>
+                <target>Precio</target>
+            </trans-unit>
+            <trans-unit id="opdviQC">
+                <source>label.prize_rank</source>
+                <target>Rango del premio</target>
+            </trans-unit>
+            <trans-unit id="kw0Mbid">
+                <source>label.prizes</source>
+                <target>Premios</target>
+            </trans-unit>
+            <trans-unit id="eUzbPZ6">
+                <source>label.project</source>
+                <target>Proyecto</target>
+            </trans-unit>
+            <trans-unit id="3l8OWaU">
+                <source>label.quantity</source>
+                <target>Cantidad</target>
+            </trans-unit>
+            <trans-unit id="KBtWbXF">
+                <source>label.remaining_quantity</source>
+                <target>Cantidad restante</target>
+            </trans-unit>
+            <trans-unit id="l4Xwk4V">
+                <source>label.requires_shipping</source>
+                <target>Requiere envío</target>
+            </trans-unit>
+            <trans-unit id="ZoidhFK">
+                <source>label.ticket_number</source>
+                <target>Número de boleto</target>
+            </trans-unit>
+            <trans-unit id="twUWdkS">
+                <source>label.tickets_used</source>
+                <target>Solo algunos boletos aparecen en la animación, pero, evidentemente, todos se utilizan para el sorteo.</target>
+            </trans-unit>
+            <trans-unit id="FaNcbQP">
+                <source>label.title</source>
+                <target>Título</target>
+            </trans-unit>
+            <trans-unit id="GNY2KYP">
+                <source>label.unavailable</source>
+                <target>No disponible</target>
+            </trans-unit>
+            <trans-unit id="GiG3TIF">
+                <source>label.use</source>
+                <target>Uso</target>
+            </trans-unit>
+            <trans-unit id="yqQC3Wy">
+                <source>label.use_for</source>
+                <target>Usado para</target>
+            </trans-unit>
+            <trans-unit id="UZxduj0">
+                <source>label.videos</source>
+                <target>Vídeos</target>
+            </trans-unit>
+            <trans-unit id="9VS1cFh">
+                <source>label.website</source>
+                <target>Sitio web</target>
+            </trans-unit>
+            <trans-unit id="XEqake_">
+                <source>label.winner_ticket</source>
+                <target>Boleto ganador</target>
+            </trans-unit>
+            <trans-unit id="RhLeqtL">
+                <source>label.winning_ticket</source>
+                <target>¡Boleto ganador!</target>
+            </trans-unit>
+            <trans-unit id="DxUlNeo">
+                <source>label.youtube_or_upload</source>
+                <target>BIEN un identificador de Youtube, BIEN un archivo de vídeo a continuación</target>
+            </trans-unit>
+            <trans-unit id="gYaiTcO">
+                <source>text.crowdfundings</source>
+                <target>Todas nuestras financiaciones colectivas</target>
+            </trans-unit>
+            <trans-unit id="bEI1XmL">
+                <source>text.items_management</source>
+                <target>Añada elementos SIN medios/archivos, luego agréguelos después, de lo contrario no funciona.</target>
+            </trans-unit>
+            <trans-unit id="hdV8NGF">
+                <source>text.lottery_information</source>
+                <target>Algunas contrapartidas dan derecho a un número de boletos de lotería cuyos premios figuran a continuación.</target>
+            </trans-unit>
+            <trans-unit id="94ueBdV">
+                <source>text.lottery_reminder</source>
+                <target>Al contribuir a una financiación colectiva, tuvo derecho a los boletos de lotería siguientes:</target>
+            </trans-unit>
+            <trans-unit id="bJHfWyb">
+                <source>text.lottery_ticket_winner</source>
+                <target>Participó en una lotería vinculada a una financiación colectiva y ¡ganó!</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

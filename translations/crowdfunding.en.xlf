@@ -1,0 +1,335 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="en" target-language="en" datatype="plaintext" original="crowdfunding.en.xlf">
+        <body>
+            <trans-unit id="Vt2B4j1">
+                <source>label.add_news</source>
+                <target>Add news</target>
+            </trans-unit>
+            <trans-unit id="lTw6WbB">
+                <source>label.added</source>
+                <target>added!</target>
+            </trans-unit>
+            <trans-unit id="PtggqkW">
+                <source>label.allocated</source>
+                <target>Tickets allocated</target>
+            </trans-unit>
+            <trans-unit id="B6_Lxb3">
+                <source>label.amount_achieved</source>
+                <target>Amount achieved</target>
+            </trans-unit>
+            <trans-unit id="HZi42IB">
+                <source>label.anonymous</source>
+                <target>Anonymous</target>
+            </trans-unit>
+            <trans-unit id="AP6ATeW">
+                <source>label.author</source>
+                <target>Author</target>
+            </trans-unit>
+            <trans-unit id="YX74SUa">
+                <source>label.author_presentation</source>
+                <target>Author&#x27;s presentation</target>
+            </trans-unit>
+            <trans-unit id="vYC15uH">
+                <source>label.begin_date</source>
+                <target>Begin date</target>
+            </trans-unit>
+            <trans-unit id="CfX6fkN">
+                <source>label.blocks</source>
+                <target>Blocks</target>
+            </trans-unit>
+            <trans-unit id="WsvnGDa">
+                <source>label.come_back_on</source>
+                <target>come back on</target>
+            </trans-unit>
+            <trans-unit id="jsVhaPu">
+                <source>label.content</source>
+                <target>Content</target>
+            </trans-unit>
+            <trans-unit id="yKgTN6R">
+                <source>label.contribution_counterparts_reminder</source>
+                <target>Reminder of the counterparts you picked:</target>
+            </trans-unit>
+            <trans-unit id="3d6iyJ4">
+                <source>label.contribution_thanks</source>
+                <target>Thank you for your contribution and your trust!</target>
+            </trans-unit>
+            <trans-unit id="sialHtn">
+                <source>label.contributors</source>
+                <target>Contributors</target>
+            </trans-unit>
+            <trans-unit id="PVSfj4w">
+                <source>label.counterpart_entitles</source>
+                <target>This counterpart entitles you to:</target>
+            </trans-unit>
+            <trans-unit id="Hprwr99">
+                <source>label.counterparts</source>
+                <target>Counterparts</target>
+            </trans-unit>
+            <trans-unit id="24uIZJb">
+                <source>label.creation</source>
+                <target>Creation</target>
+            </trans-unit>
+            <trans-unit id="6xR2WhB">
+                <source>label.crowdfunding</source>
+                <target>Crowdfunding</target>
+            </trans-unit>
+            <trans-unit id="SDxnVE7">
+                <source>label.crowdfunding_contribution</source>
+                <target>Contribution to crowdfunding</target>
+            </trans-unit>
+            <trans-unit id="ogIpb8K">
+                <source>label.crowdfunding_ended</source>
+                <target>Crowdfunding ended</target>
+            </trans-unit>
+            <trans-unit id="nlA_JAm">
+                <source>label.crowdfunding_not_started</source>
+                <target>Crowdfuding not started</target>
+            </trans-unit>
+            <trans-unit id="intx8VO">
+                <source>label.crowdfundings</source>
+                <target>Crowdfundings</target>
+            </trans-unit>
+            <trans-unit id="WeIbrxE">
+                <source>label.currency</source>
+                <target>Currency</target>
+            </trans-unit>
+            <trans-unit id="_yJxuuN">
+                <source>label.dates</source>
+                <target>Dates</target>
+            </trans-unit>
+            <trans-unit id="fkGOcvD">
+                <source>label.days_left</source>
+                <target>Days left</target>
+            </trans-unit>
+            <trans-unit id="yLDxHe2">
+                <source>label.description</source>
+                <target>Description</target>
+            </trans-unit>
+            <trans-unit id="a7PjnQb">
+                <source>label.draw</source>
+                <target>Draw</target>
+            </trans-unit>
+            <trans-unit id="w5quAPt">
+                <source>label.draw_date</source>
+                <target>Draw date</target>
+            </trans-unit>
+            <trans-unit id="0hCue4f">
+                <source>label.enable_lottery</source>
+                <target>Enable lottery</target>
+            </trans-unit>
+            <trans-unit id="7SudCae">
+                <source>label.end_date</source>
+                <target>End date</target>
+            </trans-unit>
+            <trans-unit id="QDJKUqu">
+                <source>label.expected_delivery</source>
+                <target>Expected delivery</target>
+            </trans-unit>
+            <trans-unit id="_vpMf6w">
+                <source>label.follow_up</source>
+                <target>We will follow up on this very quickly.</target>
+            </trans-unit>
+            <trans-unit id="L487Qeh">
+                <source>label.funding</source>
+                <target>Funding</target>
+            </trans-unit>
+            <trans-unit id="JeD558W">
+                <source>label.goal</source>
+                <target>Goal</target>
+            </trans-unit>
+            <trans-unit id="zoh06Qn">
+                <source>label.good_luck</source>
+                <target>Good luck!</target>
+            </trans-unit>
+            <trans-unit id="P1LHaIr">
+                <source>label.i_contribute</source>
+                <target>I contribute!</target>
+            </trans-unit>
+            <trans-unit id="M5fGm6s">
+                <source>label.info_crowdfunding</source>
+                <target>List of all crowdfunding campaigns. Create, edit or delete a campaign: goal, dates, presentation, counterparts, news, medias and its lottery.</target>
+            </trans-unit>
+            <trans-unit id="28mFigc">
+                <source>label.last_day</source>
+                <target>Last day!</target>
+            </trans-unit>
+            <trans-unit id="dvgScgz">
+                <source>label.limited_quantity</source>
+                <target>Limited quantity</target>
+            </trans-unit>
+            <trans-unit id="0__9nyP">
+                <source>label.limited_quantity_reached</source>
+                <target>Limited quantity reached</target>
+            </trans-unit>
+            <trans-unit id="S4MzZyq">
+                <source>label.lottery</source>
+                <target>Loterie</target>
+            </trans-unit>
+            <trans-unit id="HppshNh">
+                <source>label.lottery_identifier</source>
+                <target>Lottery identifier</target>
+            </trans-unit>
+            <trans-unit id="bb8uV6W">
+                <source>label.lottery_tickets</source>
+                <target>Lottery tickets</target>
+            </trans-unit>
+            <trans-unit id="PG4vZtB">
+                <source>label.media</source>
+                <target>Media</target>
+            </trans-unit>
+            <trans-unit id="feH1LnI">
+                <source>label.modification</source>
+                <target>Modification</target>
+            </trans-unit>
+            <trans-unit id="Zu9MEoW">
+                <source>label.news</source>
+                <target>News</target>
+            </trans-unit>
+            <trans-unit id="bSrxrsZ">
+                <source>label.next_smiley</source>
+                <target>I&#x27;m contributing for the next smiley!</target>
+            </trans-unit>
+            <trans-unit id="bhykuCN">
+                <source>label.no_contributor</source>
+                <target>No contributor</target>
+            </trans-unit>
+            <trans-unit id="ako4chX">
+                <source>label.no_counterpart</source>
+                <target>No counterparts</target>
+            </trans-unit>
+            <trans-unit id="BxFJtV7">
+                <source>label.no_crowdfunding</source>
+                <target>No crowdfunding</target>
+            </trans-unit>
+            <trans-unit id="goIdzk0">
+                <source>label.no_more_items_available</source>
+                <target>There are no more items available, sorry</target>
+            </trans-unit>
+            <trans-unit id="IIeIjIa">
+                <source>label.no_news</source>
+                <target>No news</target>
+            </trans-unit>
+            <trans-unit id="4aFvk0O">
+                <source>label.not_yet_drawn</source>
+                <target>Not yet drawn</target>
+            </trans-unit>
+            <trans-unit id="_LlHKem">
+                <source>label.only_those_left_message</source>
+                <target>Only those who left a message appear here</target>
+            </trans-unit>
+            <trans-unit id="lfkT1XY">
+                <source>label.ordered_quantity</source>
+                <target>Ordered quantity</target>
+            </trans-unit>
+            <trans-unit id="4AAvIlU">
+                <source>label.our_crowdfundings</source>
+                <target>Our Crowdfundings</target>
+            </trans-unit>
+            <trans-unit id="mNK2w8R">
+                <source>label.outof</source>
+                <target>out of</target>
+            </trans-unit>
+            <trans-unit id="Df9s6eu">
+                <source>label.position</source>
+                <target>Position</target>
+            </trans-unit>
+            <trans-unit id="HqWSbZ3">
+                <source>label.presentation</source>
+                <target>Presentation</target>
+            </trans-unit>
+            <trans-unit id="reH32Yp">
+                <source>label.price</source>
+                <target>Price</target>
+            </trans-unit>
+            <trans-unit id="opdviQC">
+                <source>label.prize_rank</source>
+                <target>Prize rank</target>
+            </trans-unit>
+            <trans-unit id="kw0Mbid">
+                <source>label.prizes</source>
+                <target>Prizes</target>
+            </trans-unit>
+            <trans-unit id="eUzbPZ6">
+                <source>label.project</source>
+                <target>Project</target>
+            </trans-unit>
+            <trans-unit id="3l8OWaU">
+                <source>label.quantity</source>
+                <target>Quantity</target>
+            </trans-unit>
+            <trans-unit id="KBtWbXF">
+                <source>label.remaining_quantity</source>
+                <target>Remaining quantity</target>
+            </trans-unit>
+            <trans-unit id="l4Xwk4V">
+                <source>label.requires_shipping</source>
+                <target>Requires shipping</target>
+            </trans-unit>
+            <trans-unit id="ZoidhFK">
+                <source>label.ticket_number</source>
+                <target>Ticket number</target>
+            </trans-unit>
+            <trans-unit id="twUWdkS">
+                <source>label.tickets_used</source>
+                <target>Only some tickets appear in the animation, but, obviously, all of them are used for the drawing.</target>
+            </trans-unit>
+            <trans-unit id="FaNcbQP">
+                <source>label.title</source>
+                <target>Title</target>
+            </trans-unit>
+            <trans-unit id="GNY2KYP">
+                <source>label.unavailable</source>
+                <target>Unavailable</target>
+            </trans-unit>
+            <trans-unit id="GiG3TIF">
+                <source>label.use</source>
+                <target>Use</target>
+            </trans-unit>
+            <trans-unit id="yqQC3Wy">
+                <source>label.use_for</source>
+                <target>Use for</target>
+            </trans-unit>
+            <trans-unit id="UZxduj0">
+                <source>label.videos</source>
+                <target>Videos</target>
+            </trans-unit>
+            <trans-unit id="9VS1cFh">
+                <source>label.website</source>
+                <target>Website</target>
+            </trans-unit>
+            <trans-unit id="XEqake_">
+                <source>label.winner_ticket</source>
+                <target>Winner ticket</target>
+            </trans-unit>
+            <trans-unit id="RhLeqtL">
+                <source>label.winning_ticket</source>
+                <target>Winning Ticket!</target>
+            </trans-unit>
+            <trans-unit id="DxUlNeo">
+                <source>label.youtube_or_upload</source>
+                <target>EITHER a Youtube ID OR a video file below</target>
+            </trans-unit>
+            <trans-unit id="gYaiTcO">
+                <source>text.crowdfundings</source>
+                <target>All our crowdfundings</target>
+            </trans-unit>
+            <trans-unit id="bEI1XmL">
+                <source>text.items_management</source>
+                <target>Add items WITHOUT media/files and then add them afterwards, otherwise it doesn&#x27;t work.</target>
+            </trans-unit>
+            <trans-unit id="hdV8NGF">
+                <source>text.lottery_information</source>
+                <target>Some counterparts entitle you to a number of lottery tickets, the prizes of which are listed below.</target>
+            </trans-unit>
+            <trans-unit id="94ueBdV">
+                <source>text.lottery_reminder</source>
+                <target>By contributing to a crowdfunding campaign, you were eligible for the lottery tickets below:</target>
+            </trans-unit>
+            <trans-unit id="bJHfWyb">
+                <source>text.lottery_ticket_winner</source>
+                <target>You entered a crowdfunding lottery and won!</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

@@ -38,7 +38,7 @@ class LotteryController extends AbstractController
         name: 'lottery_draw_prize',
         requirements: [
             'identifier' => '^([a-zA-Z0-9\-]{13})',
-            'rank' => '^[0-5]$'
+            'rank' => '^[0-5]$',
         ],
         methods: ['POST']
     )]

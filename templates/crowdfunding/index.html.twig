@@ -1,11 +1,11 @@
 {% extends 'layout.html.twig' %}
-{% trans_default_domain 'shop' %}
+{% trans_default_domain 'crowdfunding' %}
 
 {# Defines specific variables #}
 {% set title = 'label.crowdfundings'|trans %}
-{% set description = 'text.crowdfundings'|trans %}
+{% set summarySocialNetwork = 'text.crowdfundings'|trans %}
 
 {% block content %}
-    <twig:c975LShop:Shop:TestMode/>
+    <twig:c975LPayment:Basket:TestMode/>
     <twig:c975LCrowdfunding:Crowdfunding:Crowdfundings crowdfundings="{{ crowdfundings }}"/>
 {% endblock %}

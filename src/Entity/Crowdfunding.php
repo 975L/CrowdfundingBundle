@@ -1,4 +1,5 @@
 <?php
+
 /*
  * (c) 2025: 975L <contact@975l.com>
  * (c) 2025: Laurent Marquet <laurent.marquet@laposte.net>
@@ -9,11 +10,11 @@
 
 namespace c975L\CrowdfundingBundle\Entity;
 
-use App\Entity\User;
-use c975L\ShopBundle\Entity\CrowdfundingMedia;
-use c975L\ShopBundle\Entity\CrowdfundingVideo;
+use c975L\ConfigBundle\Contract\UserInterface;
 use c975L\CrowdfundingBundle\Repository\CrowdfundingRepository;
-use DateTimeInterface;
+use c975L\UiBundle\Contract\HasBlocksInterface;
+use c975L\UiBundle\Entity\Block;
+use c975L\UiBundle\Entity\Trait\HasBlocksTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -21,16 +22,24 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: CrowdfundingRepository::class)]
-#[ORM\Table(name: 'shop_crowdfunding')]
+#[ORM\Table(name: 'crowdfunding_crowdfunding')]
 #[UniqueEntity('slug')]
-class Crowdfunding
+class Crowdfunding implements HasBlocksInterface, \Stringable
 {
+    use HasBlocksTrait;
+
     private string $type = 'crowdfunding';
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
+
+    // What an admin composes the rest of the campaign page with, on top of the fields above - the same kinds every other page of the site is built from
+    #[ORM\ManyToMany(targetEntity: Block::class, cascade: ['persist', 'remove'])]
+    #[ORM\JoinTable(name: 'crowdfunding_crowdfunding_block')]
+    #[ORM\OrderBy(['position' => 'ASC'])]
+    private Collection $blocks;
 
     #[ORM\Column(length: 100)]
     private ?string $title = null;
@@ -63,16 +72,16 @@ class Crowdfunding
     private ?string $useFor = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
-    private ?DateTimeInterface $beginDate = null;
+    private ?\DateTimeInterface $beginDate = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
-    private ?DateTimeInterface $endDate = null;
+    private ?\DateTimeInterface $endDate = null;
 
     #[ORM\Column(nullable: true)]
     private ?int $position = null;
 
     #[ORM\OneToMany(targetEntity: CrowdfundingMedia::class, mappedBy: 'crowdfunding', cascade: ['persist', 'remove'])]
-    #[ORM\OrderBy(["position" => "ASC"])]
+    #[ORM\OrderBy(['position' => 'ASC'])]
     private Collection $medias;
 
     #[ORM\OneToMany(targetEntity: CrowdfundingContributor::class, mappedBy: 'crowdfunding')]
@@ -94,16 +103,17 @@ class Crowdfunding
     private Collection $lotteries;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?DateTimeInterface $creation = null;
+    private ?\DateTimeInterface $creation = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?DateTimeInterface $modification = null;
+    private ?\DateTimeInterface $modification = null;
 
     #[ORM\ManyToOne]
-    private ?User $user = null;
+    private ?UserInterface $user = null;
 
     public function __construct()
     {
+        $this->blocks = new ArrayCollection();
         $this->medias = new ArrayCollection();
         $this->videos = new ArrayCollection();
         $this->contributors = new ArrayCollection();
@@ -112,9 +122,9 @@ class Crowdfunding
         $this->lotteries = new ArrayCollection();
     }
 
-    public function __toString()
+    public function __toString(): string
     {
-        return $this->title;
+        return (string) $this->title;
     }
 
     public function getType(): string
@@ -254,24 +264,24 @@ class Crowdfunding
         return $this;
     }
 
-    public function getBeginDate(): ?DateTimeInterface
+    public function getBeginDate(): ?\DateTimeInterface
     {
         return $this->beginDate;
     }
 
-    public function setBeginDate(?DateTimeInterface $beginDate): static
+    public function setBeginDate(?\DateTimeInterface $beginDate): static
     {
         $this->beginDate = $beginDate;
 
         return $this;
     }
 
-    public function getEndDate(): ?DateTimeInterface
+    public function getEndDate(): ?\DateTimeInterface
     {
         return $this->endDate;
     }
 
-    public function setEndDate(?DateTimeInterface $endDate): static
+    public function setEndDate(?\DateTimeInterface $endDate): static
     {
         $this->endDate = $endDate;
 
@@ -286,6 +296,7 @@ class Crowdfunding
     public function setPosition(?int $position): self
     {
         $this->position = $position ?? 0;
+
         return $this;
     }
 
@@ -451,36 +462,36 @@ class Crowdfunding
         return $this;
     }
 
-    public function getCreation(): ?DateTimeInterface
+    public function getCreation(): ?\DateTimeInterface
     {
         return $this->creation;
     }
 
-    public function setCreation(DateTimeInterface $creation): static
+    public function setCreation(\DateTimeInterface $creation): static
     {
         $this->creation = $creation;
 
         return $this;
     }
 
-    public function getModification(): ?DateTimeInterface
+    public function getModification(): ?\DateTimeInterface
     {
         return $this->modification;
     }
 
-    public function setModification(DateTimeInterface $modification): static
+    public function setModification(\DateTimeInterface $modification): static
     {
         $this->modification = $modification;
 
         return $this;
     }
 
-    public function getUser(): ?User
+    public function getUser(): ?UserInterface
     {
         return $this->user;
     }
 
-    public function setUser(?User $user): static
+    public function setUser(?UserInterface $user): static
     {
         $this->user = $user;
 

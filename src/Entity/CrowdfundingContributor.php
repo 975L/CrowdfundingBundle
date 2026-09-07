@@ -10,19 +10,16 @@
 
 namespace c975L\CrowdfundingBundle\Entity;
 
-use DateTimeInterface;
+use c975L\CrowdfundingBundle\Repository\CrowdfundingContributorRepository;
+use c975L\PaymentBundle\Entity\Basket;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\Common\Collections\ArrayCollection;
-use c975L\PaymentBundle\Entity\Basket;
-use c975L\CrowdfundingBundle\Entity\CrowdfundingCounterpart;
-use c975L\CrowdfundingBundle\Entity\CrowdfundingContributorCounterpart;
-use c975L\CrowdfundingBundle\Repository\CrowdfundingContributorRepository;
 
 #[ORM\Entity(repositoryClass: CrowdfundingContributorRepository::class)]
-#[ORM\Table(name: 'shop_crowdfunding_contributor')]
-class CrowdfundingContributor
+#[ORM\Table(name: 'crowdfunding_contributor')]
+class CrowdfundingContributor implements \Stringable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -38,11 +35,15 @@ class CrowdfundingContributor
     #[ORM\Column(length: 100)]
     private ?string $email = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?DateTimeInterface $creation = null;
+    // The language the contribution was made in: a lottery email goes out from a draw an admin clicked, and this row is the only thing that remembers what language its contributor read the campaign in
+    #[ORM\Column(length: 5, nullable: true)]
+    private ?string $locale = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?DateTimeInterface $modification = null;
+    private ?\DateTimeInterface $creation = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $modification = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: true)]
@@ -60,9 +61,9 @@ class CrowdfundingContributor
         return get_object_vars($this);
     }
 
-    public function __toString()
+    public function __toString(): string
     {
-        return $this->email;
+        return (string) $this->email;
     }
 
     public function __construct()
@@ -111,24 +112,36 @@ class CrowdfundingContributor
         return $this;
     }
 
-    public function getCreation(): ?DateTimeInterface
+    public function getLocale(): ?string
+    {
+        return $this->locale;
+    }
+
+    public function setLocale(?string $locale): static
+    {
+        $this->locale = $locale;
+
+        return $this;
+    }
+
+    public function getCreation(): ?\DateTimeInterface
     {
         return $this->creation;
     }
 
-    public function setCreation(DateTimeInterface $creation): static
+    public function setCreation(\DateTimeInterface $creation): static
     {
         $this->creation = $creation;
 
         return $this;
     }
 
-    public function getModification(): ?DateTimeInterface
+    public function getModification(): ?\DateTimeInterface
     {
         return $this->modification;
     }
 
-    public function setModification(DateTimeInterface $modification): static
+    public function setModification(\DateTimeInterface $modification): static
     {
         $this->modification = $modification;
 

@@ -6,8 +6,8 @@
 {% endfor %}
 
 <section id="tickets">
-    <h2>{{ 'label.lottery_tickets'|trans({}, 'shop') }}</h2>
-    <p class="text text-center">{{ 'label.quantity'|trans({}, 'shop') }} : <strong>{{ tickets|length }}</strong></p>
+    <h2>{{ 'label.lottery_tickets'|trans({}, 'crowdfunding') }}</h2>
+    <p class="text text-center">{{ 'label.quantity'|trans({}, 'crowdfunding') }} : <strong>{{ tickets|length }}</strong></p>
     <div>
         {% for ticket in tickets %}
         {% set class= "" %}

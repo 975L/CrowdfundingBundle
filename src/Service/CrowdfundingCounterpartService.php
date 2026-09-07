@@ -10,24 +10,19 @@
 
 namespace c975L\CrowdfundingBundle\Service;
 
-use DateTimeImmutable;
 use c975L\CrowdfundingBundle\Entity\CrowdfundingCounterpart;
-use Doctrine\ORM\EntityManagerInterface;
 use c975L\CrowdfundingBundle\Repository\CrowdfundingCounterpartRepository;
-use c975L\CrowdfundingBundle\Repository\CrowdfundingCounterpartMediaRepository;
 
 class CrowdfundingCounterpartService implements CrowdfundingCounterpartServiceInterface
 {
     public function __construct(
-        private readonly EntityManagerInterface $entityManager,
         private readonly CrowdfundingCounterpartRepository $crowdfundingCounterpartRepository,
-        private readonly CrowdfundingCounterpartMediaRepository $crowdfundingCounterpartMediaRepository
     ) {
     }
 
     // Finds one by id
-    public function findOneById(int $id): CrowdfundingCounterpart
+    public function findOneById(int $id): ?CrowdfundingCounterpart
     {
-        return $this->crowdfundingCounterpartRepository->findOneById($id);
+        return $this->crowdfundingCounterpartRepository->find($id);
     }
 }

@@ -10,17 +10,16 @@
 
 namespace c975L\CrowdfundingBundle\Listener;
 
-use DateTimeImmutable;
-use Doctrine\ORM\Events;
 use c975L\CrowdfundingBundle\Entity\CrowdfundingCounterpart;
+use c975L\CrowdfundingBundle\Entity\CrowdfundingCounterpartMedia;
+use c975L\CrowdfundingBundle\Listener\Traits\UserTrait;
+use Doctrine\Bundle\DoctrineBundle\Attribute\AsEntityListener;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Event\PreFlushEventArgs;
 use Doctrine\ORM\Event\PrePersistEventArgs;
+use Doctrine\ORM\Events;
 use Symfony\Bundle\SecurityBundle\Security;
-use c975L\ShopBundle\Entity\CrowdfundingCounterpartMedia;
-use c975L\CrowdfundingBundle\Listener\Traits\UserTrait;
 use Symfony\Component\String\Slugger\SluggerInterface;
-use Doctrine\Bundle\DoctrineBundle\Attribute\AsEntityListener;
 
 #[AsEntityListener(event: Events::preFlush, method: 'preFlush', entity: CrowdfundingCounterpart::class)]
 #[AsEntityListener(event: Events::prePersist, method: 'prePersist', entity: CrowdfundingCounterpart::class)]
@@ -38,7 +37,7 @@ class CrowdfundingCounterpartListener
     public function preFlush(CrowdfundingCounterpart $entity, PreFlushEventArgs $event): void
     {
         $entity->setSlug($this->slugger->slug($entity->getTitle())->lower());
-        $entity->setModification(new DateTimeImmutable());
+        $entity->setModification(new \DateTime());
         $this->setUser($entity);
     }
 
@@ -47,10 +46,10 @@ class CrowdfundingCounterpartListener
         // Needs to add empty placeholder and a add contents aftewards because the owner is not yet persisted
         if (null === $entity->getMedia()) {
             $crowdfundingCounterpartMedia = new CrowdfundingCounterpartMedia();
-            $crowdfundingCounterpartMedia->setUpdatedAt(new DateTimeImmutable());
+            $crowdfundingCounterpartMedia->setUpdatedAt(new \DateTimeImmutable());
             $crowdfundingCounterpartMedia->setCrowdfundingCounterpart($entity);
             $entity->setMedia($crowdfundingCounterpartMedia);
         }
-        $entity->setCreation(new DateTimeImmutable());
+        $entity->setCreation(new \DateTime());
     }
 }

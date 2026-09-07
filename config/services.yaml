@@ -7,3 +7,13 @@ services:
     c975L\CrowdfundingBundle\:
         resource: '../src/'
         exclude: '../src/{DependencyInjection,Entity,Message}'
+
+    # After PaymentBundle's sheet (priority 20), whose basket rules the counterparts build on
+    c975L\CrowdfundingBundle\Service\StylesheetProvider:
+        tags:
+            - { name: 'ui.stylesheet', priority: 10 }
+
+    # After PaymentBundle's barrel (priority 100 as well, registered first): the counterparts draw its basket buttons, the lottery only adds its own wheel
+    c975L\CrowdfundingBundle\Service\ScriptProvider:
+        tags:
+            - { name: 'ui.script', priority: 100 }

@@ -1,15 +1,15 @@
 {% extends 'layout.html.twig' %}
-{% trans_default_domain 'shop' %}
+{% trans_default_domain 'crowdfunding' %}
 
 {# Defines specific variables #}
 {% set title = 'label.lottery'|trans ~ ": " ~ lottery.identifier %}
-{% set description = 'text.lottery_information'|trans %}
+{% set summarySocialNetwork = 'text.lottery_information'|trans %}
 
 {% block content %}
-    <twig:c975LShop:Shop:TestMode/>
+    <twig:c975LPayment:Basket:TestMode/>
     <div data-controller="lottery" data-lottery-identifier-value="{{ lottery.identifier }}">
         <p class="text text-center">{{ 'label.crowdfunding'|trans }} : <a href="{{ absolute_url(path('crowdfunding_display', {'slug': lottery.crowdfunding.slug})) }}">{{ lottery.crowdfunding.title }}</a></p>
-        <p class="text text-center">{{ 'label.draw_date'|trans({}, 'shop') }} : <strong>{{ lottery.drawDate|date('d/m/Y - H:i', app.session.get('user_timezone', 'Europe/Paris')) }}</strong></p>
+        <p class="text text-center">{{ 'label.draw_date'|trans({}, 'crowdfunding') }} : <strong>{{ lottery.drawDate|date('d/m/Y - H:i', app.session.get('user_timezone', 'Europe/Paris')) }}</strong></p>
         <twig:c975LCrowdfunding:Lottery:Prizes prizes="{{ lottery.prizes }}"/>
         <twig:c975LCrowdfunding:Lottery:SpinWheel/>
         <twig:c975LCrowdfunding:Lottery:Videos videos="{{ lottery.videos }}"/>

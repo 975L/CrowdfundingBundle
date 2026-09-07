@@ -1,0 +1,9 @@
+{# What was won and where it was drawn: computed from the prize the draw wrote, never retyped by an admin #}
+{% if prize is defined and prize %}
+    {% trans_default_domain 'crowdfunding' %}
+    <p>{{ 'label.crowdfunding'|trans }} : <strong><a href="{{ absolute_url(path('crowdfunding_display', {'slug': prize.lottery.crowdfunding.slug})) }}">{{ prize.lottery.crowdfunding.title }}</a></strong></p>
+    <p>{{ 'label.lottery'|trans }} : <strong><a href="{{ absolute_url(path('lottery_display', {'identifier': prize.lottery.identifier})) }}">{{ prize.lottery.identifier }}</a></strong></p>
+    <p>{{ 'label.ticket_number'|trans }} : <strong>{{ prize.winningTicket.number }}</strong></p>
+    <p>{{ 'label.title'|trans }} : <strong>{{ prize.title }}</strong></p>
+    <p>{{ 'label.description'|trans }} : <strong>{{ prize.description }}</strong></p>
+{% endif %}

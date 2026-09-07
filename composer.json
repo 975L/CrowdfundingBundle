@@ -1,7 +1,7 @@
 {
     "name": "c975l/crowdfunding-bundle",
     "type": "symfony-bundle",
-    "description": "Symfony bundle for crowdfunding campaigns (counterparts, contributors, news, media) and lottery, checkout out via c975l/payment-bundle",
+    "description": "Symfony bundle for crowdfunding campaigns on the c975L core — counterparts, contributors, news and media, plus an optional lottery tied to a campaign. Checkout is delegated to c975l/payment-bundle.",
     "keywords": ["symfony", "bundle", "crowdfunding", "lottery"],
     "license": "MIT",
     "authors": [
@@ -17,22 +17,31 @@
         }
     ],
     "require": {
-        "php": ">=8.0",
-        "c975l/config-bundle": "*",
-        "c975l/ui-bundle": "*",
-        "c975l/payment-bundle": "*",
-        "c975l/shop-bundle": "*",
-        "doctrine/orm": "*",
+        "php": ">=8.4",
+        "c975l/core-bundle": "^1.23",
+        "c975l/payment-bundle": "^6.8",
+        "doctrine/dbal": "^4.4",
+        "doctrine/orm": "^3.6",
         "easycorp/easyadmin-bundle": "^5.1",
-        "imagine/imagine": "*",
-        "knplabs/knp-paginator-bundle": "*",
-        "symfony/routing": "*",
-        "symfony/security-bundle": "*",
-        "symfony/translation": "*",
-        "vich/uploader-bundle": "*"
+        "imagine/imagine": "^1.5",
+        "symfony/console": "^8.0",
+        "symfony/filesystem": "^8.0",
+        "symfony/form": "^8.0",
+        "symfony/framework-bundle": "^8.0",
+        "symfony/http-foundation": "^8.0",
+        "symfony/mailer": "^8.0",
+        "symfony/messenger": "^8.0",
+        "symfony/mime": "^8.0",
+        "symfony/routing": "^8.0",
+        "symfony/security-bundle": "^8.0",
+        "symfony/string": "^8.0",
+        "symfony/translation": "^8.0",
+        "symfony/twig-bridge": "^8.0",
+        "symfony/validator": "^8.0",
+        "vich/uploader-bundle": "^2.9"
     },
     "require-dev": {
-        "phpunit/phpunit": "*"
+        "phpunit/phpunit": "^13.2"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
@@ -41,8 +50,36 @@
             "c975L\\CrowdfundingBundle\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "c975L\\CrowdfundingBundle\\Tests\\": "tests/"
+        }
+    },
     "config": {
         "sort-packages": true
+    },
+    "scripts": {
+        "audit-deps": "composer audit --abandoned=report",
+        "cs": "phpcs -q",
+        "fixer": "php-cs-fixer check --diff",
+        "stan": "phpstan analyse --no-progress",
+        "rector": "rector process --dry-run",
+        "test": "phpunit",
+        "qa": [
+            "@audit-deps",
+            "@cs",
+            "@fixer",
+            "@stan",
+            "@rector",
+            "@test"
+        ]
+    },
+    "scripts-descriptions": {
+        "cs": "PSR-12 (phpcs)",
+        "fixer": "Standard Symfony (php-cs-fixer)",
+        "stan": "Analyse statique du bundle, level 5",
+        "test": "Suite PHPUnit",
+        "qa": "Tous les contrôles de la CI, dans l'ordre - voir bin/ci.sh pour les rejouer sur des dépendances fraîches"
     },
     "support": {
         "email": "contact@975l.com",

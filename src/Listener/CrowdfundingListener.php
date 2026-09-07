@@ -10,14 +10,13 @@
 
 namespace c975L\CrowdfundingBundle\Listener;
 
-use DateTime;
-use Doctrine\ORM\Events;
 use c975L\CrowdfundingBundle\Entity\Crowdfunding;
-use Doctrine\ORM\Event\PreFlushEventArgs;
-use Doctrine\ORM\Event\PrePersistEventArgs;
 use c975L\CrowdfundingBundle\Listener\Traits\UserTrait;
 use Doctrine\Bundle\DoctrineBundle\Attribute\AsEntityListener;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Event\PreFlushEventArgs;
+use Doctrine\ORM\Event\PrePersistEventArgs;
+use Doctrine\ORM\Events;
 use Symfony\Bundle\SecurityBundle\Security;
 
 #[AsEntityListener(event: Events::preFlush, method: 'preFlush', entity: Crowdfunding::class)]
@@ -28,7 +27,7 @@ class CrowdfundingListener
 
     public function __construct(
         private readonly Security $security,
-        private readonly EntityManagerInterface $entityManager
+        private readonly EntityManagerInterface $entityManager,
     ) {
     }
 
@@ -42,12 +41,12 @@ class CrowdfundingListener
             }
             $entity->setPosition($maxPosition + 5);
         }
-        $entity->setModification(new DateTime());
+        $entity->setModification(new \DateTime());
         $this->setUser($entity);
     }
 
     public function prePersist(Crowdfunding $entity, PrePersistEventArgs $event): void
     {
-        $entity->setCreation(new DateTime());
+        $entity->setCreation(new \DateTime());
     }
 }

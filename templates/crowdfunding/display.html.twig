@@ -1,5 +1,5 @@
 {% extends 'layout.html.twig' %}
-{% trans_default_domain 'shop' %}
+{% trans_default_domain 'crowdfunding' %}
 
 {# Defines specific variables #}
 {% set title = 'label.crowdfunding'|trans ~ ' : "' ~ crowdfunding.title ~ '"' %}
@@ -7,10 +7,10 @@
     {% set ogImage = absolute_url(asset(crowdfunding.medias[0].name)) %}
 {% endif %}
 
-{% set description = crowdfunding.description %}
+{% set summarySocialNetwork = crowdfunding.description %}
 
 {% block content %}
-    <twig:c975LShop:Shop:TestMode/>
+    <twig:c975LPayment:Basket:TestMode/>
     <div class="crowdfunding">
         <twig:c975LCrowdfunding:Crowdfunding:AmountGoal amount="{{ crowdfunding.amountGoal }}" currency="{{ crowdfunding.currency }}"/>
         <twig:c975LCrowdfunding:Crowdfunding:AmountAchieved crowdfunding="{{ crowdfunding }}"/>
@@ -22,5 +22,8 @@
         <twig:c975LCrowdfunding:Crowdfunding:CounterParts counterparts="{{ crowdfunding.counterparts }}"/>
         <twig:c975LCrowdfunding:Crowdfunding:NewsCollection newsCollection="{{ crowdfunding.news }}" form="{{ form }}"/>
         <twig:c975LCrowdfunding:Crowdfunding:Contributors contributors="{{ crowdfunding.contributors }}"/>
+
+        {# Composed in the back office with UiBundle's own kinds - a banner, the arguments, a gallery, a FAQ - so a campaign says what it needs without a template written for it #}
+        <twig:c975LUi:Blocks:Blocks blocks="{{ crowdfunding.blocks }}"/>
     </div>
 {% endblock %}

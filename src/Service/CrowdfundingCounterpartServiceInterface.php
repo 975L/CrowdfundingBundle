@@ -14,5 +14,8 @@ use c975L\CrowdfundingBundle\Entity\CrowdfundingCounterpart;
 
 interface CrowdfundingCounterpartServiceInterface
 {
-    public function findOneById(int $id): CrowdfundingCounterpart;
+    /**
+     * @return CrowdfundingCounterpart|null null when no counterpart carries that id
+     */
+    public function findOneById(int $id): ?CrowdfundingCounterpart;
 }

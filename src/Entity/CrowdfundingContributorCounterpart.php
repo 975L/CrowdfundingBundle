@@ -5,7 +5,7 @@ namespace c975L\CrowdfundingBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
-#[ORM\Table(name: 'shop_crowdfunding_contributor_counterpart')]
+#[ORM\Table(name: 'crowdfunding_contributor_counterpart')]
 class CrowdfundingContributorCounterpart
 {
     #[ORM\Id]
@@ -22,7 +22,7 @@ class CrowdfundingContributorCounterpart
     private ?CrowdfundingCounterpart $counterpart = null;
 
     #[ORM\Column(type: 'smallint')]
-    private ?int $quantity = 0;
+    private int $quantity = 0;
 
     public function getId(): ?int
     {
@@ -37,6 +37,7 @@ class CrowdfundingContributorCounterpart
     public function setContributor(?CrowdfundingContributor $contributor): self
     {
         $this->contributor = $contributor;
+
         return $this;
     }
 
@@ -48,6 +49,7 @@ class CrowdfundingContributorCounterpart
     public function setCounterpart(?CrowdfundingCounterpart $counterpart): self
     {
         $this->counterpart = $counterpart;
+
         return $this;
     }
 
@@ -59,6 +61,7 @@ class CrowdfundingContributorCounterpart
     public function setQuantity(int $quantity): self
     {
         $this->quantity = $quantity;
+
         return $this;
     }
 }

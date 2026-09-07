@@ -12,14 +12,12 @@ namespace c975L\CrowdfundingBundle\Form;
 
 use c975L\CrowdfundingBundle\Entity\Lottery;
 use Symfony\Component\Form\AbstractType;
-use c975L\CrowdfundingBundle\Form\LotteryPrizeType;
-use c975L\CrowdfundingBundle\Form\LotteryVideoType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
 class LotteryType extends AbstractType
 {
@@ -28,19 +26,19 @@ class LotteryType extends AbstractType
         $builder
             ->add('isActive', CheckboxType::class, [
                 'label' => 'label.enable_lottery',
-                'required' => false
+                'required' => false,
             ])
             ->add('identifier', TextType::class, [
                 'label' => 'label.lottery_identifier',
                 'required' => false,
                 'attr' => [
-                    'readonly' => true
+                    'readonly' => true,
                 ],
             ])
             ->add('drawDate', DateTimeType::class, [
                 'label' => 'label.draw_date',
                 'required' => false,
-                'widget' => 'single_text'
+                'widget' => 'single_text',
             ])
             ->add('videos', CollectionType::class, [
                 'entry_type' => LotteryVideoType::class,
@@ -48,7 +46,7 @@ class LotteryType extends AbstractType
                 'allow_delete' => true,
                 'by_reference' => false,
                 'label' => 'label.videos',
-                'required' => false
+                'required' => false,
             ])
             ->add('prizes', CollectionType::class, [
                 'entry_type' => LotteryPrizeType::class,
@@ -56,7 +54,7 @@ class LotteryType extends AbstractType
                 'allow_delete' => true,
                 'by_reference' => false,
                 'label' => 'label.prizes',
-                'required' => false
+                'required' => false,
             ])
         ;
     }
@@ -65,7 +63,7 @@ class LotteryType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Lottery::class,
-            'translation_domain' => 'shop',
+            'translation_domain' => 'crowdfunding',
         ]);
     }
 }

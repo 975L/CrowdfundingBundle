@@ -4,7 +4,6 @@ namespace c975L\CrowdfundingBundle\Form;
 
 use c975L\CrowdfundingBundle\Entity\CrowdfundingNews;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -17,11 +16,11 @@ class CrowdfundingNewsType extends AbstractType
         $builder
             ->add('title', TextType::class, [
                 'label' => 'label.title',
-                'translation_domain' => 'shop',
+                'translation_domain' => 'crowdfunding',
             ])
             ->add('content', TextareaType::class, [
                 'label' => 'label.content',
-                'translation_domain' => 'shop',
+                'translation_domain' => 'crowdfunding',
             ])
         ;
     }
@@ -32,6 +31,6 @@ class CrowdfundingNewsType extends AbstractType
             'data_class' => CrowdfundingNews::class,
         ]);
 
-         $resolver->setRequired('config');
-   }
+        $resolver->setRequired('config');
+    }
 }

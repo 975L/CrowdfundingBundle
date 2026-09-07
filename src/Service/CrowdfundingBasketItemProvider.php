@@ -1,4 +1,5 @@
 <?php
+
 /*
  * (c) 2026: 975L <contact@975l.com>
  * (c) 2026: Laurent Marquet <laurent.marquet@laposte.net>
@@ -9,27 +10,21 @@
 
 namespace c975L\CrowdfundingBundle\Service;
 
-use DateTime;
-use DateTimeImmutable;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Messenger\MessageBusInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
-use c975L\PaymentBundle\Entity\Basket;
-use c975L\PaymentBundle\Contract\BasketItemProviderInterface;
 use c975L\CrowdfundingBundle\Entity\CrowdfundingContributor;
 use c975L\CrowdfundingBundle\Entity\CrowdfundingContributorCounterpart;
 use c975L\CrowdfundingBundle\Message\LotteryTicketsMessage;
+use c975L\PaymentBundle\Contract\BasketItemProviderInterface;
+use c975L\PaymentBundle\Entity\Basket;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
-// Plugs crowdfunding counterparts into PaymentBundle's Basket/checkout engine (see BasketItemProviderInterface) -
-// also owns the crowdfunding-specific parts of the checkout flow that used to live in ShopBundle's BasketService
-// directly (contributor registration, lottery ticket generation)
+// Plugs counterparts into PaymentBundle's checkout, and owns the crowdfunding-specific parts of that flow
 class CrowdfundingBasketItemProvider implements BasketItemProviderInterface
 {
     public function __construct(
         private readonly CrowdfundingCounterpartServiceInterface $crowdfundingCounterpartService,
         private readonly EntityManagerInterface $entityManager,
-        private readonly RequestStack $requestStack,
         private readonly MessageBusInterface $messageBus,
         private readonly TranslatorInterface $translator,
         private readonly LotteryServiceInterface $lotteryService,
@@ -41,7 +36,7 @@ class CrowdfundingBasketItemProvider implements BasketItemProviderInterface
         return 'crowdfunding';
     }
 
-    public function findItem(int|string $id): ?object
+    public function findItem(int | string $id): ?object
     {
         return $this->crowdfundingCounterpartService->findOneById((int) $id);
     }
@@ -49,23 +44,23 @@ class CrowdfundingBasketItemProvider implements BasketItemProviderInterface
     public function validateAddition(object $item, int $quantity): ?string
     {
         if (0 === $item->getLimitedQuantity()) {
-            return $this->translator->trans('label.unavailable', [], 'shop');
+            return $this->translator->trans('label.unavailable', [], 'crowdfunding');
         }
 
-        $beginDatetime = new DateTime($item->getCrowdfunding()->getBeginDate()->format('Y-m-d 00:00:00'));
-        $endDatetime = new DateTime($item->getCrowdfunding()->getEndDate()->format('Y-m-d 23:59:59'));
-        if ($beginDatetime > new DateTime()) {
-            return $this->translator->trans('label.crowdfunding_not_started', [], 'shop');
+        $beginDatetime = new \DateTime($item->getCrowdfunding()->getBeginDate()->format('Y-m-d 00:00:00'));
+        $endDatetime = new \DateTime($item->getCrowdfunding()->getEndDate()->format('Y-m-d 23:59:59'));
+        if ($beginDatetime > new \DateTime()) {
+            return $this->translator->trans('label.crowdfunding_not_started', [], 'crowdfunding');
         }
-        if (new DateTime() > $endDatetime) {
-            return $this->translator->trans('label.crowdfunding_ended', [], 'shop');
+        if (new \DateTime() > $endDatetime) {
+            return $this->translator->trans('label.crowdfunding_ended', [], 'crowdfunding');
         }
 
         if ($item->getLimitedQuantity() > 0) {
             $alreadyOrdered = $item->getOrderedQuantity() ?? 0;
             $canAdd = $item->getLimitedQuantity() - $alreadyOrdered;
             if ($canAdd <= 0) {
-                return $this->translator->trans('label.no_more_items_available', [], 'shop');
+                return $this->translator->trans('label.no_more_items_available', [], 'crowdfunding');
             }
         }
 
@@ -101,12 +96,34 @@ class CrowdfundingBasketItemProvider implements BasketItemProviderInterface
             : Basket::CONTENT_FLAG_CF_DIGITAL;
     }
 
-    // Stashes the contributor's name/message in session - turned into a real Contributor in onBasketPaid(),
-    // once payment is actually confirmed (mirrors the former BasketService::defineContributor())
-    public function onBasketValidated(Basket $basket, array $itemsOfThisKind, array $requestData): void
+    // The only check standing between filling a basket and paying for it: a basket sits for days, and in between a campaign ends, a counterpart runs out or is withdrawn
+    public function validateCheckout(Basket $basket, array $itemsOfThisKind): ?string
     {
-        $session = $this->requestStack->getSession();
+        foreach ($itemsOfThisKind as $id => $itemContent) {
+            $counterpart = $this->crowdfundingCounterpartService->findOneById((int) $id);
 
+            // Deleted outright while the basket held it: there is nothing left to give and nothing left to name
+            if (null === $counterpart) {
+                return $this->translator->trans('label.unavailable', [], 'crowdfunding');
+            }
+
+            $error = $this->validateAddition($counterpart, (int) $itemContent['quantity']);
+            if (null !== $error) {
+                return $error;
+            }
+
+            // What validateAddition() cannot ask, having only ever seen one click at a time: the whole basket quantity against what the run has left
+            if ($counterpart->getLimitedQuantity() > 0 && (int) $itemContent['quantity'] > $counterpart->getLimitedQuantity() - ($counterpart->getOrderedQuantity() ?? 0)) {
+                return $this->translator->trans('label.no_more_items_available', [], 'crowdfunding');
+            }
+        }
+
+        return null;
+    }
+
+    // Handed over to PaymentBundle, which keeps it on the basket and gives it back once the payment is confirmed - turned into a real Contributor only then. Nothing goes in the session: the payment provider confirms on a request of its own, carrying no session of this contributor
+    public function onBasketValidated(Basket $basket, array $itemsOfThisKind, array $requestData): array
+    {
         $counterpartsArray = [];
         foreach ($itemsOfThisKind as $counterpartData) {
             $counterpart = $this->crowdfundingCounterpartService->findOneById($counterpartData['item']['id']);
@@ -115,18 +132,16 @@ class CrowdfundingBasketItemProvider implements BasketItemProviderInterface
             }
         }
 
-        $session->set('contributor', [
+        return [
             'name' => $requestData['coordinates']['contributorName'] ?? null,
             'message' => $requestData['coordinates']['contributorMessage'] ?? null,
             'email' => $basket->getEmail(),
-            'basket_id' => $basket->getId(),
             'counterparts' => $counterpartsArray,
-        ]);
+        ];
     }
 
-    // Registers the contributor + their counterparts, bumps orderedQuantity, generates lottery tickets -
-    // mirrors the former BasketService::registerContributor() + the crowdfunding branch of updateOrderedQuantity()
-    public function onBasketPaid(Basket $basket, array $itemsOfThisKind): void
+    // Registers the contributor and counterparts, bumps orderedQuantity and generates lottery tickets
+    public function onBasketPaid(Basket $basket, array $itemsOfThisKind, array $checkoutData): void
     {
         foreach ($itemsOfThisKind as $id => $itemContent) {
             $counterpart = $this->crowdfundingCounterpartService->findOneById($id);
@@ -136,9 +151,9 @@ class CrowdfundingBasketItemProvider implements BasketItemProviderInterface
             $counterpart->setOrderedQuantity(($counterpart->getOrderedQuantity() ?? 0) + $itemContent['quantity']);
         }
 
-        $session = $this->requestStack->getSession();
-        $contributorData = $session->get('contributor');
-        if (null === $contributorData || $contributorData['basket_id'] !== $basket->getId()) {
+        // What onBasketValidated() handed over, kept on the basket by PaymentBundle - already this basket's own, so there is nothing to match it against
+        $contributorData = $checkoutData;
+        if ([] === $contributorData) {
             return;
         }
 
@@ -146,8 +161,10 @@ class CrowdfundingBasketItemProvider implements BasketItemProviderInterface
         $contributor->setName(empty($contributorData['name']) ? null : $contributorData['name']);
         $contributor->setMessage(empty($contributorData['message']) ? null : $contributorData['message']);
         $contributor->setEmail($contributorData['email']);
-        $contributor->setCreation(new DateTimeImmutable());
-        $contributor->setModification(new DateTimeImmutable());
+        // The language the order was placed in, which is the only thing that will still say it when the lottery is drawn months later
+        $contributor->setLocale($basket->getLocale());
+        $contributor->setCreation(new \DateTime());
+        $contributor->setModification(new \DateTime());
         $contributor->setBasket($basket);
 
         $this->entityManager->persist($contributor);
@@ -169,7 +186,7 @@ class CrowdfundingBasketItemProvider implements BasketItemProviderInterface
             if ($crowdfunding) {
                 $amount = $counterpart->getPrice() * $quantity;
                 $crowdfunding->setAmountAchieved($crowdfunding->getAmountAchieved() + $amount);
-                $crowdfunding->setModification(new DateTimeImmutable());
+                $crowdfunding->setModification(new \DateTime());
                 $crowdfunding->addContributor($contributor);
 
                 $contributor->setCrowdfunding($crowdfunding);
@@ -180,9 +197,9 @@ class CrowdfundingBasketItemProvider implements BasketItemProviderInterface
             $this->lotteryService->generateTicketsForContributor($contributor, $counterpart, $quantity);
         }
 
-        $this->messageBus->dispatch(new LotteryTicketsMessage($contributor->getId()));
-
         $this->entityManager->flush();
-        $session->remove('contributor');
+
+        // After the flush, and only then: the contributor's id is assigned by the database, and the message declares it an int - dispatched before, a basket holding no counterpart at all handed the bus a null
+        $this->messageBus->dispatch(new LotteryTicketsMessage($contributor->getId()));
     }
 }

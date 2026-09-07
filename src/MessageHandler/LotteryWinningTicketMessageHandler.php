@@ -10,27 +10,39 @@
 
 namespace c975L\CrowdfundingBundle\MessageHandler;
 
+use c975L\CrowdfundingBundle\Email\CrowdfundingEmailSender;
 use c975L\CrowdfundingBundle\Message\LotteryWinningTicketMessage;
 use c975L\CrowdfundingBundle\Repository\LotteryPrizeRepository;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
-use c975L\CrowdfundingBundle\Service\EmailServiceInterface;
 
 #[AsMessageHandler]
 class LotteryWinningTicketMessageHandler
 {
     public function __construct(
         private readonly LotteryPrizeRepository $lotteryPrizeRepository,
-        private readonly EmailServiceInterface $emailService,
-    ) {}
+        private readonly CrowdfundingEmailSender $emailSender,
+    ) {
+    }
 
     public function __invoke(LotteryWinningTicketMessage $message): void
     {
-        $prize = $this->lotteryPrizeRepository->findOneById($message->getPrizeId());
+        $prize = $this->lotteryPrizeRepository->find($message->getPrizeId());
         if (!$prize) {
             return;
         }
 
-        // Sends the email
-        $this->emailService->lotteryWinningTicket($prize);
+        $contributor = $prize->getWinningTicket()?->getContributor();
+        if (null === $contributor) {
+            return;
+        }
+
+        $this->emailSender->send(
+            'lottery_ticket_winner',
+            'label.winning_ticket',
+            (string) $contributor->getEmail(),
+            ['prize' => $prize],
+            $contributor->getLocale(),
+            (string) $prize->getLottery()?->getIdentifier(),
+        );
     }
 }

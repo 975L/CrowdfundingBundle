@@ -1,4 +1,5 @@
 <?php
+
 /*
  * (c) 2026: 975L <contact@975l.com>
  * (c) 2026: Laurent Marquet <laurent.marquet@laposte.net>
@@ -9,9 +10,15 @@
 
 namespace c975L\CrowdfundingBundle\Form;
 
-use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormInterface;
 
 interface CrowdfundingFormFactoryInterface
 {
-    public function create(string $name, $object): Form;
+    /**
+     * Builds one of the bundle's own forms by name, bound to the given entity.
+     *
+     * @param string $name   the form's short name
+     * @param mixed  $object the entity the form is bound to
+     */
+    public function create(string $name, $object): FormInterface;
 }

@@ -1,4 +1,4 @@
-{% trans_default_domain 'shop' %}
+{% trans_default_domain 'crowdfunding' %}
 
 {% set class = "not-drawn" %}
 {% set number = "XX-0000-YYY" %}
@@ -10,10 +10,10 @@
     {% set name = "label.name"|trans ~ ": <strong>" ~ contributorName ~ "</strong>" %}
     {% set disabled = "disabled" %}
 {% endif %}
-<twig:c975LUi:Card:Card id="prize-{{ prize.id }}" title="#{{ prize.rank }} - {{ prize.title }}">
+<twig:c975LUi:Card:Card tag="article" id="prize-{{ prize.id }}" title="#{{ prize.rank }} - {{ prize.title }}">
     <div class="card-data" data-prize-rank="{{ prize.rank }}">
         <p class="text-left">{{ prize.description|raw|nl2br }}</p>
-        <h3>{{ 'label.winner_ticket'|trans({}, 'shop') }}</h3>
+        <h3>{{ 'label.winner_ticket'|trans({}, 'crowdfunding') }}</h3>
         <p class="ticket-number {{ class }}" data-lottery-target="winnerNumber">{{ number }}</p>
         <p data-lottery-target="winnerName">{{ name|raw }}</p>
         {# Draw #}
@@ -24,7 +24,7 @@
             {% endif %}
             <twig:c975LCrowdfunding:Lottery:DrawButton rank="{{ prize.rank }}" disabled="{{ disabled }}"/>
         {% elseif true == winner %}
-            <p class="text text-center">{{ 'label.draw_date'|trans({}, 'shop') }} : <strong>{{ prize.drawDate|date('d/m/Y - H:i', app.session.get('user_timezone', 'Europe/Paris')) }}</strong></p>
+            <p class="text text-center">{{ 'label.draw_date'|trans({}, 'crowdfunding') }} : <strong>{{ prize.drawDate|date('d/m/Y - H:i', app.session.get('user_timezone', 'Europe/Paris')) }}</strong></p>
         {% endif %}
     </div>
 </twig:c975LUi:Card:Card>

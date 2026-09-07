@@ -10,15 +10,14 @@
 
 namespace c975L\CrowdfundingBundle\Listener;
 
-use DateTimeImmutable;
-use Doctrine\ORM\Events;
 use c975L\CrowdfundingBundle\Entity\LotteryPrize;
+use c975L\CrowdfundingBundle\Listener\Traits\UserTrait;
+use Doctrine\Bundle\DoctrineBundle\Attribute\AsEntityListener;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Event\PreFlushEventArgs;
 use Doctrine\ORM\Event\PrePersistEventArgs;
+use Doctrine\ORM\Events;
 use Symfony\Bundle\SecurityBundle\Security;
-use c975L\CrowdfundingBundle\Listener\Traits\UserTrait;
-use Doctrine\Bundle\DoctrineBundle\Attribute\AsEntityListener;
 
 #[AsEntityListener(event: Events::preFlush, method: 'preFlush', entity: LotteryPrize::class)]
 #[AsEntityListener(event: Events::prePersist, method: 'prePersist', entity: LotteryPrize::class)]
@@ -34,12 +33,12 @@ class LotteryPrizeListener
 
     public function preFlush(LotteryPrize $entity, PreFlushEventArgs $event): void
     {
-        $entity->setModification(new DateTimeImmutable());
+        $entity->setModification(new \DateTime());
         $this->setUser($entity);
     }
 
     public function prePersist(LotteryPrize $entity, PrePersistEventArgs $event): void
     {
-        $entity->setCreation(new DateTimeImmutable());
+        $entity->setCreation(new \DateTime());
     }
 }

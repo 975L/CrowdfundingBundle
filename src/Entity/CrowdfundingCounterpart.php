@@ -10,19 +10,22 @@
 
 namespace c975L\CrowdfundingBundle\Entity;
 
-use App\Entity\User;
-use DateTimeInterface;
+use c975L\ConfigBundle\Contract\UserInterface;
+use c975L\CrowdfundingBundle\Repository\CrowdfundingCounterpartRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\Common\Collections\ArrayCollection;
-use c975L\ShopBundle\Entity\CrowdfundingCounterpartMedia;
-use c975L\CrowdfundingBundle\Repository\CrowdfundingCounterpartRepository;
 
 #[ORM\Entity(repositoryClass: CrowdfundingCounterpartRepository::class)]
-#[ORM\Table(name: 'shop_crowdfunding_counterpart')]
-class CrowdfundingCounterpart
+#[ORM\Table(name: 'crowdfunding_counterpart')]
+class CrowdfundingCounterpart implements \Stringable
 {
+    public function __construct()
+    {
+        $this->contributorCounterparts = new ArrayCollection();
+    }
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -50,7 +53,7 @@ class CrowdfundingCounterpart
     private ?string $expectedDelivery = null;
 
     #[ORM\Column(length: 3)]
-    private ?string $currency = 'eur';
+    private string $currency = 'eur';
 
     #[ORM\Column(type: 'boolean')]
     private bool $requiresShipping = false;
@@ -59,10 +62,10 @@ class CrowdfundingCounterpart
     private int $lotteryTickets = 0;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?DateTimeInterface $creation = null;
+    private ?\DateTimeInterface $creation = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?DateTimeInterface $modification = null;
+    private ?\DateTimeInterface $modification = null;
 
     #[ORM\ManyToOne(targetEntity: Crowdfunding::class, inversedBy: 'counterparts')]
     #[ORM\JoinColumn(nullable: true)]
@@ -76,16 +79,11 @@ class CrowdfundingCounterpart
     private ?CrowdfundingCounterpartMedia $media = null;
 
     #[ORM\ManyToOne]
-    private ?User $user = null;
+    private ?UserInterface $user = null;
 
-    public function __construct()
+    public function __toString(): string
     {
-        $this->contributors = new ArrayCollection();
-    }
-
-    public function __toString()
-    {
-        return $this->title;
+        return (string) $this->title;
     }
 
     public function toArray()
@@ -218,24 +216,24 @@ class CrowdfundingCounterpart
         return $this;
     }
 
-    public function getCreation(): ?DateTimeInterface
+    public function getCreation(): ?\DateTimeInterface
     {
         return $this->creation;
     }
 
-    public function setCreation(DateTimeInterface $creation): static
+    public function setCreation(\DateTimeInterface $creation): static
     {
         $this->creation = $creation;
 
         return $this;
     }
 
-    public function getModification(): ?DateTimeInterface
+    public function getModification(): ?\DateTimeInterface
     {
         return $this->modification;
     }
 
-    public function setModification(DateTimeInterface $modification): static
+    public function setModification(\DateTimeInterface $modification): static
     {
         $this->modification = $modification;
 
@@ -265,28 +263,6 @@ class CrowdfundingCounterpart
         return $contributors;
     }
 
-    public function addContributor(CrowdfundingContributor $contributor): static
-    {
-        if (!$this->contributors->contains($contributor)) {
-            $this->contributors->add($contributor);
-            $contributor->setCrowdfundingCounterpart($this);
-        }
-
-        return $this;
-    }
-
-    public function removeContributor(CrowdfundingContributor $contributor): static
-    {
-        if ($this->contributors->removeElement($contributor)) {
-            // set the owning side to null (unless already changed)
-            if ($contributor->getCrowdfundingCounterpart() === $this) {
-                $contributor->setCrowdfundingCounterpart(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function getMedia(): ?CrowdfundingCounterpartMedia
     {
         return $this->media;
@@ -299,12 +275,12 @@ class CrowdfundingCounterpart
         return $this;
     }
 
-    public function getUser(): ?User
+    public function getUser(): ?UserInterface
     {
         return $this->user;
     }
 
-    public function setUser(?User $user): static
+    public function setUser(?UserInterface $user): static
     {
         $this->user = $user;
 

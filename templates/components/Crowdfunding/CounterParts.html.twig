@@ -1,5 +1,5 @@
 <section id="counterparts">
-    <h2>{{ 'label.counterparts'|trans({}, 'shop') }}</h2>
+    <h2>{{ 'label.counterparts'|trans({}, 'crowdfunding') }}</h2>
     {% if counterparts is not empty %}
         <div data-controller="basket">
             <div class="cards">
@@ -8,9 +8,9 @@
                 {% endfor %}
             </div>
             <twig:c975LPayment:Basket:Message/>
-            <twig:c975LShop:Shop:NavbarBasket/>
+            <twig:c975LPayment:Basket:Navbar/>
         </div>
     {% else %}
-        <p class="text text-center lead">{{ 'label.no_counterpart'|trans({}, 'shop') }}</p>
+        <p class="text text-center lead">{{ 'label.no_counterpart'|trans({}, 'crowdfunding') }}</p>
     {% endif %}
 </section>
