@@ -2,331 +2,691 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
     <file source-language="en" target-language="fr" datatype="plaintext" original="crowdfunding.en.xlf">
         <body>
-            <trans-unit id="Vt2B4j1">
+            <trans-unit id="m0zKYk1">
+                <source>description.guided_project_crowdfunding_blocks</source>
+                <target>Tout ce que les champs du formulaire ne disent pas s'écrit en blocs, avec l'éditeur qui sert aussi aux pages du site.</target>
+            </trans-unit>
+            <trans-unit id="LqUplER">
+                <source>description.guided_project_crowdfunding_campaign</source>
+                <target>L'objectif, les dates, la présentation et l'auteur : ce qu'une campagne est avant d'avoir quoi que ce soit à offrir.</target>
+            </trans-unit>
+            <trans-unit id="Bo1XOJ3">
+                <source>description.guided_project_crowdfunding_counterpart</source>
+                <target>Ce qu'un contributeur reçoit en échange de son don, avec son montant et, s'il y a lieu, le nombre d'exemplaires disponibles.</target>
+            </trans-unit>
+            <trans-unit id=".E7he3K">
+                <source>description.guided_project_crowdfunding_draw_video</source>
+                <target>Une fois le tirage filmé, la vidéo se dépose sur la loterie ou, si le fichier est trop lourd, sur la campagne avec une adresse YouTube.</target>
+            </trans-unit>
+            <trans-unit id="rFPdrwq">
+                <source>description.guided_project_crowdfunding_lottery</source>
+                <target>Une date de tirage et des lots. Les billets se vendent comme des contreparties, et le tirage a lieu sur la page publique de la loterie.</target>
+            </trans-unit>
+            <trans-unit id="urDtbec">
+                <source>description.guided_project_crowdfunding_media</source>
+                <target>Les photographies et les vidéos de la page publique : une campagne qu'on ne voit pas est une campagne qu'on ne finance pas.</target>
+            </trans-unit>
+            <trans-unit id="wJ18L1_">
+                <source>description.guided_step_crowdfunding_blocks_add</source>
+                <target>Section « Blocs », tout en bas du formulaire. Textes, images, boutons, tableaux : les mêmes qu'une page du site, et ils se déplacent de la même façon.</target>
+            </trans-unit>
+            <trans-unit id="gxuhOnD">
+                <source>description.guided_step_crowdfunding_blocks_done</source>
+                <target>Les blocs s'affichent sur la page publique, sous la présentation et les contreparties.</target>
+            </trans-unit>
+            <trans-unit id="DDEqPtb">
+                <source>description.guided_step_crowdfunding_blocks_edit</source>
+                <target>Le crayon, sur la ligne de la campagne à compléter.</target>
+            </trans-unit>
+            <trans-unit id="kmrhQv4">
+                <source>description.guided_step_crowdfunding_blocks_open</source>
+                <target>Les blocs d'une campagne se composent sur sa fiche, sous les champs qui la décrivent.</target>
+            </trans-unit>
+            <trans-unit id="6pMhcxi">
+                <source>description.guided_step_crowdfunding_campaign_author</source>
+                <target>Qui porte le projet. Le nom, la présentation et le site apparaissent ensemble sur la page : un contributeur donne à quelqu'un, pas à une cagnotte.</target>
+            </trans-unit>
+            <trans-unit id="8pFJAvy">
+                <source>description.guided_step_crowdfunding_campaign_dates</source>
+                <target>La campagne n'accepte de contribution qu'entre ces deux dates. Avant, et après, les contreparties ne peuvent plus être ajoutées au panier.</target>
+            </trans-unit>
+            <trans-unit id="HRKqvMA">
+                <source>description.guided_step_crowdfunding_campaign_description</source>
+                <target>Le texte d'accroche, en haut de la page publique. Dites en quelques lignes ce que vous voulez faire et pourquoi ; le détail se compose plus bas, en blocs.</target>
+            </trans-unit>
+            <trans-unit id="fHTZh3T">
+                <source>description.guided_step_crowdfunding_campaign_done</source>
+                <target>La campagne est en ligne dès qu'elle existe, et visible entre ses deux dates. Les parcours suivants la complètent : ses images, ses contreparties, sa loterie.</target>
+            </trans-unit>
+            <trans-unit id="_M0S4bg">
+                <source>description.guided_step_crowdfunding_campaign_goal</source>
+                <target>Le montant à atteindre. C'est lui que la jauge de la page publique compare à la somme des contributions déjà reçues.</target>
+            </trans-unit>
+            <trans-unit id="L5sz.S5">
+                <source>description.guided_step_crowdfunding_campaign_new</source>
+                <target>Le bouton au-dessus de la liste ouvre un formulaire vide. Il porte tout : la campagne, ses médias, ses contreparties, sa loterie et ses blocs.</target>
+            </trans-unit>
+            <trans-unit id="8E51Ewv">
+                <source>description.guided_step_crowdfunding_campaign_open</source>
+                <target>Toutes les campagnes du site sont listées ici, celle qui se termine le plus tard en tête.</target>
+            </trans-unit>
+            <trans-unit id="8MwwlvA">
+                <source>description.guided_step_crowdfunding_campaign_slug</source>
+                <target>Elle se remplit toute seule à partir du titre. Une fois la campagne partagée, ne la changez plus : les liens déjà diffusés cesseraient de fonctionner.</target>
+            </trans-unit>
+            <trans-unit id="jpUn2Je">
+                <source>description.guided_step_crowdfunding_campaign_title</source>
+                <target>C'est le nom sous lequel la campagne apparaît partout : dans la liste, sur sa page, dans le panier et dans les emails envoyés aux contributeurs.</target>
+            </trans-unit>
+            <trans-unit id="QQuS8Ai">
+                <source>description.guided_step_crowdfunding_counterpart_add</source>
+                <target>Section « Contreparties ». Donnez-lui un titre, un montant et une description : c'est ce qu'un contributeur lit avant de choisir.</target>
+            </trans-unit>
+            <trans-unit id=".x5B8xo">
+                <source>description.guided_step_crowdfunding_counterpart_done</source>
+                <target>La contrepartie s'ajoute au panier comme n'importe quel article. C'est la boutique qui encaisse : ce bundle ne touche jamais à l'argent.</target>
+            </trans-unit>
+            <trans-unit id="BKuv7RS">
+                <source>description.guided_step_crowdfunding_counterpart_edit</source>
+                <target>Le crayon, sur la ligne de la campagne à laquelle la contrepartie se rattache.</target>
+            </trans-unit>
+            <trans-unit id="J25OJ4u">
+                <source>description.guided_step_crowdfunding_counterpart_expand</source>
+                <target>Une contrepartie ajoutée se replie sur son titre. Ouvrez-la : le prix, la quantité limitée et la date de livraison sont tous à l'intérieur.</target>
+            </trans-unit>
+            <trans-unit id="qWM59CT">
+                <source>description.guided_step_crowdfunding_counterpart_open</source>
+                <target>Une contrepartie appartient à une campagne et se crée sur sa fiche : il n'y a pas d'écran de contreparties.</target>
+            </trans-unit>
+            <trans-unit id="_0dRlZp">
+                <source>description.guided_step_crowdfunding_counterpart_quantity</source>
+                <target>Une quantité limitée retire la contrepartie de la vente une fois épuisée, et le panier refuse d'en commander plus qu'il n'en reste. Laissez zéro pour ne pas limiter.</target>
+            </trans-unit>
+            <trans-unit id="pBi5ebg">
+                <source>description.guided_step_crowdfunding_draw_video_done</source>
+                <target>Les gagnants ont déjà reçu leur email, envoyé au moment du tirage. La vidéo est ce que voient tous les autres : reste à l'annoncer, à la main, sur les réseaux.</target>
+            </trans-unit>
+            <trans-unit id="nozqyBG">
+                <source>description.guided_step_crowdfunding_draw_video_edit</source>
+                <target>Le crayon, sur la ligne de la campagne dont la loterie vient d'être tirée.</target>
+            </trans-unit>
+            <trans-unit id="uJINwgx">
+                <source>description.guided_step_crowdfunding_draw_video_lottery</source>
+                <target>Section « Loterie », celle que vous venez de tirer. Ouvrez-la : son champ « Vidéos » est replié à l'intérieur.</target>
+            </trans-unit>
+            <trans-unit id="yUyQkUz">
+                <source>description.guided_step_crowdfunding_draw_video_open</source>
+                <target>La vidéo du tirage se dépose sur la campagne qui porte la loterie, comme tout le reste.</target>
+            </trans-unit>
+            <trans-unit id="LjfF0xf">
+                <source>description.guided_step_crowdfunding_draw_video_upload</source>
+                <target>Son champ « Vidéos » n'accepte qu'un fichier téléversé. La vidéo s'affiche alors sous les lots, sur la page du tirage, là où les contributeurs vont la chercher.</target>
+            </trans-unit>
+            <trans-unit id="vEi1b6q">
+                <source>description.guided_step_crowdfunding_draw_video_youtube</source>
+                <target>Pour un fichier trop lourd : publiez-le sur YouTube, puis collez son adresse dans les vidéos de la campagne, section « Médias ». C'est le seul des deux champs qui accepte une adresse.</target>
+            </trans-unit>
+            <trans-unit id="13LRffH">
+                <source>description.guided_step_crowdfunding_lottery_add</source>
+                <target>Section « Loterie ». Cochez « Activer » et fixez la date du tirage : le bouton de tirage reste grisé tant qu'elle n'est pas passée.</target>
+            </trans-unit>
+            <trans-unit id="l5evlUU">
+                <source>description.guided_step_crowdfunding_lottery_done</source>
+                <target>Le tirage, lui, ne se fait pas ici : il a lieu sur la page publique de la loterie, à la date fixée, et vous seul y voyez le bouton. Filmez-le : la procédure « Filmer et publier un tirage de loterie » dit comment, et pourquoi il n'y a pas de seconde prise.</target>
+            </trans-unit>
+            <trans-unit id="inMyLuT">
+                <source>description.guided_step_crowdfunding_lottery_edit</source>
+                <target>Le crayon, sur la ligne de la campagne qui porte la loterie.</target>
+            </trans-unit>
+            <trans-unit id="kTuxs8s">
+                <source>description.guided_step_crowdfunding_lottery_expand</source>
+                <target>Une loterie ajoutée se replie sur son titre. Ouvrez-la : « Activer », l'identifiant, la date du tirage et les lots sont tous à l'intérieur.</target>
+            </trans-unit>
+            <trans-unit id="sWi8KFW">
+                <source>description.guided_step_crowdfunding_lottery_open</source>
+                <target>Une loterie appartient à une campagne : ses billets sont des contributions, et son tirage récompense ceux qui ont donné.</target>
+            </trans-unit>
+            <trans-unit id="yv7V5uv">
+                <source>description.guided_step_crowdfunding_lottery_prizes</source>
+                <target>Un lot par rang, du premier au dernier. Un billet ne gagne qu'une fois : un billet déjà sorti est retiré des tirages suivants.</target>
+            </trans-unit>
+            <trans-unit id="PvP917x">
+                <source>description.guided_step_crowdfunding_media_done</source>
+                <target>La page publique montre vos images. Rien à publier de plus : ce qui est enregistré est en ligne.</target>
+            </trans-unit>
+            <trans-unit id="zOOKTt9">
+                <source>description.guided_step_crowdfunding_media_edit</source>
+                <target>Le crayon, sur la ligne de la campagne à illustrer.</target>
+            </trans-unit>
+            <trans-unit id="OyJ02qF">
+                <source>description.guided_step_crowdfunding_media_open</source>
+                <target>Les images d'une campagne se déposent sur sa propre fiche : c'est un formulaire unique, où tout ce qui la compose tient ensemble.</target>
+            </trans-unit>
+            <trans-unit id="eZVMvUv">
+                <source>description.guided_step_crowdfunding_media_photos</source>
+                <target>Section « Médias ». Chaque image ajoutée s'affiche sur la page publique, dans l'ordre où vous les mettez. La première est celle qu'on voit d'abord.</target>
+            </trans-unit>
+            <trans-unit id="h8uTQLk">
+                <source>description.guided_step_crowdfunding_media_videos</source>
+                <target>Juste en dessous. Une vidéo de campagne accepte un fichier téléversé ou, plus simplement, une adresse YouTube : c'est la voie à prendre pour un fichier lourd.</target>
+            </trans-unit>
+            <trans-unit id="Gc5WKsr">
                 <source>label.add_news</source>
                 <target>Ajout de la nouvelle</target>
             </trans-unit>
-            <trans-unit id="lTw6WbB">
+            <trans-unit id="4jca4DY">
                 <source>label.added</source>
                 <target>ajouté !</target>
             </trans-unit>
-            <trans-unit id="PtggqkW">
+            <trans-unit id="8F16cl6">
                 <source>label.allocated</source>
                 <target>Tickets attribués</target>
             </trans-unit>
-            <trans-unit id="B6_Lxb3">
+            <trans-unit id="f7uZKuS">
                 <source>label.amount_achieved</source>
                 <target>Montant réalisé</target>
             </trans-unit>
-            <trans-unit id="HZi42IB">
+            <trans-unit id="rB0F4ao">
                 <source>label.anonymous</source>
                 <target>Anonyme</target>
             </trans-unit>
-            <trans-unit id="AP6ATeW">
+            <trans-unit id="J2_zmdF">
                 <source>label.author</source>
                 <target>Auteur</target>
             </trans-unit>
-            <trans-unit id="YX74SUa">
+            <trans-unit id="oe3QmTO">
                 <source>label.author_presentation</source>
-                <target>Présentation de l&#x27;auteur</target>
+                <target>Présentation de l'auteur</target>
             </trans-unit>
-            <trans-unit id="vYC15uH">
+            <trans-unit id="akzzLrP">
                 <source>label.begin_date</source>
                 <target>Date début</target>
             </trans-unit>
-            <trans-unit id="CfX6fkN">
+            <trans-unit id="OncQEBy">
                 <source>label.blocks</source>
                 <target>Blocs</target>
             </trans-unit>
-            <trans-unit id="WsvnGDa">
+            <trans-unit id="x_zkKv9">
                 <source>label.come_back_on</source>
                 <target>revenez le</target>
             </trans-unit>
-            <trans-unit id="jsVhaPu">
+            <trans-unit id="f7w7ZE0">
                 <source>label.content</source>
                 <target>Contenu</target>
             </trans-unit>
-            <trans-unit id="yKgTN6R">
+            <trans-unit id="uNApWfl">
                 <source>label.contribution_counterparts_reminder</source>
                 <target>Rappel des contreparties choisies :</target>
             </trans-unit>
-            <trans-unit id="3d6iyJ4">
+            <trans-unit id="E5qz2An">
                 <source>label.contribution_thanks</source>
                 <target>Nous vous remercions pour votre contribution et votre confiance !</target>
             </trans-unit>
-            <trans-unit id="sialHtn">
+            <trans-unit id="C5TwOKs">
                 <source>label.contributors</source>
                 <target>Contributeurs</target>
             </trans-unit>
-            <trans-unit id="PVSfj4w">
+            <trans-unit id="blga5_q">
                 <source>label.counterpart_entitles</source>
                 <target>Cette contrepartie vous donne droit à :</target>
             </trans-unit>
-            <trans-unit id="Hprwr99">
+            <trans-unit id="wW2Rykr">
                 <source>label.counterparts</source>
                 <target>Contreparties</target>
             </trans-unit>
-            <trans-unit id="24uIZJb">
+            <trans-unit id="emPIlPf">
                 <source>label.creation</source>
                 <target>Création</target>
             </trans-unit>
-            <trans-unit id="6xR2WhB">
+            <trans-unit id="65YupRM">
                 <source>label.crowdfunding</source>
                 <target>Financement participatif</target>
             </trans-unit>
-            <trans-unit id="SDxnVE7">
+            <trans-unit id="DDD762x">
                 <source>label.crowdfunding_contribution</source>
                 <target>Contribution au financement participatif</target>
             </trans-unit>
-            <trans-unit id="ogIpb8K">
+            <trans-unit id="x5e1r02">
                 <source>label.crowdfunding_ended</source>
                 <target>Financement terminé</target>
             </trans-unit>
-            <trans-unit id="nlA_JAm">
+            <trans-unit id="by.JcZR">
                 <source>label.crowdfunding_not_started</source>
                 <target>Financement non commencé</target>
             </trans-unit>
-            <trans-unit id="intx8VO">
+            <trans-unit id="ppQ3IHB">
                 <source>label.crowdfundings</source>
                 <target>Financements participatifs</target>
             </trans-unit>
-            <trans-unit id="WeIbrxE">
+            <trans-unit id="AdZ6CDL">
                 <source>label.currency</source>
                 <target>Monnaie</target>
             </trans-unit>
-            <trans-unit id="_yJxuuN">
+            <trans-unit id="3oRGY77">
                 <source>label.dates</source>
                 <target>Dates</target>
             </trans-unit>
-            <trans-unit id="fkGOcvD">
+            <trans-unit id="yDl2fKN">
                 <source>label.days_left</source>
                 <target>Jours restants</target>
             </trans-unit>
-            <trans-unit id="yLDxHe2">
+            <trans-unit id="Zb4xuOb">
                 <source>label.description</source>
                 <target>Description</target>
             </trans-unit>
-            <trans-unit id="a7PjnQb">
+            <trans-unit id="VnW7Zhx">
                 <source>label.draw</source>
                 <target>Tirage au sort</target>
             </trans-unit>
-            <trans-unit id="w5quAPt">
+            <trans-unit id="yaZhoxM">
                 <source>label.draw_date</source>
                 <target>Date du tirage au sort</target>
             </trans-unit>
-            <trans-unit id="0hCue4f">
+            <trans-unit id="jBpUgmt">
                 <source>label.enable_lottery</source>
                 <target>Activer la loterie</target>
             </trans-unit>
-            <trans-unit id="7SudCae">
+            <trans-unit id="T1IX8vB">
                 <source>label.end_date</source>
                 <target>Date fin</target>
             </trans-unit>
-            <trans-unit id="QDJKUqu">
+            <trans-unit id="7YIlu03">
                 <source>label.expected_delivery</source>
                 <target>Livraison prévue</target>
             </trans-unit>
-            <trans-unit id="_vpMf6w">
+            <trans-unit id="DCH0Xrv">
                 <source>label.follow_up</source>
                 <target>Nous allons y donner suite très rapidement.</target>
             </trans-unit>
-            <trans-unit id="L487Qeh">
+            <trans-unit id="WUDdLAg">
                 <source>label.funding</source>
                 <target>Financement</target>
             </trans-unit>
-            <trans-unit id="JeD558W">
+            <trans-unit id="B3UCgwK">
                 <source>label.goal</source>
                 <target>Objectif</target>
             </trans-unit>
-            <trans-unit id="zoh06Qn">
+            <trans-unit id="OA0H3bI">
                 <source>label.good_luck</source>
                 <target>Bonne chance !</target>
             </trans-unit>
-            <trans-unit id="P1LHaIr">
+            <trans-unit id="mCTG_Kk">
+                <source>label.guided_project_crowdfunding_blocks</source>
+                <target>Composer le reste de la page</target>
+            </trans-unit>
+            <trans-unit id="Yd3LkjK">
+                <source>label.guided_project_crowdfunding_campaign</source>
+                <target>Créer une campagne</target>
+            </trans-unit>
+            <trans-unit id="3_2DV_Z">
+                <source>label.guided_project_crowdfunding_counterpart</source>
+                <target>Proposer une contrepartie</target>
+            </trans-unit>
+            <trans-unit id="GztwfM0">
+                <source>label.guided_project_crowdfunding_draw_video</source>
+                <target>Publier la vidéo du tirage</target>
+            </trans-unit>
+            <trans-unit id="cx_q9.J">
+                <source>label.guided_project_crowdfunding_lottery</source>
+                <target>Ouvrir une loterie</target>
+            </trans-unit>
+            <trans-unit id="3kvYf07">
+                <source>label.guided_project_crowdfunding_media</source>
+                <target>Illustrer la campagne</target>
+            </trans-unit>
+            <trans-unit id="MG1lau0">
+                <source>label.guided_step_crowdfunding_blocks_add</source>
+                <target>Ajouter des blocs</target>
+            </trans-unit>
+            <trans-unit id="EgFe_pG">
+                <source>label.guided_step_crowdfunding_blocks_done</source>
+                <target>C'est fait</target>
+            </trans-unit>
+            <trans-unit id="DMiqtI_">
+                <source>label.guided_step_crowdfunding_blocks_edit</source>
+                <target>Ouvrir la campagne</target>
+            </trans-unit>
+            <trans-unit id="XxPn7h8">
+                <source>label.guided_step_crowdfunding_blocks_open</source>
+                <target>Vos campagnes</target>
+            </trans-unit>
+            <trans-unit id="y6908zv">
+                <source>label.guided_step_crowdfunding_blocks_save</source>
+                <target>Enregistrer</target>
+            </trans-unit>
+            <trans-unit id="xT38DBt">
+                <source>label.guided_step_crowdfunding_campaign_author</source>
+                <target>L'auteur</target>
+            </trans-unit>
+            <trans-unit id="cp.9zIz">
+                <source>label.guided_step_crowdfunding_campaign_dates</source>
+                <target>Les dates</target>
+            </trans-unit>
+            <trans-unit id="gaDAn30">
+                <source>label.guided_step_crowdfunding_campaign_description</source>
+                <target>La présentation</target>
+            </trans-unit>
+            <trans-unit id=".rDKH9V">
+                <source>label.guided_step_crowdfunding_campaign_done</source>
+                <target>C'est fait</target>
+            </trans-unit>
+            <trans-unit id="Y0TLiku">
+                <source>label.guided_step_crowdfunding_campaign_goal</source>
+                <target>L'objectif</target>
+            </trans-unit>
+            <trans-unit id="0BpmxEC">
+                <source>label.guided_step_crowdfunding_campaign_new</source>
+                <target>Ajouter une campagne</target>
+            </trans-unit>
+            <trans-unit id="2Ku_c9D">
+                <source>label.guided_step_crowdfunding_campaign_open</source>
+                <target>Vos campagnes</target>
+            </trans-unit>
+            <trans-unit id="wTRt9xJ">
+                <source>label.guided_step_crowdfunding_campaign_save</source>
+                <target>Enregistrer</target>
+            </trans-unit>
+            <trans-unit id="YHLyaPS">
+                <source>label.guided_step_crowdfunding_campaign_slug</source>
+                <target>L'adresse de la page</target>
+            </trans-unit>
+            <trans-unit id="EqjHrxc">
+                <source>label.guided_step_crowdfunding_campaign_title</source>
+                <target>Le titre</target>
+            </trans-unit>
+            <trans-unit id="Gd8U_Bz">
+                <source>label.guided_step_crowdfunding_counterpart_add</source>
+                <target>Ajouter une contrepartie</target>
+            </trans-unit>
+            <trans-unit id="E5J5ryF">
+                <source>label.guided_step_crowdfunding_counterpart_done</source>
+                <target>C'est fait</target>
+            </trans-unit>
+            <trans-unit id="eCIGVQv">
+                <source>label.guided_step_crowdfunding_counterpart_edit</source>
+                <target>Ouvrir la campagne</target>
+            </trans-unit>
+            <trans-unit id="f8biVPd">
+                <source>label.guided_step_crowdfunding_counterpart_expand</source>
+                <target>Déplier la contrepartie</target>
+            </trans-unit>
+            <trans-unit id="leZR2g_">
+                <source>label.guided_step_crowdfunding_counterpart_open</source>
+                <target>Vos campagnes</target>
+            </trans-unit>
+            <trans-unit id="OcYkZI6">
+                <source>label.guided_step_crowdfunding_counterpart_quantity</source>
+                <target>La quantité et la livraison</target>
+            </trans-unit>
+            <trans-unit id="GsHraQp">
+                <source>label.guided_step_crowdfunding_counterpart_save</source>
+                <target>Enregistrer</target>
+            </trans-unit>
+            <trans-unit id="DXu9CXs">
+                <source>label.guided_step_crowdfunding_draw_video_done</source>
+                <target>C'est fait</target>
+            </trans-unit>
+            <trans-unit id="81ZTecp">
+                <source>label.guided_step_crowdfunding_draw_video_edit</source>
+                <target>Ouvrir la campagne</target>
+            </trans-unit>
+            <trans-unit id="8UKzmwC">
+                <source>label.guided_step_crowdfunding_draw_video_lottery</source>
+                <target>Déplier la loterie</target>
+            </trans-unit>
+            <trans-unit id="YayYWpV">
+                <source>label.guided_step_crowdfunding_draw_video_open</source>
+                <target>Vos campagnes</target>
+            </trans-unit>
+            <trans-unit id="tMXXy86">
+                <source>label.guided_step_crowdfunding_draw_video_save</source>
+                <target>Enregistrer</target>
+            </trans-unit>
+            <trans-unit id="VRIi4aB">
+                <source>label.guided_step_crowdfunding_draw_video_upload</source>
+                <target>Déposer la vidéo sur la loterie</target>
+            </trans-unit>
+            <trans-unit id="wmjl5ST">
+                <source>label.guided_step_crowdfunding_draw_video_youtube</source>
+                <target>Ou passer par YouTube</target>
+            </trans-unit>
+            <trans-unit id="ElxQNB0">
+                <source>label.guided_step_crowdfunding_lottery_add</source>
+                <target>Ajouter la loterie</target>
+            </trans-unit>
+            <trans-unit id="uHErnL1">
+                <source>label.guided_step_crowdfunding_lottery_done</source>
+                <target>C'est fait</target>
+            </trans-unit>
+            <trans-unit id="wK2a0oP">
+                <source>label.guided_step_crowdfunding_lottery_edit</source>
+                <target>Ouvrir la campagne</target>
+            </trans-unit>
+            <trans-unit id="nGl.xzQ">
+                <source>label.guided_step_crowdfunding_lottery_expand</source>
+                <target>Déplier la loterie</target>
+            </trans-unit>
+            <trans-unit id="6WPGw5q">
+                <source>label.guided_step_crowdfunding_lottery_open</source>
+                <target>Vos campagnes</target>
+            </trans-unit>
+            <trans-unit id="fmpjvMO">
+                <source>label.guided_step_crowdfunding_lottery_prizes</source>
+                <target>Les lots</target>
+            </trans-unit>
+            <trans-unit id="XiQEN7x">
+                <source>label.guided_step_crowdfunding_lottery_save</source>
+                <target>Enregistrer</target>
+            </trans-unit>
+            <trans-unit id="49.9gFs">
+                <source>label.guided_step_crowdfunding_media_done</source>
+                <target>C'est fait</target>
+            </trans-unit>
+            <trans-unit id="xH_WYSz">
+                <source>label.guided_step_crowdfunding_media_edit</source>
+                <target>Ouvrir la campagne</target>
+            </trans-unit>
+            <trans-unit id="BRCuw7c">
+                <source>label.guided_step_crowdfunding_media_open</source>
+                <target>Vos campagnes</target>
+            </trans-unit>
+            <trans-unit id="eiB_Bfr">
+                <source>label.guided_step_crowdfunding_media_photos</source>
+                <target>Les photographies</target>
+            </trans-unit>
+            <trans-unit id="IUbfdAN">
+                <source>label.guided_step_crowdfunding_media_save</source>
+                <target>Enregistrer</target>
+            </trans-unit>
+            <trans-unit id="WJs2doU">
+                <source>label.guided_step_crowdfunding_media_videos</source>
+                <target>Les vidéos</target>
+            </trans-unit>
+            <trans-unit id="CXV._FX">
                 <source>label.i_contribute</source>
                 <target>Je contribue !</target>
             </trans-unit>
-            <trans-unit id="M5fGm6s">
+            <trans-unit id="Cp6DNFT">
                 <source>label.info_crowdfunding</source>
                 <target>Liste de toutes les campagnes de financement participatif. Créez, modifiez ou supprimez une campagne : objectif, dates, présentation, contreparties, actualités, médias et sa loterie.</target>
             </trans-unit>
-            <trans-unit id="28mFigc">
+            <trans-unit id="dNmXFy9">
                 <source>label.last_day</source>
                 <target>Dernier jour !</target>
             </trans-unit>
-            <trans-unit id="dvgScgz">
+            <trans-unit id="d9tKXhO">
                 <source>label.limited_quantity</source>
                 <target>Quantité limitée</target>
             </trans-unit>
-            <trans-unit id="0__9nyP">
+            <trans-unit id="k9iKpUW">
                 <source>label.limited_quantity_reached</source>
                 <target>Quantité limitée atteinte</target>
             </trans-unit>
-            <trans-unit id="S4MzZyq">
+            <trans-unit id="1EQKEoy">
                 <source>label.lottery</source>
                 <target>Loterie</target>
             </trans-unit>
-            <trans-unit id="HppshNh">
+            <trans-unit id="1AwkSUy">
                 <source>label.lottery_identifier</source>
                 <target>Identifiant de loterie</target>
             </trans-unit>
-            <trans-unit id="bb8uV6W">
+            <trans-unit id="Iy19Ook">
                 <source>label.lottery_tickets</source>
                 <target>Tickets de loterie</target>
             </trans-unit>
-            <trans-unit id="PG4vZtB">
+            <trans-unit id="hC0xs1.">
                 <source>label.media</source>
                 <target>Médias</target>
             </trans-unit>
-            <trans-unit id="feH1LnI">
+            <trans-unit id="baXk6pr">
                 <source>label.modification</source>
                 <target>Modification</target>
             </trans-unit>
-            <trans-unit id="Zu9MEoW">
+            <trans-unit id="QiGcdrp">
                 <source>label.news</source>
                 <target>Nouvelles</target>
             </trans-unit>
-            <trans-unit id="bSrxrsZ">
+            <trans-unit id="l7Zf_4n">
                 <source>label.next_smiley</source>
                 <target>Je contribue pour le smiley suivant !</target>
             </trans-unit>
-            <trans-unit id="bhykuCN">
+            <trans-unit id="XgVuHWL">
                 <source>label.no_contributor</source>
                 <target>Pas de contributeurs</target>
             </trans-unit>
-            <trans-unit id="ako4chX">
+            <trans-unit id="3tvL1ry">
                 <source>label.no_counterpart</source>
                 <target>Pas de contreparties</target>
             </trans-unit>
-            <trans-unit id="BxFJtV7">
+            <trans-unit id="pXagOfJ">
                 <source>label.no_crowdfunding</source>
                 <target>Pas de financements participatif</target>
             </trans-unit>
-            <trans-unit id="goIdzk0">
+            <trans-unit id="nGq_qPJ">
                 <source>label.no_more_items_available</source>
-                <target>Il n&#x27;y a plus d&#x27;articles disponibles, désolé</target>
+                <target>Il n'y a plus d'articles disponibles, désolé</target>
             </trans-unit>
-            <trans-unit id="IIeIjIa">
+            <trans-unit id="z.q_kcu">
                 <source>label.no_news</source>
                 <target>Pas de nouvelles</target>
             </trans-unit>
-            <trans-unit id="4aFvk0O">
+            <trans-unit id="iPDiOQk">
                 <source>label.not_yet_drawn</source>
                 <target>Pas encore tiré au sort</target>
             </trans-unit>
-            <trans-unit id="_LlHKem">
+            <trans-unit id="834lNkE">
                 <source>label.only_those_left_message</source>
                 <target>Seuls ceux qui ont laissé un message apparaissent ici</target>
             </trans-unit>
-            <trans-unit id="lfkT1XY">
+            <trans-unit id="ulZFQM6">
                 <source>label.ordered_quantity</source>
                 <target>Quantité commandée</target>
             </trans-unit>
-            <trans-unit id="4AAvIlU">
+            <trans-unit id="z25PhN8">
                 <source>label.our_crowdfundings</source>
                 <target>Nos financements participatifs</target>
             </trans-unit>
-            <trans-unit id="mNK2w8R">
+            <trans-unit id="6BF3TkV">
                 <source>label.outof</source>
                 <target>sur</target>
             </trans-unit>
-            <trans-unit id="Df9s6eu">
+            <trans-unit id="Rfi.GLm">
                 <source>label.position</source>
                 <target>Position</target>
             </trans-unit>
-            <trans-unit id="HqWSbZ3">
+            <trans-unit id="Q1eLOqX">
                 <source>label.presentation</source>
                 <target>Présentation</target>
             </trans-unit>
-            <trans-unit id="reH32Yp">
+            <trans-unit id="xOZNrCi">
                 <source>label.price</source>
                 <target>Prix</target>
             </trans-unit>
-            <trans-unit id="opdviQC">
+            <trans-unit id="OLEiQQo">
                 <source>label.prize_rank</source>
                 <target>Rang du prix</target>
             </trans-unit>
-            <trans-unit id="kw0Mbid">
+            <trans-unit id="vQtGepC">
                 <source>label.prizes</source>
                 <target>Prix</target>
             </trans-unit>
-            <trans-unit id="eUzbPZ6">
+            <trans-unit id="1QBj5KM">
                 <source>label.project</source>
                 <target>Projet</target>
             </trans-unit>
-            <trans-unit id="3l8OWaU">
+            <trans-unit id="SxGGYuv">
                 <source>label.quantity</source>
                 <target>Quantité</target>
             </trans-unit>
-            <trans-unit id="KBtWbXF">
+            <trans-unit id="hWI8aee">
                 <source>label.remaining_quantity</source>
                 <target>Quantité restante</target>
             </trans-unit>
-            <trans-unit id="l4Xwk4V">
+            <trans-unit id="PcJ4rF3">
                 <source>label.requires_shipping</source>
                 <target>Nécessite une expédition</target>
             </trans-unit>
-            <trans-unit id="ZoidhFK">
+            <trans-unit id="B3H3lVW">
                 <source>label.ticket_number</source>
                 <target>Numéro de ticket</target>
             </trans-unit>
-            <trans-unit id="twUWdkS">
+            <trans-unit id="ZYvVtBC">
                 <source>label.tickets_used</source>
-                <target>Seuls certains tickets apparaissent dans l&#x27;animation, mais, évidemment, tous sont utilisés pour le tirage au sort.</target>
+                <target>Seuls certains tickets apparaissent dans l'animation, mais, évidemment, tous sont utilisés pour le tirage au sort.</target>
             </trans-unit>
-            <trans-unit id="FaNcbQP">
+            <trans-unit id="ZIbme0L">
                 <source>label.title</source>
                 <target>Titre</target>
             </trans-unit>
-            <trans-unit id="GNY2KYP">
+            <trans-unit id="zUuBcCL">
                 <source>label.unavailable</source>
                 <target>Indisponible</target>
             </trans-unit>
-            <trans-unit id="GiG3TIF">
+            <trans-unit id="IYGCM0P">
                 <source>label.use</source>
                 <target>Utilisation</target>
             </trans-unit>
-            <trans-unit id="yqQC3Wy">
+            <trans-unit id="9E9CdsW">
                 <source>label.use_for</source>
                 <target>Utilisation pour</target>
             </trans-unit>
-            <trans-unit id="UZxduj0">
+            <trans-unit id="eRXVDgZ">
                 <source>label.videos</source>
                 <target>Vidéos</target>
             </trans-unit>
-            <trans-unit id="9VS1cFh">
+            <trans-unit id="rJFIqnF">
                 <source>label.website</source>
                 <target>Site web</target>
             </trans-unit>
-            <trans-unit id="XEqake_">
+            <trans-unit id="fYqAHL0">
                 <source>label.winner_ticket</source>
                 <target>Ticket gagnant</target>
             </trans-unit>
-            <trans-unit id="RhLeqtL">
+            <trans-unit id="hro5Y9n">
                 <source>label.winning_ticket</source>
                 <target>Ticket gagnant !</target>
             </trans-unit>
-            <trans-unit id="DxUlNeo">
+            <trans-unit id="7jzpD3i">
                 <source>label.youtube_or_upload</source>
                 <target>SOIT un identifiant Youtube, SOIT un fichier vidéo ci-dessous</target>
             </trans-unit>
-            <trans-unit id="gYaiTcO">
+            <trans-unit id="lMuHD.4">
                 <source>text.crowdfundings</source>
                 <target>Tous nos financements participatifs</target>
             </trans-unit>
-            <trans-unit id="bEI1XmL">
+            <trans-unit id="8c.LYZW">
                 <source>text.items_management</source>
                 <target>Ajoutez des éléments SANS médias/fichiers, puis ajoutez-les ensuite, sinon cela ne fonctionne pas.</target>
             </trans-unit>
-            <trans-unit id="hdV8NGF">
+            <trans-unit id="QsMOM4Y">
                 <source>text.lottery_information</source>
                 <target>Certaines contreparties donnent droit à un nombre de tickets de loterie dont les prix figurent ci-dessous.</target>
             </trans-unit>
-            <trans-unit id="94ueBdV">
+            <trans-unit id="oBbhXg0">
                 <source>text.lottery_reminder</source>
                 <target>En contribuant à un financement participatif, vous avez eu droit aux tickets de loterie ci-dessous :</target>
             </trans-unit>
-            <trans-unit id="bJHfWyb">
+            <trans-unit id="9pUi4A6">
                 <source>text.lottery_ticket_winner</source>
                 <target>Vous avez participé à une loterie liée à un financement participatif et vous avez gagné !</target>
             </trans-unit>

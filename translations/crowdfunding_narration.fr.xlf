@@ -1,0 +1,183 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="en" target-language="fr" datatype="plaintext" original="crowdfunding_narration.fr.xlf">
+        <body>
+            <trans-unit id="kec7TEP">
+                <source>narration.crowdfunding_index</source>
+                <target>Ce lien ouvre la page publique des campagnes, celle que voient vos visiteurs.</target>
+            </trans-unit>
+            <trans-unit id="qcPEY4.">
+                <source>narration.crowdfundings</source>
+                <target>Dans la colonne de gauche, ouvrez « Financements participatifs » : toutes les campagnes du site y sont listées, avec leur objectif, leurs dates et ce qu'elles ont déjà reçu.</target>
+            </trans-unit>
+            <trans-unit id="THG7mHh">
+                <source>narration.guided_step_crowdfunding_blocks_add</source>
+                <target>Tout en bas du formulaire, la section « Blocs ». Textes, images, boutons, tableaux : ce sont les mêmes qu'une page du site, et ils se déplacent de la même façon.</target>
+            </trans-unit>
+            <trans-unit id="O99Sw6N">
+                <source>narration.guided_step_crowdfunding_blocks_done</source>
+                <target>Vos blocs s'affichent sur la page publique, sous la présentation et les contreparties.</target>
+            </trans-unit>
+            <trans-unit id="Y7Ua_lX">
+                <source>narration.guided_step_crowdfunding_blocks_edit</source>
+                <target>Ouvrez avec le crayon la campagne à compléter.</target>
+            </trans-unit>
+            <trans-unit id="K.pUwda">
+                <source>narration.guided_step_crowdfunding_blocks_open</source>
+                <target>Le panneau vous ramène sur vos campagnes. Les blocs d'une campagne se composent sur sa fiche, sous les champs qui la décrivent.</target>
+            </trans-unit>
+            <trans-unit id="CQxhpxA">
+                <source>narration.guided_step_crowdfunding_blocks_save</source>
+                <target>Enregistrez pour publier vos blocs.</target>
+            </trans-unit>
+            <trans-unit id="hgUHihv">
+                <source>narration.guided_step_crowdfunding_campaign_author</source>
+                <target>Renseignez l'auteur : qui porte le projet. Le nom, la présentation et le site apparaissent ensemble sur la page, car un contributeur donne à quelqu'un, pas à une cagnotte.</target>
+            </trans-unit>
+            <trans-unit id="iEoj5Fw">
+                <source>narration.guided_step_crowdfunding_campaign_dates</source>
+                <target>Fixez les dates de début et de fin. La campagne n'accepte de contribution qu'entre les deux : avant, et après, ses contreparties ne peuvent plus être ajoutées au panier.</target>
+            </trans-unit>
+            <trans-unit id="fUvUmco">
+                <source>narration.guided_step_crowdfunding_campaign_description</source>
+                <target>Écrivez la présentation, le texte d'accroche en haut de la page publique. Dites en quelques lignes ce que vous voulez faire et pourquoi ; le détail se compose plus bas, en blocs.</target>
+            </trans-unit>
+            <trans-unit id="km659jZ">
+                <source>narration.guided_step_crowdfunding_campaign_done</source>
+                <target>Votre campagne est en ligne. Elle est visible entre ses deux dates, et les parcours suivants la complètent : ses images, ses contreparties, sa loterie.</target>
+            </trans-unit>
+            <trans-unit id="_u8T5ub">
+                <source>narration.guided_step_crowdfunding_campaign_goal</source>
+                <target>Indiquez le montant à atteindre. C'est lui que la jauge de la page publique compare à la somme des contributions déjà reçues.</target>
+            </trans-unit>
+            <trans-unit id="1P3j2XH">
+                <source>narration.guided_step_crowdfunding_campaign_new</source>
+                <target>Ajoutez une campagne avec le bouton en haut de la liste. Le formulaire qui s'ouvre porte tout : la campagne, ses médias, ses contreparties, sa loterie et ses blocs.</target>
+            </trans-unit>
+            <trans-unit id="YXMcYQ.">
+                <source>narration.guided_step_crowdfunding_campaign_open</source>
+                <target>Le panneau vous emmène sur vos campagnes. Toutes celles du site sont listées ici, celle qui se termine le plus tard en tête.</target>
+            </trans-unit>
+            <trans-unit id="RZfB6Sx">
+                <source>narration.guided_step_crowdfunding_campaign_save</source>
+                <target>Enregistrez. La campagne existe, et vous revenez à la liste.</target>
+            </trans-unit>
+            <trans-unit id="0wokC8B">
+                <source>narration.guided_step_crowdfunding_campaign_slug</source>
+                <target>L'adresse de la page se remplit toute seule à partir du titre. Une fois la campagne partagée, ne la changez plus : les liens déjà diffusés cesseraient de fonctionner.</target>
+            </trans-unit>
+            <trans-unit id="uUvuj4C">
+                <source>narration.guided_step_crowdfunding_campaign_title</source>
+                <target>Donnez son titre à la campagne. C'est le nom sous lequel elle apparaît partout : dans la liste, sur sa page, dans le panier et dans les emails envoyés aux contributeurs.</target>
+            </trans-unit>
+            <trans-unit id="7Il9fMx">
+                <source>narration.guided_step_crowdfunding_counterpart_add</source>
+                <target>Dans la section « Contreparties », ajoutez-en une. Donnez-lui un titre, un montant et une description : c'est ce qu'un contributeur lit avant de choisir.</target>
+            </trans-unit>
+            <trans-unit id="s_HfNfd">
+                <source>narration.guided_step_crowdfunding_counterpart_done</source>
+                <target>Votre contrepartie est en vente. Elle s'ajoute au panier comme n'importe quel article, et c'est la boutique qui encaisse : ce module ne touche jamais à l'argent.</target>
+            </trans-unit>
+            <trans-unit id="XOei0WS">
+                <source>narration.guided_step_crowdfunding_counterpart_edit</source>
+                <target>Ouvrez avec le crayon la campagne à laquelle la contrepartie se rattache.</target>
+            </trans-unit>
+            <trans-unit id="idjtIgj">
+                <source>narration.guided_step_crowdfunding_counterpart_expand</source>
+                <target>Une contrepartie ajoutée se replie sur son titre : ouvrez-la, car le prix, la quantité limitée et la date de livraison sont tous à l'intérieur.</target>
+            </trans-unit>
+            <trans-unit id="AOepNij">
+                <source>narration.guided_step_crowdfunding_counterpart_open</source>
+                <target>Le panneau vous ramène sur vos campagnes. Une contrepartie appartient à une campagne et se crée sur sa fiche : il n'y a pas d'écran de contreparties.</target>
+            </trans-unit>
+            <trans-unit id="Hwz.WYF">
+                <source>narration.guided_step_crowdfunding_counterpart_quantity</source>
+                <target>Renseignez la quantité et la livraison. Une quantité limitée retire la contrepartie de la vente une fois épuisée, et le panier refuse d'en commander plus qu'il n'en reste ; laissez zéro pour ne pas limiter.</target>
+            </trans-unit>
+            <trans-unit id="3BidmNS">
+                <source>narration.guided_step_crowdfunding_counterpart_save</source>
+                <target>Enregistrez pour mettre la contrepartie en vente.</target>
+            </trans-unit>
+            <trans-unit id="PbGdfgv">
+                <source>narration.guided_step_crowdfunding_draw_video_done</source>
+                <target>La vidéo est en ligne. Les gagnants ont déjà reçu leur email, envoyé au moment du tirage ; la vidéo est ce que voient tous les autres. Reste à l'annoncer, à la main, sur les réseaux.</target>
+            </trans-unit>
+            <trans-unit id="6kagHVV">
+                <source>narration.guided_step_crowdfunding_draw_video_edit</source>
+                <target>Ouvrez avec le crayon la campagne dont la loterie vient d'être tirée.</target>
+            </trans-unit>
+            <trans-unit id="DhdQf.n">
+                <source>narration.guided_step_crowdfunding_draw_video_lottery</source>
+                <target>Descendez à la section « Loterie », retrouvez celle que vous venez de tirer et ouvrez-la : son champ « Vidéos » est replié à l'intérieur.</target>
+            </trans-unit>
+            <trans-unit id="rPTNs30">
+                <source>narration.guided_step_crowdfunding_draw_video_open</source>
+                <target>Le panneau vous ramène sur vos campagnes. La vidéo du tirage se dépose sur la campagne qui porte la loterie, comme tout le reste.</target>
+            </trans-unit>
+            <trans-unit id="hz6z6mz">
+                <source>narration.guided_step_crowdfunding_draw_video_save</source>
+                <target>Enregistrez pour publier la vidéo.</target>
+            </trans-unit>
+            <trans-unit id="u6SKhwE">
+                <source>narration.guided_step_crowdfunding_draw_video_upload</source>
+                <target>Le champ « Vidéos » de la loterie n'accepte qu'un fichier téléversé. La vidéo s'affiche alors sous les lots, sur la page du tirage, là où les contributeurs vont la chercher.</target>
+            </trans-unit>
+            <trans-unit id="gYNDANU">
+                <source>narration.guided_step_crowdfunding_draw_video_youtube</source>
+                <target>Si le fichier est trop lourd, publiez-le sur YouTube et collez son adresse dans les vidéos de la campagne, section « Médias ». C'est le seul des deux champs qui accepte une adresse.</target>
+            </trans-unit>
+            <trans-unit id="DhIgb5x">
+                <source>narration.guided_step_crowdfunding_lottery_add</source>
+                <target>Dans la section « Loterie », ajoutez-en une. Cochez « Activer » et fixez la date du tirage : le bouton de tirage reste grisé tant qu'elle n'est pas passée.</target>
+            </trans-unit>
+            <trans-unit id="69mg1rJ">
+                <source>narration.guided_step_crowdfunding_lottery_done</source>
+                <target>Votre loterie est ouverte. Le tirage, lui, ne se fait pas ici : il a lieu sur la page publique de la loterie, à la date fixée, et vous seul y voyez le bouton. Filmez-le : la procédure « Filmer et publier un tirage de loterie » dit comment, et pourquoi il n'y a pas de seconde prise.</target>
+            </trans-unit>
+            <trans-unit id="8nQ02jp">
+                <source>narration.guided_step_crowdfunding_lottery_edit</source>
+                <target>Ouvrez avec le crayon la campagne qui portera la loterie.</target>
+            </trans-unit>
+            <trans-unit id="NeYgYnQ">
+                <source>narration.guided_step_crowdfunding_lottery_expand</source>
+                <target>Une loterie ajoutée se replie sur son titre : ouvrez-la, car « Activer », l'identifiant, la date du tirage et les lots sont tous à l'intérieur.</target>
+            </trans-unit>
+            <trans-unit id="yVh0c_B">
+                <source>narration.guided_step_crowdfunding_lottery_open</source>
+                <target>Le panneau vous ramène sur vos campagnes. Une loterie appartient à une campagne : ses billets sont des contributions, et son tirage récompense ceux qui ont donné.</target>
+            </trans-unit>
+            <trans-unit id="Oj0D1Iv">
+                <source>narration.guided_step_crowdfunding_lottery_prizes</source>
+                <target>Ajoutez les lots, un par rang, du premier au dernier. Un billet ne gagne qu'une fois : un billet déjà sorti est retiré des tirages suivants.</target>
+            </trans-unit>
+            <trans-unit id="8grj0tv">
+                <source>narration.guided_step_crowdfunding_lottery_save</source>
+                <target>Enregistrez pour ouvrir la loterie.</target>
+            </trans-unit>
+            <trans-unit id="l79C0HL">
+                <source>narration.guided_step_crowdfunding_media_done</source>
+                <target>La page publique montre vos images. Il n'y a rien à publier de plus : ce qui est enregistré est en ligne.</target>
+            </trans-unit>
+            <trans-unit id="z4IqhU1">
+                <source>narration.guided_step_crowdfunding_media_edit</source>
+                <target>Ouvrez la campagne à illustrer avec le crayon, sur sa ligne.</target>
+            </trans-unit>
+            <trans-unit id="rI9vIoG">
+                <source>narration.guided_step_crowdfunding_media_open</source>
+                <target>Le panneau vous ramène sur vos campagnes. Les images d'une campagne se déposent sur sa propre fiche, un formulaire unique où tout ce qui la compose tient ensemble.</target>
+            </trans-unit>
+            <trans-unit id="qxil.Nu">
+                <source>narration.guided_step_crowdfunding_media_photos</source>
+                <target>Dans la section « Médias », ajoutez vos photographies. Chacune s'affiche sur la page publique, dans l'ordre où vous les mettez, et la première est celle qu'on voit d'abord.</target>
+            </trans-unit>
+            <trans-unit id="yUCyA0E">
+                <source>narration.guided_step_crowdfunding_media_save</source>
+                <target>Enregistrez pour publier vos images.</target>
+            </trans-unit>
+            <trans-unit id="3pamyEn">
+                <source>narration.guided_step_crowdfunding_media_videos</source>
+                <target>Juste en dessous, les vidéos. Une vidéo de campagne accepte un fichier téléversé ou, plus simplement, une adresse YouTube : c'est la voie à prendre pour un fichier lourd.</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

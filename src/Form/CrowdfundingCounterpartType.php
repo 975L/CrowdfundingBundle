@@ -89,6 +89,7 @@ class CrowdfundingCounterpartType extends AbstractType
             ->add('limitedQuantity', IntegerType::class, [
                 'label' => 'label.limited_quantity',
                 'required' => false,
+                'row_attr' => ['data-counterpart-quantity' => '1'],
             ])
             ->add('orderedQuantity', IntegerType::class, [
                 'label' => 'label.ordered_quantity',

@@ -47,6 +47,8 @@ class LotteryType extends AbstractType
                 'by_reference' => false,
                 'label' => 'label.videos',
                 'required' => false,
+                // Nested in a CollectionField printing no id, so its own row carries the marker the draw's guided project points at
+                'row_attr' => ['data-lottery-videos' => '1'],
             ])
             ->add('prizes', CollectionType::class, [
                 'entry_type' => LotteryPrizeType::class,
@@ -55,6 +57,7 @@ class LotteryType extends AbstractType
                 'by_reference' => false,
                 'label' => 'label.prizes',
                 'required' => false,
+                'row_attr' => ['data-lottery-prizes' => '1'],
             ])
         ;
     }

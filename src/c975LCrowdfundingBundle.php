@@ -18,10 +18,6 @@ class c975LCrowdfundingBundle extends AbstractBundle
 {
     public function prependExtension(ContainerConfigurator $configurator, ContainerBuilder $container): void
     {
-        if (!$container->hasExtension('vich_uploader')) {
-            return;
-        }
-
         $container->prependExtensionConfig('framework', [
             'asset_mapper' => [
                 'paths' => [

@@ -75,9 +75,11 @@ class CrowdfundingCrudController extends AbstractCrudController
                 ->setStoredAsCents(true)
                 ->hideOnForm(),
             DateField::new('beginDate')
-                ->setLabel(t('label.begin_date', [], 'crowdfunding')),
+                ->setLabel(t('label.begin_date', [], 'crowdfunding'))
+                ->setRequired(true),
             DateField::new('endDate')
-                ->setLabel(t('label.end_date', [], 'crowdfunding')),
+                ->setLabel(t('label.end_date', [], 'crowdfunding'))
+                ->setRequired(true),
             TextEditorField::new('description')
                 ->setLabel(t('label.description', [], 'crowdfunding'))
                 ->hideOnIndex(),
@@ -101,10 +103,13 @@ class CrowdfundingCrudController extends AbstractCrudController
                 ->hideOnIndex(),
             CollectionField::new('medias')
                 ->hideOnIndex()
-                ->setEntryType(CrowdfundingMediaType::class),
+                ->setEntryType(CrowdfundingMediaType::class)
+                // A CollectionField prints no id of its own, so its row carries the marker the guided projects point at (see CrowdfundingGuidedProjectProvider)
+                ->setFormTypeOption('row_attr', ['data-crowdfunding-medias' => '1']),
             CollectionField::new('videos')
                 ->hideOnIndex()
-                ->setEntryType(CrowdfundingVideoType::class),
+                ->setEntryType(CrowdfundingVideoType::class)
+                ->setFormTypeOption('row_attr', ['data-crowdfunding-videos' => '1']),
 
             // Counterpart management
             FormField::addFieldset(t('label.counterparts', [], 'crowdfunding'))
@@ -112,28 +117,21 @@ class CrowdfundingCrudController extends AbstractCrudController
                 ->hideOnIndex(),
             CollectionField::new('counterparts')
                 ->hideOnIndex()
-                ->setEntryType(CrowdfundingCounterpartType::class),
+                ->setEntryType(CrowdfundingCounterpartType::class)
+                ->setFormTypeOption('row_attr', ['data-crowdfunding-counterparts' => '1']),
 
             // Lottery management
             FormField::addFieldset(t('label.lottery', [], 'crowdfunding'))
                 ->hideOnIndex(),
             CollectionField::new('lotteries')
                 ->hideOnIndex()
-                ->setEntryType(LotteryType::class),
+                ->setEntryType(LotteryType::class)
+                ->setFormTypeOption('row_attr', ['data-crowdfunding-lotteries' => '1']),
 
             // What an admin composes the rest of the page with, on top of the fields above
             FormField::addFieldset(t('label.blocks', [], 'crowdfunding'))
                 ->hideOnIndex(),
-            CollectionField::new('blocks')
-                ->setLabel(false)
-                ->hideOnIndex()
-                // CollectionField's "col-md-8 col-xxl-7" default would leave a nested block editor working in 7/12 of the row
-                ->setColumns('col-12')
-                ->setEntryType(BlockType::class)
-                ->allowAdd()
-                ->allowDelete()
-                ->setFormTypeOption('by_reference', false)
-                ->setFormTypeOption('row_attr', $this->blockMoveRowAttrBuilder->build(CrowdfundingBlockOwnerResolver::TYPE_CROWDFUNDING, $crowdfunding instanceof Crowdfunding ? $crowdfunding->getId() : null)),
+            $this->blocksField($crowdfunding),
 
             // Dates
             DateTimeField::new('creation')
@@ -147,6 +145,22 @@ class CrowdfundingCrudController extends AbstractCrudController
                 ->setFormTypeOption('disabled', 'disabled')
                 ->onlyOnDetail(),
         ];
+    }
+
+    // The block editor, the one field carrying enough of its own configuration to read better named than inlined - its row_attr is UiBundle's, which is what the move buttons of a block read their target from
+    private function blocksField(mixed $crowdfunding): CollectionField
+    {
+        return CollectionField::new('blocks')
+            ->setLabel(false)
+            ->hideOnIndex()
+            // CollectionField's "col-md-8 col-xxl-7" default would leave a nested block editor working in 7/12 of the row
+            ->setColumns('col-12')
+            ->setEntryType(BlockType::class)
+            ->allowAdd()
+            ->allowDelete()
+            ->setFormTypeOption('by_reference', false)
+            ->setFormTypeOption('row_attr', $this->blockMoveRowAttrBuilder->build(CrowdfundingBlockOwnerResolver::TYPE_CROWDFUNDING, $crowdfunding instanceof Crowdfunding ? $crowdfunding->getId() : null))
+        ;
     }
 
     public function configureActions(Actions $actions): Actions

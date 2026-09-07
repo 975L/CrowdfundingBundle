@@ -84,11 +84,8 @@ class TranslationDomainTest extends TestCase
         }
     }
 
-    /**
-     * Every key this bundle resolves in its own domain, keyed by the file naming it.
-     *
-     * @return array<string, string>
-     */
+    // Every key this bundle resolves in its own domain, keyed by the file naming it
+    /** @return array<string, string> */
     private function usedKeys(): array
     {
         $used = [];
@@ -96,52 +93,84 @@ class TranslationDomainTest extends TestCase
         foreach ($this->sourceFiles() as $file) {
             $contents = (string) file_get_contents($file);
             $name = basename($file);
-            $default = str_contains($contents, "trans_default_domain 'crowdfunding'");
 
-            // Twig: 'key'|trans({}, 'crowdfunding'), or without a domain in a file declaring the default one
-            // The parentheses are optional in Twig: "'key'|trans" under a trans_default_domain is how the emails named theirs, and a regexp asking for them missed every one
-            preg_match_all("/'([a-zA-Z0-9_.]+)'\\s*\\|\\s*trans(?:\\(\\s*(?:\\{[^}]*\\})?\\s*(?:,\\s*'([a-z_]+)')?)?/", $contents, $twig, PREG_SET_ORDER);
-            foreach ($twig as $match) {
-                $domain = $match[2] ?? '';
-                if ('crowdfunding' === $domain || ('' === $domain && $default)) {
-                    $used[$match[1]] = $name;
-                }
-            }
-
-            // PHP: trans('key', [], 'crowdfunding') and the t() the CRUD fields take
-            preg_match_all("/(?:trans|\\bt)\\(\\s*'([a-zA-Z0-9_.]+)'\\s*,\\s*\\[\\]\\s*,\\s*'crowdfunding'\\s*\\)/", $contents, $php);
-            foreach ($php[1] as $key) {
+            foreach ($this->keysNamedIn($file, $contents) as $key) {
                 $used[$key] = $name;
-            }
-
-            // The email chain names its keys as bare arguments - a subject key handed to the sender, a sentence handed to the template provider - which no trans() call spells out. Both directories only ever name this bundle's own catalogue
-            if (str_contains($file, '/src/Email/') || str_contains($file, '/src/MessageHandler/')) {
-                preg_match_all("/'((?:label|text)\\.[a-zA-Z0-9_.]+)'/", $contents, $emails);
-                foreach ($emails[1] as $key) {
-                    // The subject prefix reads its own word in PaymentBundle's catalogue, the bundle that declares the "shop-name" key beside it
-                    if (str_contains($contents, sprintf("'%s', [], 'payment'", $key))) {
-                        continue;
-                    }
-
-                    $used[$key] = $name;
-                }
-            }
-
-            // A form type resolving its own labels in the bundle's domain: they carry no domain of their own
-            if (str_contains($contents, "'translation_domain' => 'crowdfunding'")) {
-                preg_match_all("/'(?:label|help)' => '([a-z][a-zA-Z0-9_]*\\.[a-zA-Z0-9_.]+)'/", $contents, $labels);
-                foreach ($labels[1] as $key) {
-                    $used[$key] = $name;
-                }
             }
         }
 
         return $used;
     }
 
-    /**
-     * @return array<string, string>
-     */
+    // The four ways a key is named, a file being read by whichever of them applies to it
+    /** @return list<string> */
+    private function keysNamedIn(string $file, string $contents): array
+    {
+        $keys = $this->twigKeys($contents);
+        $keys = array_merge($keys, $this->phpKeys($contents));
+
+        // The email chain names its keys as bare arguments - a subject key handed to the sender, a sentence handed to the template provider - which no trans() call spells out. Both directories only ever name this bundle's own catalogue
+        if (str_contains($file, '/src/Email/') || str_contains($file, '/src/MessageHandler/')) {
+            $keys = array_merge($keys, $this->emailKeys($contents));
+        }
+
+        // A form type resolving its own labels in the bundle's domain, and the menu and guided-project providers naming theirs the same way, carry no domain of their own; "narration" is left out, resolved in the "_narration" domain NarrationCatalogueTest holds
+        if (str_contains($contents, "'translation_domain' => 'crowdfunding'")) {
+            $keys = array_merge($keys, $this->declaredLabelKeys($contents));
+        }
+
+        return $keys;
+    }
+
+    // Twig: 'key'|trans({}, 'crowdfunding'), or without a domain in a file declaring the default one - the parentheses being optional, "'key'|trans" is how the emails named theirs and a regexp asking for them missed every one
+    /** @return list<string> */
+    private function twigKeys(string $contents): array
+    {
+        $default = str_contains($contents, "trans_default_domain 'crowdfunding'");
+        preg_match_all("/'([a-zA-Z0-9_.]+)'\\s*\\|\\s*trans(?:\\(\\s*(?:\\{[^}]*\\})?\\s*(?:,\\s*'([a-z_]+)')?)?/", $contents, $matches, PREG_SET_ORDER);
+        $keys = [];
+
+        foreach ($matches as $match) {
+            $domain = $match[2] ?? '';
+            if ('crowdfunding' === $domain || ('' === $domain && $default)) {
+                $keys[] = $match[1];
+            }
+        }
+
+        return $keys;
+    }
+
+    // PHP: trans('key', [], 'crowdfunding') and the t() the CRUD fields take
+    /** @return list<string> */
+    private function phpKeys(string $contents): array
+    {
+        preg_match_all("/(?:trans|\\bt)\\(\\s*'([a-zA-Z0-9_.]+)'\\s*,\\s*\\[\\]\\s*,\\s*'crowdfunding'\\s*\\)/", $contents, $matches);
+
+        return $matches[1];
+    }
+
+    // The subject prefix reads its own word in PaymentBundle's catalogue, the bundle that declares the "shop-name" key beside it
+    /** @return list<string> */
+    private function emailKeys(string $contents): array
+    {
+        preg_match_all("/'((?:label|text)\\.[a-zA-Z0-9_.]+)'/", $contents, $matches);
+
+        return array_values(array_filter(
+            $matches[1],
+            static fn (string $key): bool => !str_contains($contents, sprintf("'%s', [], 'payment'", $key))
+        ));
+    }
+
+    // The labels a form type or a provider declares as plain array values, resolved in the domain the class itself names
+    /** @return list<string> */
+    private function declaredLabelKeys(string $contents): array
+    {
+        preg_match_all("/'(?:label|help|description)' => '([a-z][a-zA-Z0-9_]*\\.[a-zA-Z0-9_.]+)'/", $contents, $matches);
+
+        return $matches[1];
+    }
+
+    /** @return array<string, string> */
     private function catalog(string $locale): array
     {
         $xliff = simplexml_load_file(__DIR__ . '/../translations/crowdfunding.' . $locale . '.xlf');
@@ -154,9 +183,7 @@ class TranslationDomainTest extends TestCase
         return $translations;
     }
 
-    /**
-     * @return list<string>
-     */
+    /** @return list<string> */
     private function sourceFiles(): array
     {
         $files = [];

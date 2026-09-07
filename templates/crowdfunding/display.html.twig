@@ -17,7 +17,7 @@
         <twig:c975LCrowdfunding:Crowdfunding:Author name="{{ crowdfunding.authorName }}" presentation="{{ crowdfunding.authorPresentation }}" website="{{ crowdfunding.authorWebsite }}"/>
         <twig:c975LCrowdfunding:Crowdfunding:Dates beginDate="{{ crowdfunding.beginDate }}" endDate="{{ crowdfunding.endDate }}"/>
         <twig:c975LCrowdfunding:Crowdfunding:Presentation crowdfunding="{{ crowdfunding }}"/>
-        <twig:c975LUi:Slider:Slider slides="{{ crowdfunding.medias }}" id="slider" class="img-500" duration="3500"/>
+        <twig:c975LUi:Slider:Slider media="{{ crowdfunding.medias }}" id="slider" class="img-500" duration="3500" fallbackAlt="{{ crowdfunding.title }}"/>
         <twig:c975LCrowdfunding:Lottery:Lotteries lotteries="{{ crowdfunding.lotteries }}"/>
         <twig:c975LCrowdfunding:Crowdfunding:CounterParts counterparts="{{ crowdfunding.counterparts }}"/>
         <twig:c975LCrowdfunding:Crowdfunding:NewsCollection newsCollection="{{ crowdfunding.news }}" form="{{ form }}"/>

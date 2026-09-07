@@ -1,7 +1,23 @@
 # Changelog
 
-## Unreleased
+## v1.0.0
 
+Guided projects, admin procedures and the fixes the review turned up
+
+- Six guided projects in the 9000 block `GuidedProjectProviderInterface` reserves this bundle - the campaign, its media, a counterpart, its blocks, the lottery and the draw's video - where it was the one bundle of the ecosystem contributing none (07/09/2026)
+- A `filmer-tirage-loterie` procedure, read by the dashboard's assistant: a draw is written and mailed on the very click that ends it, so the recording has to be running before it, and no guided project can say that - the panel only lives in the back office, and the draw happens on the lottery's public page (07/09/2026)
+- The four collections of the campaign form carry a `data-crowdfunding-*` marker and the lottery's two a `data-lottery-*` one, a `CollectionField` printing no id its steps could point at (07/09/2026)
+- The menu entry and the public link carry the `description` and the `narration` the onboarding tour reads and speaks, where both showed a bare label (07/09/2026)
+- `translations/crowdfunding_narration.{en,fr}.xlf`, the spoken half of the catalogue the films of the back office read (07/09/2026)
+- A `publier-actualite-campagne` procedure: the CRUD declares no `news` collection, so the form exists nowhere in the back office and an admin looking for it in management never finds it (07/09/2026)
+- The counterpart parcours opens the collection entry before pointing at `limitedQuantity`, which `CrowdfundingCounterpartType` now marks with a `data-counterpart-quantity` row attribute: two steps ran on the same highlight, the second outlining a folded field (07/09/2026)
+- `CrowdfundingBasketItemProvider::validateAddition()` refuses a campaign with no dates, and the CRUD requires both: the columns are nullable, the button read as open and the click threw on `format()` (07/09/2026)
+- `CrowdfundingController::display()` reads the campaign's owner nullsafe: a campaign with no `user_id` was fatal for every logged-in visitor, admins included, and fine for anonymous ones (07/09/2026)
+- The AssetMapper path is registered unconditionally, where a leftover `vich_uploader` guard subordinated the draw button's JavaScript to an unrelated extension (07/09/2026)
+- The draw's error path calls `Handlers.displayMessage()` alone: a call to a `showError()` no controller declares threw, leaving the drum spinning and every Draw button disabled until the page was reloaded (07/09/2026)
+- `label.lottery` reads "Lottery" in the English catalogue, where it was the last French target left in it (07/09/2026)
+- The campaign's slider follows UiBundle's own contract, `media` and `fallbackAlt` where it passed `slides` (07/09/2026)
+- `Entity\Media` answers what UiBundle's slider and image read off any media: the mime type deduced from the stored name, and the texts and dimensions this hierarchy stores none of (07/09/2026)
 - The bundle ships its own `translations/crowdfunding.{en,fr,es}.xlf` and reads a `crowdfunding` domain: every label was resolved in ShopBundle's `shop` domain, a bundle this package has not depended on since 23/07/2026 - a site running a campaign without the shop showed raw keys on every page (07/09/2026) [BC-Break]
 - The email subject prefix reads its `label.shop` from PaymentBundle's catalogue, the bundle that declares the `shop-name` key beside it (07/09/2026)
 - Fourteen timestamps built a `DateTimeImmutable` for a `DATETIME_MUTABLE` column, which Doctrine refuses at flush: adding a counterpart to the basket, registering a contributor, generating lottery tickets and drawing a prize all threw (07/09/2026)
@@ -9,6 +25,7 @@
 - `EmailService` called `ConfigServiceInterface::has()`, a method that interface does not declare - the six `shop-email-*-name` keys are read with `get() ?? ''` instead (07/09/2026)
 - `phpstan.dist.neon` dropped an `identifier: phpDoc.parseError` carrying no `path`, which silenced that identifier over the whole bundle while no file in `src/` needed it (07/09/2026)
 - `composer.json` gained the `audit-deps` script and put it first in `qa`, and the workflow its *Avis de sécurité des dépendances* step, as the bundles in production have (07/09/2026)
+- `composer qa` runs `mess` and `lizard` as ShopBundle does, and `phpmd.xml.dist` drops `NPathComplexity` the same way: the mess detector's configuration was shipped without any script calling it, and neither complexity threshold was ever read (07/09/2026)
 - `c975l/core-bundle` is required in `^1.23` and `c975l/payment-bundle` in `^6.8`, the versions published today (07/09/2026)
 - `.gitattributes` keeps the whole development toolchain out of the Composer archive, where only three paths were listed (07/09/2026)
 - The lint configurations are CoreBundle's to the byte again, and `.markdownlint.json`, `.stylelintrc.json`, `LICENSE` and `.github/FUNDING.yml` are shipped, all four missing (07/09/2026)

@@ -60,7 +60,7 @@ class CrowdfundingController extends AbstractController
         // Defines form
         $form = null;
         $user = $this->getUser();
-        if ($user instanceof UserInterface && ($user->getId() === $crowdfunding->getUser()->getId() || $this->isGranted($this->configService->get('site-role-admin')))) {
+        if ($user instanceof UserInterface && ($user->getId() === $crowdfunding->getUser()?->getId() || $this->isGranted($this->configService->get('site-role-admin')))) {
             $news = new CrowdfundingNews();
             $form = $this->crowdfundingService->createForm('news', $news);
             $form->handleRequest($request);

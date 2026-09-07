@@ -72,7 +72,6 @@ export default class extends Controller {
             }, duration);
         })
         .catch(() => {
-            this.showError("Failed to draw a winner. Please try again.");
             Handlers.displayMessage(Handlers.translate("failed.draw.winner"), "alert-danger");
 
             // Resets interface

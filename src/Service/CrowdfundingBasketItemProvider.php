@@ -47,6 +47,11 @@ class CrowdfundingBasketItemProvider implements BasketItemProviderInterface
             return $this->translator->trans('label.unavailable', [], 'crowdfunding');
         }
 
+        // A campaign without dates is not open for contributions
+        if (null === $item->getCrowdfunding()->getBeginDate() || null === $item->getCrowdfunding()->getEndDate()) {
+            return $this->translator->trans('label.unavailable', [], 'crowdfunding');
+        }
+
         $beginDatetime = new \DateTime($item->getCrowdfunding()->getBeginDate()->format('Y-m-d 00:00:00'));
         $endDatetime = new \DateTime($item->getCrowdfunding()->getEndDate()->format('Y-m-d 23:59:59'));
         if ($beginDatetime > new \DateTime()) {

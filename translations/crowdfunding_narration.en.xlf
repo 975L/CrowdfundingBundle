@@ -1,0 +1,183 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="en" target-language="en" datatype="plaintext" original="crowdfunding_narration.en.xlf">
+        <body>
+            <trans-unit id="kec7TEP">
+                <source>narration.crowdfunding_index</source>
+                <target>This link opens the public page of the campaigns, the one your visitors see.</target>
+            </trans-unit>
+            <trans-unit id="qcPEY4.">
+                <source>narration.crowdfundings</source>
+                <target>In the left-hand column, open "Crowdfundings": every campaign of the site is listed there, with its goal, its dates and what it has already received.</target>
+            </trans-unit>
+            <trans-unit id="THG7mHh">
+                <source>narration.guided_step_crowdfunding_blocks_add</source>
+                <target>At the very bottom of the form, the "Blocks" section. Texts, pictures, buttons, tables: they are the same as a page of the site's, and they move around the same way.</target>
+            </trans-unit>
+            <trans-unit id="O99Sw6N">
+                <source>narration.guided_step_crowdfunding_blocks_done</source>
+                <target>Your blocks show on the public page, below the presentation and the counterparts.</target>
+            </trans-unit>
+            <trans-unit id="Y7Ua_lX">
+                <source>narration.guided_step_crowdfunding_blocks_edit</source>
+                <target>Open with the pencil the campaign to fill in.</target>
+            </trans-unit>
+            <trans-unit id="K.pUwda">
+                <source>narration.guided_step_crowdfunding_blocks_open</source>
+                <target>The panel takes you back to your campaigns. A campaign's blocks are composed on its sheet, below the fields describing it.</target>
+            </trans-unit>
+            <trans-unit id="CQxhpxA">
+                <source>narration.guided_step_crowdfunding_blocks_save</source>
+                <target>Save to publish your blocks.</target>
+            </trans-unit>
+            <trans-unit id="hgUHihv">
+                <source>narration.guided_step_crowdfunding_campaign_author</source>
+                <target>Fill in the author: who carries the project. The name, the presentation and the website appear together on the page, because a contributor gives to somebody, not to a pot.</target>
+            </trans-unit>
+            <trans-unit id="iEoj5Fw">
+                <source>narration.guided_step_crowdfunding_campaign_dates</source>
+                <target>Set the beginning and end dates. The campaign only takes contributions between the two: before, and after, its counterparts can no longer be added to the basket.</target>
+            </trans-unit>
+            <trans-unit id="fUvUmco">
+                <source>narration.guided_step_crowdfunding_campaign_description</source>
+                <target>Write the presentation, the opening text at the top of the public page. Say in a few lines what you want to do and why; the detail is composed further down, in blocks.</target>
+            </trans-unit>
+            <trans-unit id="km659jZ">
+                <source>narration.guided_step_crowdfunding_campaign_done</source>
+                <target>Your campaign is online. It is visible between its two dates, and the parcours that follow fill it in: its pictures, its counterparts, its lottery.</target>
+            </trans-unit>
+            <trans-unit id="_u8T5ub">
+                <source>narration.guided_step_crowdfunding_campaign_goal</source>
+                <target>State the amount to reach. It is what the public page's gauge compares the contributions already received to.</target>
+            </trans-unit>
+            <trans-unit id="1P3j2XH">
+                <source>narration.guided_step_crowdfunding_campaign_new</source>
+                <target>Add a campaign with the button at the top of the list. The form that opens carries everything: the campaign, its media, its counterparts, its lottery and its blocks.</target>
+            </trans-unit>
+            <trans-unit id="YXMcYQ.">
+                <source>narration.guided_step_crowdfunding_campaign_open</source>
+                <target>The panel takes you to your campaigns. Every one of the site's is listed here, the one ending latest first.</target>
+            </trans-unit>
+            <trans-unit id="RZfB6Sx">
+                <source>narration.guided_step_crowdfunding_campaign_save</source>
+                <target>Save. The campaign exists, and you are back on the list.</target>
+            </trans-unit>
+            <trans-unit id="0wokC8B">
+                <source>narration.guided_step_crowdfunding_campaign_slug</source>
+                <target>The page's address fills itself in from the title. Once the campaign has been shared, leave it alone: the links already out there would stop working.</target>
+            </trans-unit>
+            <trans-unit id="uUvuj4C">
+                <source>narration.guided_step_crowdfunding_campaign_title</source>
+                <target>Give the campaign its title. It is the name it appears under everywhere: in the list, on its page, in the basket and in the emails sent to contributors.</target>
+            </trans-unit>
+            <trans-unit id="7Il9fMx">
+                <source>narration.guided_step_crowdfunding_counterpart_add</source>
+                <target>In the "Counterparts" section, add one. Give it a title, an amount and a description: it is what a contributor reads before choosing.</target>
+            </trans-unit>
+            <trans-unit id="s_HfNfd">
+                <source>narration.guided_step_crowdfunding_counterpart_done</source>
+                <target>Your counterpart is on sale. It is added to the basket like any other item, and the shop is what takes the money: this bundle never handles it.</target>
+            </trans-unit>
+            <trans-unit id="XOei0WS">
+                <source>narration.guided_step_crowdfunding_counterpart_edit</source>
+                <target>Open with the pencil the campaign the counterpart belongs to.</target>
+            </trans-unit>
+            <trans-unit id="idjtIgj">
+                <source>narration.guided_step_crowdfunding_counterpart_expand</source>
+                <target>A counterpart once added folds onto its title: open it, because the price, the limited quantity and the expected delivery are all inside.</target>
+            </trans-unit>
+            <trans-unit id="AOepNij">
+                <source>narration.guided_step_crowdfunding_counterpart_open</source>
+                <target>The panel takes you back to your campaigns. A counterpart belongs to a campaign and is created on its sheet: there is no counterparts screen.</target>
+            </trans-unit>
+            <trans-unit id="Hwz.WYF">
+                <source>narration.guided_step_crowdfunding_counterpart_quantity</source>
+                <target>Fill in the quantity and the delivery. A limited quantity takes the counterpart off sale once it runs out, and the basket refuses to order more than what is left; leave zero not to limit it.</target>
+            </trans-unit>
+            <trans-unit id="3BidmNS">
+                <source>narration.guided_step_crowdfunding_counterpart_save</source>
+                <target>Save to put the counterpart on sale.</target>
+            </trans-unit>
+            <trans-unit id="PbGdfgv">
+                <source>narration.guided_step_crowdfunding_draw_video_done</source>
+                <target>The video is online. The winners have already had their email, sent at the moment of the draw; the video is what everybody else sees. It remains to be announced, by hand, on social networks.</target>
+            </trans-unit>
+            <trans-unit id="6kagHVV">
+                <source>narration.guided_step_crowdfunding_draw_video_edit</source>
+                <target>Open with the pencil the campaign whose lottery has just been drawn.</target>
+            </trans-unit>
+            <trans-unit id="DhdQf.n">
+                <source>narration.guided_step_crowdfunding_draw_video_lottery</source>
+                <target>Go down to the "Lottery" section, find the one you have just drawn and open it: its "Videos" field is folded up inside.</target>
+            </trans-unit>
+            <trans-unit id="rPTNs30">
+                <source>narration.guided_step_crowdfunding_draw_video_open</source>
+                <target>The panel takes you back to your campaigns. The draw's video goes on the campaign carrying the lottery, like everything else.</target>
+            </trans-unit>
+            <trans-unit id="hz6z6mz">
+                <source>narration.guided_step_crowdfunding_draw_video_save</source>
+                <target>Save to publish the video.</target>
+            </trans-unit>
+            <trans-unit id="u6SKhwE">
+                <source>narration.guided_step_crowdfunding_draw_video_upload</source>
+                <target>The lottery's "Videos" field only takes an uploaded file. The video then shows under the prizes, on the draw's own page, where contributors go looking for it.</target>
+            </trans-unit>
+            <trans-unit id="gYNDANU">
+                <source>narration.guided_step_crowdfunding_draw_video_youtube</source>
+                <target>If the file is too heavy, publish it on YouTube and paste its address into the campaign's videos, in the "Media" section. It is the only one of the two fields taking an address.</target>
+            </trans-unit>
+            <trans-unit id="DhIgb5x">
+                <source>narration.guided_step_crowdfunding_lottery_add</source>
+                <target>In the "Lottery" section, add one. Tick "Enable" and set the draw's date: the draw button stays greyed out until it has passed.</target>
+            </trans-unit>
+            <trans-unit id="69mg1rJ">
+                <source>narration.guided_step_crowdfunding_lottery_done</source>
+                <target>Your lottery is open. The draw itself does not happen here: it takes place on the lottery's public page, at the date set, and you alone see the button there. Film it: the "Film and publish a lottery draw" procedure says how, and why there is no second take.</target>
+            </trans-unit>
+            <trans-unit id="8nQ02jp">
+                <source>narration.guided_step_crowdfunding_lottery_edit</source>
+                <target>Open with the pencil the campaign that will carry the lottery.</target>
+            </trans-unit>
+            <trans-unit id="NeYgYnQ">
+                <source>narration.guided_step_crowdfunding_lottery_expand</source>
+                <target>A lottery once added folds onto its title: open it, because "Enable", the identifier, the draw's date and the prizes are all inside.</target>
+            </trans-unit>
+            <trans-unit id="yVh0c_B">
+                <source>narration.guided_step_crowdfunding_lottery_open</source>
+                <target>The panel takes you back to your campaigns. A lottery belongs to a campaign: its tickets are contributions, and its draw rewards those who gave.</target>
+            </trans-unit>
+            <trans-unit id="Oj0D1Iv">
+                <source>narration.guided_step_crowdfunding_lottery_prizes</source>
+                <target>Add the prizes, one per rank, from the first to the last. A ticket only wins once: a ticket already drawn is taken out of the draws that follow.</target>
+            </trans-unit>
+            <trans-unit id="8grj0tv">
+                <source>narration.guided_step_crowdfunding_lottery_save</source>
+                <target>Save to open the lottery.</target>
+            </trans-unit>
+            <trans-unit id="l79C0HL">
+                <source>narration.guided_step_crowdfunding_media_done</source>
+                <target>The public page shows your pictures. There is nothing more to publish: what is saved is online.</target>
+            </trans-unit>
+            <trans-unit id="z4IqhU1">
+                <source>narration.guided_step_crowdfunding_media_edit</source>
+                <target>Open the campaign to illustrate with the pencil, on its row.</target>
+            </trans-unit>
+            <trans-unit id="rI9vIoG">
+                <source>narration.guided_step_crowdfunding_media_open</source>
+                <target>The panel takes you back to your campaigns. A campaign's pictures go on its own sheet, a single form where everything composing it holds together.</target>
+            </trans-unit>
+            <trans-unit id="qxil.Nu">
+                <source>narration.guided_step_crowdfunding_media_photos</source>
+                <target>In the "Media" section, add your photographs. Each one shows on the public page, in the order you put them in, and the first is the one seen first.</target>
+            </trans-unit>
+            <trans-unit id="yUCyA0E">
+                <source>narration.guided_step_crowdfunding_media_save</source>
+                <target>Save to publish your pictures.</target>
+            </trans-unit>
+            <trans-unit id="3pamyEn">
+                <source>narration.guided_step_crowdfunding_media_videos</source>
+                <target>Just below, the videos. A campaign video takes an uploaded file or, more simply, a YouTube address: that is the way to go for a heavy file.</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

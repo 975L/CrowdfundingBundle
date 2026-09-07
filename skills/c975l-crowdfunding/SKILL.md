@@ -1,6 +1,6 @@
 ---
 name: c975l-crowdfunding
-description: "Use this skill when working on crowdfunding campaigns or the lottery of a c975L site — a campaign and its counterparts, contributing through the basket, the news an author publishes, the campaign's media and videos, and the lottery tied to a campaign with its prizes, its tickets and its draw. Covers what the basket copies of a counterpart, when a contributor row is written, and why a ticket is drawn only once. Triggers on: Crowdfunding, CrowdfundingCounterpart, CrowdfundingContributor, CrowdfundingContributorCounterpart, CrowdfundingNews, CrowdfundingMedia, CrowdfundingVideo, Lottery, LotteryPrize, LotteryTicket, LotteryVideo, CrowdfundingBasketItemProvider, CrowdfundingService, CrowdfundingCounterpartService, LotteryService, crowdfunding_index, crowdfunding_display, lottery_display, lottery_draw_prize, drawWinner, generateTicketsForContributor, generateTicketNumber, validateAddition, validateCheckout, onBasketValidated, onBasketPaid, limitedQuantity, orderedQuantity, lotteryTickets, amountGoal, amountAchieved, beginDate, endDate, CrowdfundingEmailTemplateProvider, CrowdfundingEmailFactory, CrowdfundingEmailSender, crowdfunding_contribution, lottery_tickets, lottery_ticket_winner, CrowdfundingSitemapProvider, CrowdfundingBackupPathProvider, CrowdfundingBlockOwnerResolver, c975l:crowdfunding:migrate-legacy-tables, shop_crowdfunding, crowdfunding_media."
+description: "Use this skill when working on crowdfunding campaigns or the lottery of a c975L site — a campaign and its counterparts, contributing through the basket, the news an author publishes, the campaign's media and videos, and the lottery tied to a campaign with its prizes, its tickets and its draw. Covers what the basket copies of a counterpart, when a contributor row is written, and why a ticket is drawn only once. Triggers on: Crowdfunding, CrowdfundingCounterpart, CrowdfundingContributor, CrowdfundingContributorCounterpart, CrowdfundingNews, CrowdfundingMedia, CrowdfundingVideo, Lottery, LotteryPrize, LotteryTicket, LotteryVideo, CrowdfundingBasketItemProvider, CrowdfundingService, CrowdfundingCounterpartService, LotteryService, crowdfunding_index, crowdfunding_display, lottery_display, lottery_draw_prize, drawWinner, generateTicketsForContributor, generateTicketNumber, validateAddition, validateCheckout, onBasketValidated, onBasketPaid, limitedQuantity, orderedQuantity, lotteryTickets, amountGoal, amountAchieved, beginDate, endDate, CrowdfundingEmailTemplateProvider, CrowdfundingEmailFactory, CrowdfundingEmailSender, crowdfunding_contribution, lottery_tickets, lottery_ticket_winner, CrowdfundingSitemapProvider, CrowdfundingBackupPathProvider, CrowdfundingBlockOwnerResolver, c975l:crowdfunding:migrate-legacy-tables, shop_crowdfunding, crowdfunding_media, CrowdfundingGuidedProjectProvider, ProcedureProvider, procedures.json, filmer-tirage-loterie, publier-actualite-campagne, crowdfunding_narration."
 ---
 
 # c975L CrowdfundingBundle — campaigns, counterparts and the lottery
@@ -10,7 +10,7 @@ description: "Use this skill when working on crowdfunding campaigns or the lotte
 **Package:** `c975l/crowdfunding-bundle` · **Bundle:** `c975L\CrowdfundingBundle\`
 
 **Key source paths** (relative to the package root):
-`src/Entity/Crowdfunding.php`, `src/Entity/CrowdfundingCounterpart.php`, `src/Entity/CrowdfundingContributor.php`, `src/Entity/Lottery.php`, `src/Entity/LotteryPrize.php`, `src/Entity/LotteryTicket.php`, `src/Service/CrowdfundingBasketItemProvider.php`, `src/Service/LotteryService.php`, `src/Service/CrowdfundingService.php`, `src/Controller/CrowdfundingController.php`, `src/Controller/LotteryController.php`, `src/Controller/Management/CrowdfundingCrudController.php`, `src/Email/CrowdfundingEmailTemplateProvider.php`, `src/Email/CrowdfundingEmailFactory.php`, `src/Email/CrowdfundingEmailSender.php`, `src/Management/CrowdfundingSitemapProvider.php`, `src/Management/CrowdfundingBlockOwnerResolver.php`, `src/Command/MigrateLegacyTablesCommand.php`, `templates/crowdfunding/`, `templates/lottery/`, `templates/emails/slots/`
+`src/Entity/Crowdfunding.php`, `src/Entity/CrowdfundingCounterpart.php`, `src/Entity/CrowdfundingContributor.php`, `src/Entity/Lottery.php`, `src/Entity/LotteryPrize.php`, `src/Entity/LotteryTicket.php`, `src/Service/CrowdfundingBasketItemProvider.php`, `src/Service/LotteryService.php`, `src/Service/CrowdfundingService.php`, `src/Controller/CrowdfundingController.php`, `src/Controller/LotteryController.php`, `src/Controller/Management/CrowdfundingCrudController.php`, `src/Email/CrowdfundingEmailTemplateProvider.php`, `src/Email/CrowdfundingEmailFactory.php`, `src/Email/CrowdfundingEmailSender.php`, `src/Management/CrowdfundingSitemapProvider.php`, `src/Management/CrowdfundingBlockOwnerResolver.php`, `src/Management/CrowdfundingGuidedProjectProvider.php`, `src/Management/ProcedureProvider.php`, `config/procedures.json`, `src/Command/MigrateLegacyTablesCommand.php`, `templates/crowdfunding/`, `templates/lottery/`, `templates/emails/slots/`
 
 **Related skills:** `c975l-payment-items` and `c975l-payment-checkout` in `c975l/payment-bundle`; `c975l-config` and `c975l-management` in `c975l/core-bundle`.
 
@@ -22,7 +22,7 @@ What this bundle owns is what happens on either side of that payment, in `Servic
 
 | Hook | What it does here |
 | --- | --- |
-| `validateAddition()` | refuses a counterpart of a campaign not started, ended, or whose run is out |
+| `validateAddition()` | refuses a counterpart of a campaign with no dates, not started, ended, or whose run is out |
 | `validateCheckout()` | the same rules on the whole basket, plus the quantity against what the run has left |
 | `onBasketValidated()` | hands the contributor's name and message to PaymentBundle, which keeps them **on the basket** |
 | `onBasketPaid()` | writes the `CrowdfundingContributor`, bumps `orderedQuantity`, credits `amountAchieved`, draws the lottery tickets |
@@ -74,6 +74,15 @@ Each goes out in the language the contribution was made in: `CrowdfundingContrib
 - **The tickets are announced after the flush.** `onBasketPaid()` dispatches `LotteryTicketsMessage` once the contributor has the id the database assigned; dispatched before, the message is handed a null it declares an int.
 - **Labels are resolved in the `crowdfunding` domain**, this bundle's own. It does not depend on ShopBundle, and a key read in the `shop` domain shows raw on a site running a campaign without a shop.
 - **The legacy tables.** A site installed before the rename runs `c975l:crowdfunding:migrate-legacy-tables` once: it renames the `shop_crowdfunding*` tables, moves the media folders and rewrites the stored filenames. Idempotent — running it on a fresh install is a no-op.
+
+## Guided projects and procedures
+
+`Management\CrowdfundingGuidedProjectProvider` contributes the back-office parcours, in the 9000 block, all of them walking the single CRUD to the fieldset they are about. Their labels and descriptions are resolved in the `crowdfunding` domain, their spoken `narration` in `crowdfunding_narration`, which stops at `en` and `fr`.
+
+What no parcours can reach is written as a procedure instead, read by `Management\ProcedureProvider` from `config/procedures.json`: `filmer-tirage-loterie`, because a draw happens on the lottery's public page and has no second take, and `publier-actualite-campagne`, because the CRUD declares no `news` collection and the form only exists on the campaign's public page.
+
+- A step pointing at a field nested in a collection entry is preceded by one opening the entry: EasyAdmin folds each one onto its title, and highlighting a folded field outlines nothing.
+- A nested field is reached by a `row_attr` marker set in its form type, never by its indexed id, which changes with the entry's position.
 
 ## Components
 

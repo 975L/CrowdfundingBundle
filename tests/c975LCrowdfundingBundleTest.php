@@ -13,16 +13,14 @@ namespace c975L\CrowdfundingBundle\Tests;
 use c975L\CrowdfundingBundle\c975LCrowdfundingBundle;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
 class c975LCrowdfundingBundleTest extends TestCase
 {
-    // The media entities reuse UiBundle's "block_media" mapping, a mapping of their own doubling the upload path
+    // The lottery's draw button is served from this path: registered whatever else the application installs, a condition on another extension losing the button without a word
     public function testPrependExtensionRegistersTheFrameworkConfig(): void
     {
         $container = new ContainerBuilder();
-        $container->registerExtension($this->createVichUploaderExtensionStub());
         $configurator = $this->createStub(ContainerConfigurator::class);
 
         new c975LCrowdfundingBundle()->prependExtension($configurator, $container);
@@ -31,16 +29,6 @@ class c975LCrowdfundingBundleTest extends TestCase
         $this->assertNotEmpty($frameworkConfigs, 'The framework extension must receive a prepended config');
         $paths = $frameworkConfigs[0]['asset_mapper']['paths'] ?? [];
         $this->assertSame(realpath(\dirname(__DIR__) . '/assets'), realpath(array_key_first($paths)));
-    }
-
-    public function testPrependExtensionDoesNothingWhenVichUploaderIsNotInstalled(): void
-    {
-        $container = new ContainerBuilder();
-        $configurator = $this->createStub(ContainerConfigurator::class);
-
-        new c975LCrowdfundingBundle()->prependExtension($configurator, $container);
-
-        $this->assertEmpty($container->getExtensionConfig('framework'));
     }
 
     public function testLoadExtensionImportsServicesYaml(): void
@@ -57,19 +45,5 @@ class c975LCrowdfundingBundleTest extends TestCase
         $bundle = new c975LCrowdfundingBundle();
 
         $this->assertSame(\dirname(__DIR__), $bundle->getPath());
-    }
-
-    private function createVichUploaderExtensionStub(): ExtensionInterface
-    {
-        return new class implements ExtensionInterface {
-            public function load(array $configs, ContainerBuilder $container): void
-            {
-            }
-
-            public function getAlias(): string
-            {
-                return 'vich_uploader';
-            }
-        };
     }
 }

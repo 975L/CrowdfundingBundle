@@ -10,8 +10,10 @@
 
 namespace c975L\CrowdfundingBundle\Tests\Management;
 
+use c975L\ConfigBundle\Service\ConfigServiceInterface;
 use c975L\ConfigBundle\Test\ManagementTargetsTestCase;
 use c975L\CrowdfundingBundle\Entity\Crowdfunding;
+use c975L\CrowdfundingBundle\Management\CrowdfundingGuidedProjectProvider;
 use c975L\CrowdfundingBundle\Management\LinkableRouteProvider;
 use c975L\CrowdfundingBundle\Management\MenuProvider;
 use c975L\CrowdfundingBundle\Service\CrowdfundingServiceInterface;
@@ -22,7 +24,12 @@ class ManagementTargetsTest extends ManagementTargetsTestCase
 {
     protected function managementProviders(): iterable
     {
-        return [new MenuProvider(), new LinkableRouteProvider($this->crowdfundingService(), $this->createStub(TranslatorInterface::class))];
+        return [
+            new MenuProvider(),
+            new LinkableRouteProvider($this->crowdfundingService(), $this->createStub(TranslatorInterface::class)),
+            // The socle's own recorder rather than a bare stub, so the controller each parcours opens on is read back and checked (see ManagementTargetsTestCase)
+            new CrowdfundingGuidedProjectProvider($this->adminUrlGenerator(), $this->createStub(ConfigServiceInterface::class)),
+        ];
     }
 
     // One campaign is enough to have the route its entries name checked too - an empty list would leave the index as the only linkable target

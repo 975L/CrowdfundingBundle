@@ -62,6 +62,16 @@ class CrowdfundingBasketItemProviderTest extends TestCase
         $this->assertSame('label.unavailable', $this->createProvider()->validateAddition($counterpart, 1));
     }
 
+    // Both columns are nullable and a campaign reaching the shop without them used to reach ->format() on null: the button reads as open, the click is a 500
+    public function testValidateAdditionRefusesACampaignWithNoDates(): void
+    {
+        $counterpart = $this->createCounterpart();
+        $counterpart->getCrowdfunding()->setBeginDate(null);
+        $counterpart->getCrowdfunding()->setEndDate(null);
+
+        $this->assertSame('label.unavailable', $this->createProvider()->validateAddition($counterpart, 1));
+    }
+
     public function testValidateAdditionRefusesACampaignThatHasNotStarted(): void
     {
         $counterpart = $this->createCounterpart(beginDate: '+2 days', endDate: '+30 days');

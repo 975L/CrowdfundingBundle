@@ -33,6 +33,17 @@ class MenuProviderTest extends TestCase
         $this->assertSame('crowdfunding', $menus['crowdfunding']['translation_domain']);
     }
 
+    // The onboarding tour builds a step per menu entry: one without a description shows its label alone, and the sentence it wants is the screen's own welcome text rather than a string written for the tour (see MenuProviderInterface)
+    public function testTheCampaignEntryCarriesWhatTheOnboardingTourReadsAndSpeaks(): void
+    {
+        $entry = new MenuProvider()->getMenus()['crowdfunding'];
+
+        $this->assertSame('label.info_crowdfunding', $entry['description']);
+        $this->assertSame('narration.crowdfundings', $entry['narration']);
+        // No role of its own: the whole CRUD sits behind site-role-admin, which is the key an entry already defaults to - naming it again would only be one more place to forget
+        $this->assertArrayNotHasKey('role', $entry);
+    }
+
     // The public index, offered in the sidebar so an admin reaches the page a visitor sees without leaving the back office
     public function testGetLinksPointsToThePublicIndex(): void
     {
@@ -41,5 +52,7 @@ class MenuProviderTest extends TestCase
         $this->assertCount(1, $links);
         $this->assertSame('crowdfunding_index', $links['crowdfunding']['name']);
         $this->assertSame('crowdfunding', $links['crowdfunding']['translation_domain']);
+        $this->assertSame('text.crowdfundings', $links['crowdfunding']['description']);
+        $this->assertSame('narration.crowdfunding_index', $links['crowdfunding']['narration']);
     }
 }

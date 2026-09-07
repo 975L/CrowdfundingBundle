@@ -210,6 +210,37 @@ left every page showing raw keys on a site running a campaign without the shop �
 The draw wheel's own wording is not in that catalogue: it is written by JavaScript after a fetch, where a
 Twig `|trans` never reaches, so it lives in `assets/js/translations.js`, keyed by locale.
 
+A second catalogue, `translations/crowdfunding_narration.{en,fr}.xlf`, holds what the guided steps and the
+menu entries *sound* like when they are spoken rather than read — the sentences the films of the back
+office say. They are never drawn, which is why they stop at two languages where the rest of the bundle
+speaks three.
+
+---
+
+## Guided projects and the procedures
+
+The bundle contributes six guided projects, in the 9000 block `GuidedProjectProviderInterface` reserves it:
+creating a campaign, illustrating it, offering a counterpart, composing the rest of its page in blocks,
+opening a lottery, and publishing the video of its draw. All six open on the same screen — this bundle
+holds a single CRUD, a campaign carrying its media, its counterparts, its lottery and its blocks on its own
+form — so what tells them apart is the fieldset they walk to.
+
+The draw itself is not one of them, and cannot be. The guided panel only lives in the back office, while a
+draw happens on the lottery's **public** page, where the drum and the buttons are rendered for
+`site-role-admin` alone. It is written as a procedure instead, `filmer-tirage-loterie` in
+[config/procedures.json](config/procedures.json), which the dashboard's assistant reads. What it exists to
+say: **start recording before clicking Draw.** A draw has no second take — the winner is written to the
+database on the click, `LotteryWinningTicketMessage` is dispatched at once, and a second click on the same
+prize hands back the winner already drawn rather than picking another one.
+
+Note that the video of a draw goes on the *lottery*, whose `videos` field only takes an uploaded file. Only
+a *campaign* video carries a `youtubeUrl`, which is the way out for a file too heavy to upload.
+
+A campaign's news entries are the second procedure, `publier-actualite-campagne`, for the same reason: the
+CRUD declares no `news` collection, so the form exists nowhere in the back office. It is rendered on the
+campaign's public page, for its owner or an administrator, and an admin looking for it in management never
+finds it.
+
 ---
 
 ## Data compatibility with existing ShopBundle installations
@@ -250,7 +281,7 @@ answer — it is only worth writing down:
 | Config keys (`configs.json`) | it reads only its dependencies' — the six `shop-email-*` and `shop-name` of PaymentBundle, `site-url` and `site-role-admin` of the core |
 | Block kinds (`ui.block`) | it hosts the other bundles' kinds on a campaign rather than declaring any of its own; the day it does, it owes them a silhouette too |
 | Health check | its urls are already checked, ConfigBundle running the content-quality checks on every url its sitemap provider declares |
-| Guided project, "What's new", admin procedures | prose to be written when the bundle is actually deployed somewhere, not before |
+| "What's new" (`whatsnew.json`) | prose to be written when the bundle is actually deployed somewhere, not before — its guided projects and its procedures are written, see above |
 | Maintenance task | nothing here runs on a schedule: a lottery is drawn by an admin's click, and a campaign ends by its own date |
 | Import / export | a campaign is not a catalogue: it is written once, read for a few weeks and archived |
 

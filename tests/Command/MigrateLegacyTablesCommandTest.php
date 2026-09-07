@@ -73,7 +73,7 @@ class MigrateLegacyTablesCommandTest extends TestCase
         $tester->execute([]);
 
         $this->assertSame([], $statements);
-        $this->assertStringContainsString('resolve manually', $tester->getDisplay());
+        $this->assertStringContainsString('resolve manually', $this->display($tester));
     }
 
     // The uploads live under public/, and the folder moves with the table
@@ -105,7 +105,7 @@ class MigrateLegacyTablesCommandTest extends TestCase
         $tester->execute([]);
 
         $this->assertDirectoryExists($this->projectDir . '/public/medias/shop/crowdfundings');
-        $this->assertStringContainsString('resolve manually', $tester->getDisplay());
+        $this->assertStringContainsString('resolve manually', $this->display($tester));
     }
 
     // The rows keep the path they were uploaded under: moved on disk and left alone in the database, every picture of a campaign 404s
