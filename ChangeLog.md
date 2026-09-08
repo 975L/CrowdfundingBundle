@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.1.1
+
+Run phpmd and lizard in the CI and its local replay
+
+- The workflow runs `composer mess` and `composer lizard`, with `phpmd` added to setup-php's tools and lizard pinned on a setup-python step (08/09/2026)
+- `bin/ci.sh` installs phpmd beside the other tools and lizard in a virtualenv, and prints both versions (08/09/2026)
+
 ## v1.1.0
 
 Drop the legacy-tables migration command
