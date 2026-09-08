@@ -24,7 +24,7 @@ Add CrowdfundingBundle on top of the shared [UiBundle](https://github.com/975L/U
 ## Contents
 
 - **Setup** — [requirements](#requirements) · [installation](#installation) · [assets](#install-assets) · [config values](#load-configuration-values) · [routes](#enable-routes)
-- **Using it** — [sitemap](#sitemap) · [linking a campaign](#linking-a-campaign-from-a-menu) · [status report](#status-report) · [emails](#emails) · [backup](#backup) · [translations](#translations) · [what it does not contribute](#what-this-bundle-deliberately-does-not-contribute) · [AI agent skills](#ai-agent-skills) · [data compatibility with ShopBundle](#data-compatibility-with-existing-shopbundle-installations)
+- **Using it** — [sitemap](#sitemap) · [linking a campaign](#linking-a-campaign-from-a-menu) · [composing a campaign page](#composing-a-campaign-page) · [status report](#status-report) · [emails](#emails) · [backup](#backup) · [translations](#translations) · [what it does not contribute](#what-this-bundle-deliberately-does-not-contribute) · [AI agent skills](#ai-agent-skills) · [data compatibility with ShopBundle](#data-compatibility-with-existing-shopbundle-installations)
 
 ## Features
 
@@ -35,10 +35,12 @@ Add CrowdfundingBundle on top of the shared [UiBundle](https://github.com/975L/U
 - Sitemap generation (index and campaign pages), via ConfigBundle's `SitemapProviderInterface`
 - Its own `crowdfunding` translation catalogue, in English, French and Spanish
 - Stylesheet and Stimulus barrel contributed to UiBundle's registries — nothing to register by hand
-- Campaign pages composed in the back office with UiBundle's block kinds (`HasBlocksInterface`)
+- Campaign pages composed in the back office with UiBundle's block kinds (`HasBlocksInterface`), plus
+  three kinds of its own — see [composing a campaign page](#composing-a-campaign-page)
 - Three transactional emails composable in the back office, via UiBundle's `EmailTemplateProviderInterface`
 - Campaign pages offered as menu targets (`LinkableRouteProviderInterface`) and media folders declared to the backup
 - Pending lottery draws reported to the status dashboard (`StatusProviderInterface`)
+- Every file a campaign declares checked against the disk, under its own `files-crowdfunding` health check kind
 - **A skill for coding agents**, shipped in the package and read straight from `vendor/` — see [AI agent skills](#ai-agent-skills)
 
 ---
@@ -144,6 +146,16 @@ without `alt`, broken links) under its own `urls-crowdfunding` kind on the Healt
 php bin/console c975l:health-check:run --kind=urls-crowdfunding
 ```
 
+### A file the database declares and the server no longer has
+
+`Management\CrowdfundingFilesHealthCheckProvider` (kind `files-crowdfunding`) reports, as an error, every file a row of this bundle names and the server no longer holds: a campaign's pictures and video, the picture of each counterpart, and a lottery's video. Everything it does is CoreBundle's `AbstractDeclaredFilesHealthCheckProvider`, this only names the rows to look at.
+
+```bash
+php bin/console c975l:health-check:run --kind=files-crowdfunding
+```
+
+A counterpart and a lottery have no back-office screen of their own — they are edited as collections of the campaign — so their rows link back to that campaign.
+
 ---
 
 ## Linking a campaign from a menu
@@ -151,6 +163,93 @@ php bin/console c975l:health-check:run --kind=urls-crowdfunding
 This bundle owns no SiteBundle `Page`, so its pages are offered to a menu item through
 `Management\LinkableRouteProvider`: the campaign index, and each campaign by its own title. Pick them in
 the menu item's target select — nothing to register, the provider is picked up automatically.
+
+## Composing a campaign page
+
+A campaign page is not a fixed sequence any more. `crowdfunding/display.html.twig` renders the funding
+and the campaign's own fields, then the blocks the editor composed, then the sections that are still
+hardcoded — and **each of those steps aside as soon as a block takes it over**, the way a product sheet
+does in `c975L/ShopBundle`:
+
+```twig
+{% set sheetKinds = crowdfunding_block_sheet_kinds(crowdfunding.blocks) %}
+...
+{% if 'crowdfunding_counterparts' not in sheetKinds %}
+    <twig:c975LCrowdfunding:Crowdfunding:CounterParts counterparts="{{ crowdfunding.counterparts }}"/>
+{% endif %}
+```
+
+A campaign carrying no block therefore still reads in full — the begin and end dates having moved up
+into the funding bar, beside the amounts they run against — and one being recomposed moves a single
+section at a time. Nothing has to be migrated.
+
+### The shape of the page
+
+The page is read in four movements, the funding never leaving the screen:
+
+1. **`Crowdfunding:FundingTopBar`** — a strip stuck under the site's header the whole way down: the
+   amounts, the gauge and the button. The rail below ends with the story, this does not.
+2. **`Crowdfunding:Hero`** — the campaign's opening image, its name printed over it. Stands aside for a
+   composed `banner_title`, which is an editor saying where the opening goes; the layout's own heading is
+   then left on, since only the editor knows what level their banner carries.
+3. **The story and the funding**, side by side: one column on a phone, a 380px rail from 1024px up. The
+   rail sticks below the strip rather than behind it.
+4. **`Crowdfunding:UseFor` and `Crowdfunding:Author`** on one dark band between the story and the tiers —
+   the two answers a visitor weighs a tier against, read together rather than one at each end of the page.
+   The tiers follow, then the chronicle, on two columns from 1024px up.
+
+Where the campaign stands is worked out once, by `crowdfunding_funding_state()`
+(`Twig\Extension\CrowdfundingFundingExtension`): whether it opened, whether it closed, how far it got and
+how many days it still has. The strip, the rail and the tier buttons all read that same answer, so none of
+them can say something the others contradict.
+
+### The three kinds
+
+| Kind | Takes over | Form | Template |
+| --- | --- | --- | --- |
+| `crowdfunding_slider` | the campaign's slider | `Form\Block\SliderBlockType` | `blocks/Slider.html.twig` |
+| `crowdfunding_counterparts` | `Crowdfunding:CounterParts` | `Form\Block\CounterpartsBlockType` | `blocks/Counterparts.html.twig` |
+| `crowdfunding_lottery` | `Lottery:Lotteries` | `Form\Block\LotteryBlockType` | `blocks/Lottery.html.twig` |
+
+None of them stores what to show — only how. The medias, the tiers, the draws and their prizes are read
+from the campaign's own rows at render time, through `crowdfunding_block_campaign()`
+(`Twig\Extension\CrowdfundingBlockExtension`), which resolves the campaign from the `crowdfunding_display`
+route being rendered. So a block never goes stale against the funding, no form ever asks which campaign
+to show, and one of these kinds placed on a page that is not a campaign renders nothing at all.
+
+`crowdfunding_slider` shows the campaign's medias and nothing else, so its render is cached under a
+campaign tag dropped by `CrowdfundingCacheInvalidationListener` whenever a campaign, a media, a
+counterpart or a contribution changes.
+
+The two others **render live**, vetoing their own entry through `CrowdfundingBlockCacheTagProvider`. A
+block cache entry never expires and no event fires the day a campaign ends, so a cached grid of tiers
+would keep offering to contribute to a campaign that closed — each tier's button being read against
+today's date — and the basket messages laid beside them belong to whoever is reading. The draws have
+the same trouble twice over: their dates are printed in the visitor's own timezone and the draw button
+is an administrator's alone.
+
+### The silhouette in the picker
+
+`Service\CrowdfundingShowcaseProvider` draws the slider in UiBundle's block showcase, so the picker shows
+what the kind looks like instead of its name alone. The counterparts and the lottery are deliberately
+absent: both draw PaymentBundle's basket around a tier a visitor could click, and a showcase card
+offering to contribute to a campaign that does not exist would be worse than no card.
+
+The front-end "Edit this block" hover button resolves a campaign's own edit screen through
+`Management\CrowdfundingBlockEditUrlProvider`, so a composed campaign page is corrected the way a site
+page's blocks already are.
+
+### The funding bar
+
+`Crowdfunding:FundingBar` gathers the goal, the amount achieved, the gauge, the contributors, the days
+left and the button to contribute. It is a **component the page renders**, not a kind: it stands outside
+the flow the blocks are laid in — a sticky bar under the navbar on a phone, a 380px rail beside the story
+from 1024px up — and a campaign whose editor forgot to place it would be a campaign nobody can fund.
+
+Its button points at `#counterparts`, which both the `crowdfunding_counterparts` block and the hardcoded
+section carry, so it lands wherever the tiers were put.
+
+---
 
 ## Status report
 
@@ -255,8 +354,6 @@ answer — it is only worth writing down:
 | Point | Why not |
 | --- | --- |
 | Config keys (`configs.json`) | it reads only its dependencies' — the six `shop-email-*` and `shop-name` of PaymentBundle, `site-url` and `site-role-admin` of the core |
-| Block kinds (`ui.block`) | it hosts the other bundles' kinds on a campaign rather than declaring any of its own; the day it does, it owes them a silhouette too |
-| Health check | its urls are already checked, ConfigBundle running the content-quality checks on every url its sitemap provider declares |
 | "What's new" (`whatsnew.json`) | prose to be written when the bundle is actually deployed somewhere, not before — its guided projects and its procedures are written, see above |
 | Maintenance task | nothing here runs on a schedule: a lottery is drawn by an admin's click, and a campaign ends by its own date |
 | Import / export | a campaign is not a catalogue: it is written once, read for a few weeks and archived |

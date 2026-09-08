@@ -1,0 +1,20 @@
+{# <twig:c975LCrowdfunding:Crowdfunding:Hero crowdfunding="{{ crowdfunding }}"/> #}
+{# The campaign's opening image with its title over it. Rendered by the page only when no "banner_title" block was composed: an editor who placed one has said where the opening goes, and this would print a second one above it #}
+{% trans_default_domain 'crowdfunding' %}
+{% props crowdfunding %}
+
+<section class="crowdfunding-hero">
+    {% if crowdfunding.medias is not empty %}
+        {# Decorative: the title beside it already names the campaign, and the same image is described in the slider further down #}
+        <img class="crowdfunding-hero__image" src="{{ asset(crowdfunding.medias[0].name) }}" alt="" aria-hidden="true" loading="eager" fetchpriority="high">
+    {% endif %}
+    <div class="crowdfunding-hero__caption">
+        <p class="crowdfunding-hero__meta">
+            {{ 'label.crowdfunding'|trans }}
+            {% if crowdfunding.beginDate and crowdfunding.endDate %}
+                &middot; {{ crowdfunding.beginDate|date('d/m/Y') }} - {{ crowdfunding.endDate|date('d/m/Y') }}
+            {% endif %}
+        </p>
+        <h1 class="crowdfunding-hero__title">{{ crowdfunding.title }}</h1>
+    </div>
+</section>

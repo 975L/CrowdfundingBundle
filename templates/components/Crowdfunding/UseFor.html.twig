@@ -1,0 +1,9 @@
+{# <twig:c975LCrowdfunding:Crowdfunding:UseFor crowdfunding="{{ crowdfunding }}"/> #}
+{# What the money raised pays for, said on its own rather than as a subhead of the presentation: it is the answer a visitor weighs the tiers against, so it stands beside the author on the band between the story and the counterparts #}
+{% trans_default_domain 'crowdfunding' %}
+{% props crowdfunding %}
+
+<section id="use-for">
+    <h2>{{ 'label.use'|trans }}</h2>
+    {{ crowdfunding.useFor|raw }}
+</section>

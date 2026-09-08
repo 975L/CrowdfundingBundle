@@ -1,0 +1,12 @@
+{# The medias of the campaign, through UiBundle's own slider - the id is the campaign's slug, two sliders on the same page needing two different ones #}
+{% set crowdfunding = crowdfunding_block_campaign() %}
+{% if crowdfunding and crowdfunding.medias is not empty %}
+    <twig:c975LUi:Slider:Slider
+        media="{{ crowdfunding.medias }}"
+        id="crowdfunding-slider-{{ crowdfunding.slug }}"
+        class="img-500"
+        duration="{{ duration|default(0) }}"
+        ratio="{{ ratio|default('free') }}"
+        fallbackAlt="{{ crowdfunding.title }}"
+    />
+{% endif %}

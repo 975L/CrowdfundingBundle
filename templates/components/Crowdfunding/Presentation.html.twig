@@ -1,8 +1,12 @@
+{# The use of the funds is optional here: the campaign page moved it onto the band it shares with the author, and passes showUse="false" so it is not said twice. "??" not "default", which also substitutes on an explicit false #}
+{% set showUse = showUse ?? true %}
 <section id="presentation">
     <h2>{{ 'label.presentation'|trans({}, 'crowdfunding') }}</h2>
     <twig:c975LCrowdfunding:Crowdfunding:Videos videos="{{ crowdfunding.videos }}"/>
     <h3>{{ 'label.project'|trans({}, 'crowdfunding') }}</h3>
     {{ crowdfunding.description|raw }}
-    <h3>{{ 'label.use'|trans({}, 'crowdfunding') }}</h3>
-    {{ crowdfunding.useFor|raw }}
+    {% if showUse %}
+        <h3>{{ 'label.use'|trans({}, 'crowdfunding') }}</h3>
+        {{ crowdfunding.useFor|raw }}
+    {% endif %}
 </section>

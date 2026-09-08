@@ -63,6 +63,27 @@ class CrowdfundingRepositoryTest extends TestCase
         $this->assertNull($this->createRepository()->findOneBySlug('inconnu'));
     }
 
+    // The front-end "Edit this block" button asks for every block of a page at once: one query, joined on the blocks, rather than one per hovered block
+    public function testFindByBlockIdsJoinsTheBlocksAndFiltersOnThem(): void
+    {
+        $repository = $this->createRepository();
+
+        $repository->findByBlockIds([12, 13]);
+
+        $this->assertStringContainsString('INNER JOIN c.blocks b', $repository->dql);
+        $this->assertStringContainsString('WHERE b.id IN (:blockIds)', $repository->dql);
+        $this->assertSame([12, 13], $repository->parameter('blockIds'));
+    }
+
+    // A page whose blocks were all just created carries no id to look up, and the query is never assembled
+    public function testFindByBlockIdsQueriesNothingForAnEmptyList(): void
+    {
+        $repository = $this->createRepository();
+
+        $this->assertSame([], $repository->findByBlockIds([]));
+        $this->assertSame('', $repository->dql);
+    }
+
     // Doctrine's own QueryBuilder, assembling the real DQL on an EntityManager that answers nothing: getQuery() hands the string it built to createQuery(), which is where it is read back
     private function createRepository(): CrowdfundingRepositoryDqlFixture
     {

@@ -18,7 +18,7 @@
     ],
     "require": {
         "php": ">=8.4",
-        "c975l/core-bundle": "^1.23",
+        "c975l/core-bundle": "^1.25",
         "c975l/payment-bundle": "^6.8",
         "doctrine/dbal": "^4.4",
         "doctrine/orm": "^3.6",
@@ -38,7 +38,7 @@
         "symfony/translation": "^8.0",
         "symfony/twig-bridge": "^8.0",
         "symfony/validator": "^8.0",
-        "vich/uploader-bundle": "^2.9"
+        "vich/uploader-bundle": "^3.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^13.2"

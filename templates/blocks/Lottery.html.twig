@@ -1,0 +1,17 @@
+{# The campaign's lotteries, prizes included - all of them read from the Lottery and LotteryPrize rows the draw is actually made on, nothing about a prize being typed on this block #}
+{% trans_default_domain 'crowdfunding' %}
+{% set crowdfunding = crowdfunding_block_campaign() %}
+{% if crowdfunding and crowdfunding.lotteries is not empty %}
+    <section id="lotteries" class="crowdfunding-lotteries">
+        {% if title|default('') %}
+            <h2>{{ title }}</h2>
+        {% endif %}
+        {% if intro|default('') %}
+            <p class="text text-center">{{ intro|nl2br }}</p>
+        {% endif %}
+        {# A campaign can run several draws: the collection is iterated rather than its first row read #}
+        {% for lottery in crowdfunding.lotteries %}
+            <twig:c975LCrowdfunding:Lottery:Lottery lottery="{{ lottery }}" showTicketsCount="{{ showTicketsCount ?? true }}"/>
+        {% endfor %}
+    </section>
+{% endif %}

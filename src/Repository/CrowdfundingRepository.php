@@ -55,6 +55,28 @@ class CrowdfundingRepository extends ServiceEntityRepository
         ;
     }
 
+    // The campaigns owning any of the given Block rows, read in one query - what the front-end "Edit this block" hover button resolves its edit URL from
+    /**
+     * @param int[] $blockIds
+     *
+     * @return Crowdfunding[]
+     */
+    public function findByBlockIds(array $blockIds): array
+    {
+        if ([] === $blockIds) {
+            return [];
+        }
+
+        return $this->createQueryBuilder('c')
+            ->select('c, b')
+            ->innerJoin('c.blocks', 'b')
+            ->andWhere('b.id IN (:blockIds)')
+            ->setParameter('blockIds', $blockIds)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
     // Finds a crowdfunding by slug with joined data
     public function findOneBySlug(string $slug): ?Crowdfunding
     {

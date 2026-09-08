@@ -202,9 +202,81 @@
                 <source>label.begin_date</source>
                 <target>Begin date</target>
             </trans-unit>
+            <trans-unit id="tlWkHoQ">
+                <source>label.block_columns</source>
+                <target>Number of columns</target>
+            </trans-unit>
+            <trans-unit id="7QcgnDK">
+                <source>label.block_counterparts</source>
+                <target>Campaign counterparts</target>
+            </trans-unit>
+            <trans-unit id="qb7ukag">
+                <source>label.block_counterparts_description</source>
+                <target>The campaign's counterparts, as a grid, with a highlighted tier and the remaining stock.</target>
+            </trans-unit>
+            <trans-unit id="_GdsAH3">
+                <source>label.block_highlighted_counterpart</source>
+                <target>Highlighted counterpart</target>
+            </trans-unit>
+            <trans-unit id="1UCcf5f">
+                <source>label.block_highlighted_counterpart_help</source>
+                <target>The slug of the counterpart to frame, left empty to highlight none.</target>
+            </trans-unit>
+            <trans-unit id="JwjYlDA">
+                <source>label.block_intro</source>
+                <target>Introduction</target>
+            </trans-unit>
+            <trans-unit id="bOvLcOe">
+                <source>label.block_lottery</source>
+                <target>Campaign lottery</target>
+            </trans-unit>
+            <trans-unit id=".KdhgZq">
+                <source>label.block_lottery_description</source>
+                <target>The campaign's draws and their prizes, read from the lotteries themselves.</target>
+            </trans-unit>
+            <trans-unit id="mx.fFeq">
+                <source>label.block_low_stock_threshold</source>
+                <target>Low stock threshold</target>
+            </trans-unit>
+            <trans-unit id="XmO5Zkc">
+                <source>label.block_ratio</source>
+                <target>Media ratio</target>
+            </trans-unit>
+            <trans-unit id="rwP.74_">
+                <source>label.block_ratio_free</source>
+                <target>Free</target>
+            </trans-unit>
+            <trans-unit id="rfAWgmE">
+                <source>label.block_ratio_landscape</source>
+                <target>Landscape</target>
+            </trans-unit>
+            <trans-unit id="PdHOL3E">
+                <source>label.block_ratio_square</source>
+                <target>Square</target>
+            </trans-unit>
+            <trans-unit id="MRwAZ7t">
+                <source>label.block_show_tickets_count</source>
+                <target>Show the number of allocated tickets</target>
+            </trans-unit>
+            <trans-unit id="SN2n7ci">
+                <source>label.block_slide_duration</source>
+                <target>Slide duration (ms)</target>
+            </trans-unit>
+            <trans-unit id="qY3htPq">
+                <source>label.block_slider</source>
+                <target>Campaign medias</target>
+            </trans-unit>
+            <trans-unit id="tg4Ac7t">
+                <source>label.block_slider_description</source>
+                <target>The campaign's medias in a slider, with nothing to upload again.</target>
+            </trans-unit>
             <trans-unit id="OncQEBy">
                 <source>label.blocks</source>
                 <target>Blocks</target>
+            </trans-unit>
+            <trans-unit id="pXoyqkP">
+                <source>label.category_crowdfunding</source>
+                <target>Crowdfunding</target>
             </trans-unit>
             <trans-unit id="x_zkKv9">
                 <source>label.come_back_on</source>
@@ -213,6 +285,10 @@
             <trans-unit id="f7w7ZE0">
                 <source>label.content</source>
                 <target>Content</target>
+            </trans-unit>
+            <trans-unit id="7mK4okl">
+                <source>label.contribute</source>
+                <target>I contribute</target>
             </trans-unit>
             <trans-unit id="uNApWfl">
                 <source>label.contribution_counterparts_reminder</source>
@@ -542,6 +618,10 @@
                 <source>label.modification</source>
                 <target>Modification</target>
             </trans-unit>
+            <trans-unit id=".B3ED5Q">
+                <source>label.most_chosen</source>
+                <target>Most chosen</target>
+            </trans-unit>
             <trans-unit id="QiGcdrp">
                 <source>label.news</source>
                 <target>News</target>
@@ -573,6 +653,10 @@
             <trans-unit id="iPDiOQk">
                 <source>label.not_yet_drawn</source>
                 <target>Not yet drawn</target>
+            </trans-unit>
+            <trans-unit id="muuZZsq">
+                <source>label.only_left</source>
+                <target>Only %count% left</target>
             </trans-unit>
             <trans-unit id="834lNkE">
                 <source>label.only_those_left_message</source>

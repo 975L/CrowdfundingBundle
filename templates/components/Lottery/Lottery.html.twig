@@ -3,7 +3,10 @@
         <p class="text-center">{{ 'text.lottery_information'|trans({}, 'crowdfunding') }}</p>
         <p class="text-center">{{ 'label.lottery_identifier'|trans({}, 'crowdfunding') }} : <strong><a href="{{ path('lottery_display', {'identifier': lottery.identifier}) }}" target="_blank">{{ lottery.identifier }}</a></strong></p>
         <p class="text-center">{{ 'label.draw_date'|trans({}, 'crowdfunding') }} : <strong>{{ lottery.drawDate|date('d/m/Y - H:i', app.session.get('user_timezone', 'Europe/Paris')) }}</strong></p>
-        <p class="text-center ticket-number winner">{{ 'label.allocated'|trans({}, 'crowdfunding') }} : <strong>{{ lottery.tickets|length }}</strong></p>
+        {# The tickets already allocated, a figure the lottery block can leave out - "??" not "default", which also substitutes on an explicit false and would turn the count back on #}
+        {% if showTicketsCount ?? true %}
+            <p class="text-center ticket-number winner">{{ 'label.allocated'|trans({}, 'crowdfunding') }} : <strong>{{ lottery.tickets|length }}</strong></p>
+        {% endif %}
         <h3 class="text-center">{{ 'label.prizes'|trans({}, 'crowdfunding') }}</h3>
         <ol class="circle-numbers">
         {% for prize in lottery.prizes %}

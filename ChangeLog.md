@@ -1,5 +1,44 @@
 # Changelog
 
+## v1.2.0
+
+A campaign page composed from three block kinds of its own
+
+- **Three block kinds of its own**: `crowdfunding_slider`, `crowdfunding_counterparts`, `crowdfunding_lottery` (08/09/2026)
+- Each reads the campaign of the route being rendered rather than storing which one to show (08/09/2026)
+- **New `CrowdfundingBlockExtension`**: `crowdfunding_block_campaign()` and `crowdfunding_block_sheet_kinds()` (08/09/2026)
+- `crowdfunding/display.html.twig` renders the blocks amid its sections, each stepping aside once a block takes it over (08/09/2026)
+- A campaign carrying no block reads as it always did, nothing to migrate (08/09/2026)
+- **New `CrowdfundingFundingExtension`**: `crowdfunding_funding_state()` answers where a campaign stands (08/09/2026)
+- The strip, the rail and the tier buttons read that one answer, so none can contradict another (08/09/2026)
+- **New `Crowdfunding:FundingBar` component**: the amounts, the gauge, the contributors, the days left and the button to contribute (08/09/2026)
+- The funding rail carries the first tiers within reach and the draw a contribution enters (08/09/2026)
+- It sticks only from 1024px up, two sticky boxes having no room on a phone (08/09/2026)
+- **New `Crowdfunding:FundingTopBar` component**: the amounts, the gauge and the button, stuck under the site's header (08/09/2026)
+- **New `Crowdfunding:Hero` component**: the campaign's opening image with its name over it (08/09/2026)
+- It stands aside for a composed `banner_title` (08/09/2026)
+- **New `Crowdfunding:UseFor` component**: what the money pays for, on the band it shares with the author (08/09/2026)
+- `Crowdfunding:Presentation` takes a `showUse` prop, defaulting to true (08/09/2026)
+- `Lottery:Lottery` takes a `showTicketsCount` prop, a setting of the lottery block (08/09/2026)
+- A counterpart card takes a highlighted tier and a low-stock threshold, both settings of the counterparts block (08/09/2026)
+- A tier shows its picture at the head of its card (08/09/2026)
+- The chronicle reads on two columns from 1024px up (08/09/2026)
+- The slider's render is cached under a campaign tag, dropped by `CrowdfundingCacheInvalidationListener` (08/09/2026)
+- The counterparts and the draws veto their own entry through `CrowdfundingBlockCacheTagProvider` (08/09/2026)
+- **New `CrowdfundingShowcaseProvider`**: the slider carries a silhouette in the block picker (08/09/2026)
+- The front-end "Edit this block" button resolves a campaign's edit screen, via `CrowdfundingBlockEditUrlProvider` (08/09/2026)
+- New `CrowdfundingRepository::findByBlockIds()` (08/09/2026)
+- New `sass/_crowdfunding-blocks.scss`, and the compiled stylesheets rebuilt from it (08/09/2026)
+- The translation test reads `config/services.yaml` too, the block kinds naming their labels there (08/09/2026)
+- **`vich/uploader-bundle` moves from `^2.9` to `^3.0`**, and `c975l/core-bundle` to `^1.25` (08/09/2026) [BC-Break]
+- CoreBundle overrides Vich's storage and namer, whose 3.0 signatures 2.x has no type for (08/09/2026)
+- The upgrade changes nothing here: this bundle only carries `Mapping\Attribute` on its entities (08/09/2026)
+- **New `CrowdfundingFilesHealthCheckProvider` (kind `files-crowdfunding`)**: every file a campaign, a counterpart or a lottery names is checked against the disk (08/09/2026)
+- A counterpart and a lottery have no screen of their own, so their rows link back to the campaign (08/09/2026)
+- New `MediaRepository::findWithFilename()` (08/09/2026)
+- Tests for the two Twig extensions, the three block form types, the cache services, the three providers and the two repositories (08/09/2026)
+- The README documents the composed campaign page, and the shipped skill its three kinds (08/09/2026)
+
 ## v1.1.1
 
 Run phpmd and lizard in the CI and its local replay

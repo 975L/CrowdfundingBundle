@@ -109,6 +109,11 @@ class TranslationDomainTest extends TestCase
         $keys = $this->twigKeys($contents);
         $keys = array_merge($keys, $this->phpKeys($contents));
 
+        // A service definition names its keys as plain tag attributes, quoted and nothing else
+        if (str_ends_with($file, '.yaml')) {
+            $keys = array_merge($keys, $this->yamlKeys($contents));
+        }
+
         // The email chain names its keys as bare arguments - a subject key handed to the sender, a sentence handed to the template provider - which no trans() call spells out. Both directories only ever name this bundle's own catalogue
         if (str_contains($file, '/src/Email/') || str_contains($file, '/src/MessageHandler/')) {
             $keys = array_merge($keys, $this->emailKeys($contents));
@@ -161,13 +166,14 @@ class TranslationDomainTest extends TestCase
         ));
     }
 
-    // The labels a form type or a provider declares as plain array values, resolved in the domain the class itself names
+    // The labels a form type or a provider declares as plain array values, resolved in the domain the class itself names - a ChoiceType naming its own the other way round, the key standing left of the value it stores
     /** @return list<string> */
     private function declaredLabelKeys(string $contents): array
     {
         preg_match_all("/'(?:label|help|description)' => '([a-z][a-zA-Z0-9_]*\\.[a-zA-Z0-9_.]+)'/", $contents, $matches);
+        preg_match_all("/'((?:label|text)\\.[a-zA-Z0-9_.]+)'\\s*=>/", $contents, $choices);
 
-        return $matches[1];
+        return array_merge($matches[1], $choices[1]);
     }
 
     /** @return array<string, string> */
@@ -183,15 +189,25 @@ class TranslationDomainTest extends TestCase
         return $translations;
     }
 
+    // Every key a "ui.block" tag names for its kind: the label shown in the picker, the sentence under it, and the category it is filed in
+    /** @return list<string> */
+    private function yamlKeys(string $contents): array
+    {
+        preg_match_all("/^\\s*(?:label|description|category):\\s*['\"]([a-z_]+\\.[a-zA-Z0-9_.]+)['\"]/m", $contents, $matches);
+
+        return $matches[1];
+    }
+
     /** @return list<string> */
     private function sourceFiles(): array
     {
         $files = [];
 
-        foreach (['/../src', '/../templates'] as $directory) {
+        // "config" joins them since the block kinds declare their own label, description and category straight on the "ui.block" tag, where no trans() call ever spells them out
+        foreach (['/../src', '/../templates', '/../config'] as $directory) {
             $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator(__DIR__ . $directory));
             foreach ($iterator as $file) {
-                if ($file->isFile() && \in_array($file->getExtension(), ['php', 'twig'], true)) {
+                if ($file->isFile() && \in_array($file->getExtension(), ['php', 'twig', 'yaml'], true)) {
                     $files[] = $file->getPathname();
                 }
             }

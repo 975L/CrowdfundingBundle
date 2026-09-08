@@ -1,15 +1,30 @@
-<twig:c975LUi:Card:Card tag="article" id="{{ counterpart.slug }}" level="h3" title="#{{ number }} - {{ counterpart.title }}" class="crowdfunding-counterpart">
+{% trans_default_domain 'crowdfunding' %}
+{# Highlighting and the low-stock badge are the counterparts block's own settings, defaulted here so the page rendering this card without a block keeps the card it always had #}
+{% set highlighted = highlighted|default(false) %}
+{% set lowStockThreshold = lowStockThreshold|default(0) %}
+
+{# Factual scarcity only: a tier says how few are left when the campaign itself limited it, and only under the threshold the editor set #}
+{% set remaining = counterpart.limitedQuantity is not null ? counterpart.limitedQuantity - (counterpart.orderedQuantity ?? 0) : null %}
+{% set isLowStock = lowStockThreshold > 0 and remaining is not null and remaining > 0 and remaining <= lowStockThreshold %}
+
+<twig:c975LUi:Card:Card tag="article" id="{{ counterpart.slug }}" level="h3" title="#{{ number }} - {{ counterpart.title }}" class="crowdfunding-counterpart{{ highlighted ? ' crowdfunding-counterpart--highlighted' : '' }}">
     <div>
+        {% if highlighted %}
+            <p class="crowdfunding-counterpart__flag">{{ 'label.most_chosen'|trans }}</p>
+        {% endif %}
         {% if counterpart.media != null and counterpart.media.name != null %}
             <div class="card-img">
                 <twig:c975LUi:Image:Image src="{{ counterpart.media.name }}" class="img-shadow" width="100"/>
             </div>
         {% endif %}
         <div class="card-data">
-            {{ 'label.counterpart_entitles'|trans({}, 'crowdfunding') }}
+            {{ 'label.counterpart_entitles'|trans }}
             <twig:c975LCrowdfunding:Lottery:TicketsQuantity tickets="{{ counterpart.lotteryTickets }}"/>
             <p class="description">{{ counterpart.description|raw|nl2br }}</p>
             <p class="price-counterpart">{{ (counterpart.price / 100)|format_currency(counterpart.currency, {fraction_digit: 0}) }}</p>
+            {% if isLowStock %}
+                <p class="crowdfunding-counterpart__low-stock">{{ 'label.only_left'|trans({'%count%': remaining}) }}</p>
+            {% endif %}
             <twig:c975LPayment:Item:Type item="{{ counterpart }}"/>
             <twig:c975LCrowdfunding:CrowdfundingCounterpart:Quantity limited="{{ counterpart.limitedQuantity }}" ordered="{{ counterpart.orderedQuantity }}" expectedDelivery="{{ counterpart.expectedDelivery }}"/>
         </div>

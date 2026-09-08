@@ -1,0 +1,67 @@
+{# <twig:c975LCrowdfunding:Crowdfunding:FundingBar crowdfunding="{{ crowdfunding }}"/> #}
+{# The campaign's funding, said once: the amounts, the gauge, the contributors, the time left and the ways to contribute. Rendered by the page rather than composed as a block - it stands outside the flow the blocks are laid in, as the desktop rail beside them, and a campaign whose editor forgot to place it would be a campaign nobody can fund #}
+{% trans_default_domain 'crowdfunding' %}
+{% props crowdfunding %}
+
+{% set state = crowdfunding_funding_state(crowdfunding) %}
+
+<aside class="crowdfunding-funding" id="funding" aria-label="{{ 'label.funding'|trans }}">
+    <p class="crowdfunding-funding__amounts">
+        <strong>{{ (crowdfunding.amountAchieved / 100)|format_currency(crowdfunding.currency, {fraction_digit: 0}) }}</strong>
+        {{ 'label.outof'|trans }}
+        <strong>{{ (crowdfunding.amountGoal / 100)|format_currency(crowdfunding.currency, {fraction_digit: 0}) }}</strong>
+    </p>
+    <twig:c975LUi:Progress:Bar progressPercent="{{ state.progressPercent }}" text="true"/>
+    <twig:c975LCrowdfunding:Crowdfunding:ContributorsNumber contributorsLength="{{ crowdfunding.contributors|length }}"/>
+
+    {# The two dates the days below are counted against, said once beside the amounts they run for #}
+    <p class="crowdfunding-funding__range">
+        <twig:c975LUi:Image:Icon src="bundles/c975lcrowdfunding/icons/calendar-check.svg" width="20" height="20"/>
+        <strong>{{ crowdfunding.beginDate|date('d/m/Y') }} - {{ crowdfunding.endDate|date('d/m/Y') }}</strong>
+    </p>
+
+    {# Factual urgency only, and for a running campaign alone: the two buttons below already say in full that a campaign has not opened or has closed #}
+    {% if state.isStarted and false == state.isEnded %}
+        <p class="crowdfunding-funding__dates">
+            <twig:c975LUi:Image:Icon src="bundles/c975lcrowdfunding/icons/calendar-days.svg" width="20" height="20"/>
+            {% if state.isLastDay %}
+                <strong>{{ 'label.last_day'|trans }}</strong>
+            {% else %}
+                <strong>{{ state.daysLeft }}</strong> {{ 'label.days_left'|trans }}
+            {% endif %}
+        </p>
+    {% endif %}
+
+    {% if false == state.isStarted %}
+        <twig:c975LCrowdfunding:CrowdfundingCounterpart:AddButtonNotStarted type="primary" beginDate="{{ crowdfunding.beginDate }}"/>
+    {% elseif state.isEnded %}
+        <twig:c975LCrowdfunding:CrowdfundingCounterpart:AddButtonIsEnded type="primary"/>
+    {% else %}
+        {# Reaches the counterparts wherever they are laid out, composed as a block or rendered by the page: both carry the "counterparts" anchor #}
+        <twig:c975LUi:Button:Button label="{{ 'label.contribute'|trans }}" url="#counterparts"/>
+
+        {# The first tiers within reach, so the rail answers "how much" and not only "how far": each jumps to its own card, where the tier is described in full and actually joined #}
+        {% if crowdfunding.counterparts is not empty %}
+            <ul class="crowdfunding-funding__tiers">
+                {% for counterpart in crowdfunding.counterparts|slice(0, 3) %}
+                    <li>
+                        <a href="#{{ counterpart.slug }}">
+                            <strong>{{ (counterpart.price / 100)|format_currency(counterpart.currency, {fraction_digit: 0}) }}</strong>
+                            <span>{{ counterpart.title }}</span>
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endif %}
+
+    {# The draw a contribution also enters, named and dated: the prizes themselves are read further down, where the lottery is laid out in full #}
+    {% for lottery in crowdfunding.lotteries|slice(0, 1) %}
+        <div class="crowdfunding-funding__lottery">
+            <p class="crowdfunding-funding__lottery-title">{{ 'label.lottery'|trans }}</p>
+            {# "#lotteries", the wrapper both paths carry: the composed block and the hardcoded section each print it, where the card's own "#lottery" only exists without a block #}
+            <p><a href="#lotteries">{{ lottery.identifier }}</a></p>
+            <p>{{ 'label.draw_date'|trans }} : <strong>{{ lottery.drawDate|date('d/m/Y') }}</strong></p>
+        </div>
+    {% endfor %}
+</aside>
