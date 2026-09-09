@@ -23,6 +23,7 @@
         "doctrine/dbal": "^4.4",
         "doctrine/orm": "^3.6",
         "easycorp/easyadmin-bundle": "^5.1",
+        "endroid/qr-code": "^6",
         "imagine/imagine": "^1.5",
         "symfony/console": "^8.0",
         "symfony/filesystem": "^8.0",

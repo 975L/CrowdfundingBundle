@@ -1,10 +1,20 @@
-<section id="counterparts">
+{# The pencil UiBundle's overlay draws on any [data-block-edit-url] (see block-edit-overlay.js): a composed block gets one through CrowdfundingBlockEditUrlProvider, a section the page hardcodes gets it here, pointing at the very field the section is written in. Answers null to anyone but an editor #}
+{% set editUrl = counterparts|length ? crowdfunding_edit_url(counterparts|first.crowdfunding, 'counterparts') : null %}
+{# Why no tier carries a way in: said once above the run rather than repeated as a dead button on each of them (see components/Crowdfunding/Counterpart.html.twig, which drops the button outright) #}
+{% set state = counterparts|length ? crowdfunding_funding_state(counterparts|first.crowdfunding) : null %}
+<section id="counterparts" class="crowdfunding-counterparts"{% if editUrl %} data-block-edit-url="{{ editUrl }}"{% endif %}>
     <h2>{{ 'label.counterparts'|trans({}, 'crowdfunding') }}</h2>
+    {% if state and false == state.isStarted %}
+        {# The date only where there is one: "beginDate" is nullable and Twig's date filter turns a null into today, which had a campaign with no dates announcing it opened the very day it is read #}
+        <twig:c975LUi:Alert:Alert type="info" message="{{ 'text.counterparts_not_started'|trans({}, 'crowdfunding') }}{% if counterparts|first.crowdfunding.beginDate %} {{ counterparts|first.crowdfunding.beginDate|date('d/m/Y') }}{% endif %}"/>
+    {% elseif state and state.isEnded %}
+        <twig:c975LUi:Alert:Alert type="info" message="{{ 'text.counterparts_ended'|trans({}, 'crowdfunding') }}"/>
+    {% endif %}
     {% if counterparts is not empty %}
         <div data-controller="basket">
-            <div class="cards">
+            <div class="crowdfunding-counterparts__rows">
                 {% for counterpart in counterparts %}
-                    <twig:c975LCrowdfunding:Crowdfunding:Counterpart counterpart="{{ counterpart }}" number="{{ loop.index }}"/>
+                    <twig:c975LCrowdfunding:Crowdfunding:Counterpart counterpart="{{ counterpart }}" number="{{ loop.index }}" open="{{ loop.first }}"/>
                 {% endfor %}
             </div>
             <twig:c975LPayment:Basket:Message/>

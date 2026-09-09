@@ -8,6 +8,7 @@ use c975L\CrowdfundingBundle\Service\LotteryServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\GoneHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 
 class LotteryController extends AbstractController
@@ -20,13 +21,23 @@ class LotteryController extends AbstractController
 
     // DISPLAY
     #[Route(
-        '/shop/lottery/{identifier:lottery}',
+        '/crowdfunding/lottery/{identifier:lottery}',
         name: 'lottery_display',
         requirements: ['identifier' => '^([a-zA-Z0-9\-]{13})'],
         methods: ['GET']
     )]
     public function display(Lottery $lottery): Response
     {
+        // A draw is read through the campaign it belongs to: one whose campaign is in the recycle bin answers 410 as that campaign's own page does, and one whose campaign is not opened yet answers 404 - the url is otherwise a way round what the campaign page hides
+        $crowdfunding = $lottery->getCrowdfunding();
+        if (null !== $crowdfunding && $crowdfunding->isDeleted()) {
+            throw new GoneHttpException();
+        }
+
+        if (null !== $crowdfunding && $crowdfunding->isHidden()) {
+            throw $this->createNotFoundException();
+        }
+
         return $this->render('@c975LCrowdfunding/lottery/display.html.twig', [
             'lottery' => $lottery,
         ]);
@@ -34,7 +45,7 @@ class LotteryController extends AbstractController
 
     // API endpoint to draw a winner for a specific prize
     #[Route(
-        '/shop/lottery/{identifier:lottery}/draw/{rank}',
+        '/crowdfunding/lottery/{identifier:lottery}/draw/{rank}',
         name: 'lottery_draw_prize',
         requirements: [
             'identifier' => '^([a-zA-Z0-9\-]{13})',

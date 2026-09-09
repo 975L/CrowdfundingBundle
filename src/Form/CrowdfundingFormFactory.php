@@ -27,6 +27,6 @@ class CrowdfundingFormFactory implements CrowdfundingFormFactoryInterface
             default => throw new \InvalidArgumentException(sprintf('Unknown form "%s"', $name)),
         };
 
-        return $this->formFactory->create($type, $object, ['config' => []]);
+        return $this->formFactory->create($type, $object);
     }
 }

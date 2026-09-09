@@ -3,8 +3,10 @@
 
 {# Defines specific variables #}
 {% set title = 'label.crowdfunding'|trans ~ ' : "' ~ crowdfunding.title ~ '"' %}
-{% if crowdfunding.medias is not empty %}
-    {% set ogImage = absolute_url(asset(crowdfunding.medias[0].name)) %}
+{# What a shared link is drawn with: the campaign's cover, the opening image for one written before the two were told apart, and nothing for a campaign holding neither #}
+{% set ogMedia = crowdfunding.covers|first ?: crowdfunding.heroes|first %}
+{% if ogMedia %}
+    {% set ogImage = absolute_url(asset(ogMedia.name)) %}
 {% endif %}
 
 {% set summarySocialNetwork = crowdfunding.description %}
@@ -17,47 +19,51 @@
 
 {% block content %}
     <twig:c975LPayment:Basket:TestMode/>
-    <div class="crowdfunding">
-        {# Where the campaign stands, kept in sight the whole way down: the rail below ends with the story, this does not #}
-        <twig:c975LCrowdfunding:Crowdfunding:FundingTopBar crowdfunding="{{ crowdfunding }}"/>
-
+    {# An editor reading a campaign before it is opened (see CrowdfundingController::preview()) - the page is otherwise the public one, so it says which of the two this is #}
+    {% if isPreview|default(false) and crowdfunding.hidden %}
+        <twig:c975LUi:Alert:Alert type="warning" message="{{ 'label.preview_mode'|trans }}"/>
+    {% endif %}
+    <div class="crowdfunding crowdfunding--page">
         {% if 'banner_title' not in sheetKinds %}
             <twig:c975LCrowdfunding:Crowdfunding:Hero crowdfunding="{{ crowdfunding }}"/>
         {% endif %}
 
-        {# The story and the funding, side by side: a single column on a phone, the funding standing first, and a rail beside the story from 1024px up - which is what lets the funding stay in sight while the story is read #}
+        {# The whole campaign, in two columns from 1024px up: everything that is read on the left - the story, what the money pays for, the chronicle - and only what a contribution is decided on beside it, the funding and the tiers. The same split the crowdfunding platforms use, and what keeps the left column from ending under the slider with the rail still running #}
         <div class="crowdfunding-layout">
-            <twig:c975LCrowdfunding:Crowdfunding:FundingBar crowdfunding="{{ crowdfunding }}"/>
+            {# The rail: the funding, the tiers it is reached through, then the draw a contribution also enters - all three are what a visitor weighs a contribution against, so all three stay in sight while the story is read. Same place the shop puts a product's own buying column (see ShopBundle templates/product/display.html.twig) #}
+            <div class="crowdfunding-rail">
+                <twig:c975LCrowdfunding:Crowdfunding:FundingBar crowdfunding="{{ crowdfunding }}"/>
+                {% if 'crowdfunding_lottery' not in sheetKinds %}
+                    <twig:c975LCrowdfunding:Lottery:Lotteries lotteries="{{ crowdfunding.lotteries }}"/>
+                {% endif %}
+                {% if 'crowdfunding_counterparts' not in sheetKinds %}
+                    <twig:c975LCrowdfunding:Crowdfunding:CounterParts counterparts="{{ crowdfunding.counterparts }}"/>
+                {% endif %}
+            </div>
 
             <div class="crowdfunding-main">
-                <twig:c975LCrowdfunding:Crowdfunding:Presentation crowdfunding="{{ crowdfunding }}" showUse="false"/>
+                {# ":showUse", not "showUse": the plain attribute passes the string "false", which Twig reads as true, and the use of the funds was printed both here and on the band below #}
+                <twig:c975LCrowdfunding:Crowdfunding:Presentation crowdfunding="{{ crowdfunding }}" :showUse="false"/>
 
                 {# What the campaign says around its counterparts - composed in the back office, nothing to add here when it has no block #}
                 <twig:c975LUi:Blocks:Blocks blocks="{{ crowdfunding.blocks }}"/>
 
                 {% if 'crowdfunding_slider' not in sheetKinds %}
-                    <twig:c975LUi:Slider:Slider media="{{ crowdfunding.medias }}" id="slider" class="img-500" duration="3500" fallbackAlt="{{ crowdfunding.title }}"/>
-                {% endif %}
-                {% if 'crowdfunding_lottery' not in sheetKinds %}
-                    <twig:c975LCrowdfunding:Lottery:Lotteries lotteries="{{ crowdfunding.lotteries }}"/>
+                    <twig:c975LUi:Slider:Slider media="{{ crowdfunding.slides }}" id="slider" class="img-500" duration="3500" fallbackAlt="{{ crowdfunding.title }}"/>
                 {% endif %}
             </div>
-        </div>
 
-        {# What the money pays for and who is asking for it, on one band between the story and the tiers: the two answers a visitor weighs a tier against, read together rather than one at each end of the page #}
-        <div class="crowdfunding-support section--bg-dark">
-            <twig:c975LCrowdfunding:Crowdfunding:UseFor crowdfunding="{{ crowdfunding }}"/>
-            <twig:c975LCrowdfunding:Crowdfunding:Author name="{{ crowdfunding.authorName }}" presentation="{{ crowdfunding.authorPresentation }}" website="{{ crowdfunding.authorWebsite }}"/>
-        </div>
+            {# What the money pays for and who is asking for it, on one band under the story: the two answers a visitor weighs a tier against, read together rather than one at each end of the page. Inside the layout and not after it, so that on a phone it can be ordered between the story and the tiers - only siblings order against each other (see sass/_crowdfunding-blocks.scss) #}
+            <div class="crowdfunding-support section--bg-muted">
+                <twig:c975LCrowdfunding:Crowdfunding:UseFor crowdfunding="{{ crowdfunding }}"/>
+                <twig:c975LCrowdfunding:Crowdfunding:Author name="{{ crowdfunding.authorName }}" presentation="{{ crowdfunding.authorPresentation }}" website="{{ crowdfunding.authorWebsite }}" editUrl="{{ crowdfunding_edit_url(crowdfunding, 'authorName') }}"/>
+            </div>
 
-        {% if 'crowdfunding_counterparts' not in sheetKinds %}
-            <twig:c975LCrowdfunding:Crowdfunding:CounterParts counterparts="{{ crowdfunding.counterparts }}"/>
-        {% endif %}
-
-        {# The campaign's chronicle, after everything it is composed of: the news carry a form only a signed-in visitor sees, which no block can hold #}
-        <div class="crowdfunding-chronicle">
-            <twig:c975LCrowdfunding:Crowdfunding:NewsCollection newsCollection="{{ crowdfunding.news }}" form="{{ form }}"/>
-            <twig:c975LCrowdfunding:Crowdfunding:Contributors contributors="{{ crowdfunding.contributors }}"/>
+            {# The campaign's chronicle, after everything it is composed of: the news carry a form only a signed-in visitor sees, which no block can hold. In the story's column like everything else that is read rather than acted on - the rail beside it holds the funding and the tiers, and nothing else #}
+            <div class="crowdfunding-chronicle">
+                <twig:c975LCrowdfunding:Crowdfunding:NewsCollection crowdfunding="{{ crowdfunding }}" newsCollection="{{ crowdfunding.news }}" form="{{ form }}"/>
+                <twig:c975LCrowdfunding:Crowdfunding:Contributors contributors="{{ crowdfunding.contributors }}"/>
+            </div>
         </div>
     </div>
 {% endblock %}

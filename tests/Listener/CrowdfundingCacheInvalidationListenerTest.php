@@ -13,9 +13,7 @@ namespace c975L\CrowdfundingBundle\Tests\Listener;
 use c975L\CrowdfundingBundle\Entity\Crowdfunding;
 use c975L\CrowdfundingBundle\Entity\CrowdfundingContributor;
 use c975L\CrowdfundingBundle\Entity\CrowdfundingCounterpart;
-use c975L\CrowdfundingBundle\Entity\CrowdfundingCounterpartMedia;
 use c975L\CrowdfundingBundle\Entity\CrowdfundingMedia;
-use c975L\CrowdfundingBundle\Entity\CrowdfundingNews;
 use c975L\CrowdfundingBundle\Listener\CrowdfundingCacheInvalidationListener;
 use c975L\CrowdfundingBundle\Service\CrowdfundingBlockCacheInvalidator;
 use Doctrine\ORM\EntityManagerInterface;
@@ -34,13 +32,10 @@ class CrowdfundingCacheInvalidationListenerTest extends TestCase
         return [
             [new Crowdfunding()],
             [new CrowdfundingMedia()],
-            [new CrowdfundingCounterpart()],
-            [new CrowdfundingCounterpartMedia()],
-            [new CrowdfundingContributor()],
         ];
     }
 
-    // Every row the slider's render is drawn from drops the tag, whichever of the three events wrote it
+    // Every row the slider's render is drawn from drops the tag, whichever of the three events wrote it - the campaign and its plates, and nothing else
     #[DataProvider('rowsTheCampaignIsDrawnFrom')]
     public function testEachRowTheRenderReadsDropsTheCampaignTag(object $entity): void
     {
@@ -58,14 +53,24 @@ class CrowdfundingCacheInvalidationListenerTest extends TestCase
         $listener->preRemove(new PreRemoveEventArgs($entity, $entityManager));
     }
 
-    // A row no kind of this bundle draws leaves the cache alone, the listener being registered on every entity of the application
-    public function testARowTheRenderDoesNotReadLeavesTheCacheAlone(): void
+    /** @return list<array{0: object}> */
+    public static function rowsNoCacheEntryHolds(): array
+    {
+        return [
+            [new CrowdfundingCounterpart()],
+            [new CrowdfundingContributor()],
+        ];
+    }
+
+    // A row no cached render is drawn from leaves the cache alone, the listener being registered on every entity of the application - the tiers and the contributions are only ever printed by kinds declared "cacheable: false" and by the campaign page itself, neither of which has an entry to drop
+    #[DataProvider('rowsNoCacheEntryHolds')]
+    public function testARowNoCachedRenderReadsLeavesTheCacheAlone(object $entity): void
     {
         $cache = $this->createMock(TagAwareCacheInterface::class);
         $cache->expects($this->never())->method('invalidateTags');
 
         new CrowdfundingCacheInvalidationListener(new CrowdfundingBlockCacheInvalidator($cache))
-            ->postUpdate(new PostUpdateEventArgs(new CrowdfundingNews(), $this->createStub(EntityManagerInterface::class)))
+            ->postUpdate(new PostUpdateEventArgs($entity, $this->createStub(EntityManagerInterface::class)))
         ;
     }
 }

@@ -26,13 +26,10 @@ class CrowdfundingService implements CrowdfundingServiceInterface
     ) {
     }
 
-    // Add news
+    // Add news - the dates are stamped by CrowdfundingNewsListener, which the back office goes through too
     public function addNews(Crowdfunding $crowdfunding, CrowdfundingNews $news): void
     {
         $news->setCrowdfunding($crowdfunding);
-        $news->setCreation(new \DateTime());
-        $news->setModification(new \DateTime());
-        $news->setPublishedDate(new \DateTime());
 
         $this->entityManager->persist($news);
         $this->entityManager->flush();

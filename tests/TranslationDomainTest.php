@@ -36,6 +36,20 @@ class TranslationDomainTest extends TestCase
         }
     }
 
+    // What a template writes between the tags of a component is compiled as an embedded template, which "trans_default_domain" does not reach: a key named there without its domain prints raw, in either quote
+    public function testNoKeyBetweenComponentTagsReliesOnTheDefaultDomain(): void
+    {
+        foreach ($this->sourceFiles() as $file) {
+            foreach ($this->slotContents($file) as $slot) {
+                $this->assertDoesNotMatchRegularExpression(
+                    "/['\"][a-zA-Z0-9_.]+['\"]\\s*\\|\\s*trans(?!\\(\\s*\\{[^}]*\\}\\s*,\\s*['\"])/",
+                    $slot,
+                    sprintf('%s names a key between the tags of a component without its domain, where "trans_default_domain" does not reach it', basename($file))
+                );
+            }
+        }
+    }
+
     // A key named in the code and absent from the catalog renders as itself - "label.counterparts" printed as such on the page
     public function testEveryKeyTheCodeNamesIsShipped(): void
     {
@@ -84,6 +98,19 @@ class TranslationDomainTest extends TestCase
         }
     }
 
+    // What a Twig file writes between the opening and closing tags of a component, a self-closing tag opening no slot at all
+    /** @return list<string> */
+    private function slotContents(string $file): array
+    {
+        if (!str_ends_with($file, '.twig')) {
+            return [];
+        }
+
+        preg_match_all('/<twig:[A-Za-z0-9:]+[^>]*(?<!\/)>(.*?)<\/twig:/s', (string) file_get_contents($file), $matches);
+
+        return $matches[1];
+    }
+
     // Every key this bundle resolves in its own domain, keyed by the file naming it
     /** @return array<string, string> */
     private function usedKeys(): array
@@ -122,17 +149,44 @@ class TranslationDomainTest extends TestCase
         // A form type resolving its own labels in the bundle's domain, and the menu and guided-project providers naming theirs the same way, carry no domain of their own; "narration" is left out, resolved in the "_narration" domain NarrationCatalogueTest holds
         if (str_contains($contents, "'translation_domain' => 'crowdfunding'")) {
             $keys = array_merge($keys, $this->declaredLabelKeys($contents));
+            $keys = array_merge($keys, $this->traitLabelKeys($contents));
         }
 
         return $keys;
     }
 
-    // Twig: 'key'|trans({}, 'crowdfunding'), or without a domain in a file declaring the default one - the parentheses being optional, "'key'|trans" is how the emails named theirs and a regexp asking for them missed every one
+    // The fields a form type opts into rather than writes: UiBundle's traits add them, and their labels are looked up in the domain the type itself names - so this bundle ships them without a single one of its own files spelling them out
+    /** @return list<string> */
+    private function traitLabelKeys(string $contents): array
+    {
+        $traits = [
+            'HasAnchorFieldTrait' => ['label.anchor', 'label.anchor_help'],
+            'HasBackgroundFieldTrait' => [
+                'label.section_background',
+                'label.section_background_help',
+                'label.section_background_muted',
+                'label.section_background_primary',
+                'label.section_background_dark',
+                'label.section_background_none',
+            ],
+        ];
+
+        $keys = [];
+        foreach ($traits as $trait => $traitKeys) {
+            if (str_contains($contents, 'use ' . $trait . ';')) {
+                $keys = array_merge($keys, $traitKeys);
+            }
+        }
+
+        return $keys;
+    }
+
+    // Twig: 'key'|trans({}, 'crowdfunding'), or without a domain in a file declaring the default one - the parentheses being optional, "'key'|trans" is how the emails named theirs and a regexp asking for them missed every one. Either quote, Twig taking both: "label.name" in Prize.html.twig was named nowhere this test could see it, and printed raw
     /** @return list<string> */
     private function twigKeys(string $contents): array
     {
         $default = str_contains($contents, "trans_default_domain 'crowdfunding'");
-        preg_match_all("/'([a-zA-Z0-9_.]+)'\\s*\\|\\s*trans(?:\\(\\s*(?:\\{[^}]*\\})?\\s*(?:,\\s*'([a-z_]+)')?)?/", $contents, $matches, PREG_SET_ORDER);
+        preg_match_all("/['\"]([a-zA-Z0-9_.]+)['\"]\\s*\\|\\s*trans(?:\\(\\s*(?:\\{[^}]*\\})?\\s*(?:,\\s*['\"]([a-z_]+)['\"])?)?/", $contents, $matches, PREG_SET_ORDER);
         $keys = [];
 
         foreach ($matches as $match) {
@@ -145,11 +199,11 @@ class TranslationDomainTest extends TestCase
         return $keys;
     }
 
-    // PHP: trans('key', [], 'crowdfunding') and the t() the CRUD fields take
+    // PHP: trans('key', [...], 'crowdfunding') and the t() the CRUD fields take, in either quote as in Twig above - the parameters are read as anything but a closing bracket, a key handed placeholders being named no differently from one handed none
     /** @return list<string> */
     private function phpKeys(string $contents): array
     {
-        preg_match_all("/(?:trans|\\bt)\\(\\s*'([a-zA-Z0-9_.]+)'\\s*,\\s*\\[\\]\\s*,\\s*'crowdfunding'\\s*\\)/", $contents, $matches);
+        preg_match_all("/(?:trans|\\bt)\\(\\s*['\"]([a-zA-Z0-9_.]+)['\"]\\s*,\\s*\\[[^\\]]*\\]\\s*,\\s*['\"]crowdfunding['\"]\\s*\\)/", $contents, $matches);
 
         return $matches[1];
     }

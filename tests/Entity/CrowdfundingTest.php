@@ -48,6 +48,60 @@ class CrowdfundingTest extends TestCase
         $this->assertSame('', (string) new Crowdfunding());
     }
 
+    // The field a file is dropped on is what says what it is for: nothing reads "the first media" any more, so a plate sorted to the top cannot become the campaign's opening by accident
+    public function testAMediaBelongsToTheUseItWasAddedUnder(): void
+    {
+        $crowdfunding = new Crowdfunding();
+        $opening = new CrowdfundingMedia();
+        $plate = new CrowdfundingMedia();
+
+        $cover = new CrowdfundingMedia();
+
+        $crowdfunding->addCover($cover);
+        $crowdfunding->addHero($opening);
+        $crowdfunding->addSlide($plate);
+
+        $this->assertSame([$cover], array_values($crowdfunding->getCovers()->toArray()));
+        $this->assertSame([$opening], array_values($crowdfunding->getHeroes()->toArray()));
+        $this->assertSame([$plate], array_values($crowdfunding->getSlides()->toArray()));
+        $this->assertCount(3, $crowdfunding->getMedias());
+    }
+
+    // The cover and the opening image are two files and two uses: the catalogue shows the first whole, the page opens on the second - so laying one never fills the other in
+    public function testTheCoverAndTheOpeningImageAreToldApart(): void
+    {
+        $crowdfunding = new Crowdfunding();
+        $cover = new CrowdfundingMedia();
+
+        $crowdfunding->addCover($cover);
+
+        $this->assertSame(CrowdfundingMedia::KIND_COVER, $cover->getKind());
+        $this->assertTrue($crowdfunding->getHeroes()->isEmpty());
+    }
+
+    // One file, one use: a campaign wanting the same image as its opening and in its slider uploads it twice, rather than one row being read by both
+    public function testAFileHasASingleUse(): void
+    {
+        $crowdfunding = new Crowdfunding();
+        $media = new CrowdfundingMedia();
+
+        $crowdfunding->addSlide($media);
+
+        $this->assertTrue($crowdfunding->getHeroes()->isEmpty());
+        $this->assertSame(CrowdfundingMedia::KIND_SLIDE, $media->getKind());
+    }
+
+    // A campaign whose medias were never given a use shows none of them: no fallback on the first row, which would open the page on whatever an editor happened to sort first
+    public function testAMediaWithoutAUseIsReadByNeither(): void
+    {
+        $crowdfunding = new Crowdfunding()->addMedia(new CrowdfundingMedia());
+
+        $this->assertTrue($crowdfunding->getCovers()->isEmpty());
+        $this->assertTrue($crowdfunding->getHeroes()->isEmpty());
+        $this->assertTrue($crowdfunding->getSlides()->isEmpty());
+        $this->assertCount(1, $crowdfunding->getMedias());
+    }
+
     /** @return iterable<string, array{string, string, object}> */
     public static function ownedCollections(): iterable
     {
@@ -123,5 +177,39 @@ class CrowdfundingTest extends TestCase
 
         $this->assertSame(500000, $crowdfunding->getAmountGoal());
         $this->assertSame(125000, $crowdfunding->getAmountAchieved());
+    }
+
+    // Without the cascade the database refused to delete a funded campaign at all, its contributors still pointing at the row being deleted - and the recycle bin, which removes nothing, is what keeps a campaign
+    public function testTheContributionsAreCascadedWithTheCampaign(): void
+    {
+        $attribute = new \ReflectionProperty(Crowdfunding::class, 'contributors')
+            ->getAttributes(\Doctrine\ORM\Mapping\OneToMany::class)[0]->newInstance();
+
+        $this->assertContains('remove', (array) $attribute->cascade);
+    }
+
+    // A campaign is written before it is opened: the property starts hidden, so nothing of it is public before the screen it is composed on has been filled in
+    public function testACampaignStartsHidden(): void
+    {
+        $this->assertTrue(new Crowdfunding()->isHidden());
+        $this->assertFalse(new Crowdfunding()->isDeleted());
+    }
+
+    // Trashing a campaign hides it too, the two never disagreeing: a row of the recycle bin is out of the listing whatever its own switch said before
+    public function testTrashingACampaignHidesIt(): void
+    {
+        $crowdfunding = new Crowdfunding()->setHidden(false)->setIsDeleted(true);
+
+        $this->assertTrue($crowdfunding->isDeleted());
+        $this->assertTrue($crowdfunding->isHidden());
+    }
+
+    // Restoring leaves it hidden, to be read once before it is opened again
+    public function testRestoringACampaignLeavesItHidden(): void
+    {
+        $crowdfunding = new Crowdfunding()->setHidden(false)->setIsDeleted(true)->setIsDeleted(false);
+
+        $this->assertFalse($crowdfunding->isDeleted());
+        $this->assertTrue($crowdfunding->isHidden());
     }
 }

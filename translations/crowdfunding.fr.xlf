@@ -2,6 +2,38 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
     <file source-language="en" target-language="fr" datatype="plaintext" original="crowdfunding.en.xlf">
         <body>
+            <trans-unit id="sSgetpg">
+                <source>action.delete_permanently</source>
+                <target>Supprimer définitivement</target>
+            </trans-unit>
+            <trans-unit id="vUjYe27">
+                <source>action.move_to_trash</source>
+                <target>Mettre à la corbeille</target>
+            </trans-unit>
+            <trans-unit id="OVrqPFV">
+                <source>action.preview</source>
+                <target>Prévisualiser</target>
+            </trans-unit>
+            <trans-unit id="KrzhzB_">
+                <source>action.restore</source>
+                <target>Restaurer</target>
+            </trans-unit>
+            <trans-unit id="8w7xgsI">
+                <source>action.trash</source>
+                <target>Corbeille</target>
+            </trans-unit>
+            <trans-unit id="CTyRVpC">
+                <source>action.view_on_site</source>
+                <target>Voir sur le site</target>
+            </trans-unit>
+            <trans-unit id="X4j.TeG">
+                <source>confirm.delete_permanently</source>
+                <target>Cette campagne, ses médias, ses contreparties, ses tirages et les contributions reçues sont supprimés pour de bon. Rien ne les ramène.</target>
+            </trans-unit>
+            <trans-unit id="dm8sVDz">
+                <source>confirm.move_to_trash</source>
+                <target>Cette campagne quitte la liste pour la corbeille, en gardant tout ce qu'elle contient. Elle se restaure depuis là.</target>
+            </trans-unit>
             <trans-unit id="m0zKYk1">
                 <source>description.guided_project_crowdfunding_blocks</source>
                 <target>Tout ce que les champs du formulaire ne disent pas s'écrit en blocs, avec l'éditeur qui sert aussi aux pages du site.</target>
@@ -26,9 +58,21 @@
                 <source>description.guided_project_crowdfunding_media</source>
                 <target>Les photographies et les vidéos de la page publique : une campagne qu'on ne voit pas est une campagne qu'on ne finance pas.</target>
             </trans-unit>
+            <trans-unit id="eFr0snj">
+                <source>description.guided_project_crowdfunding_news</source>
+                <target>Une actualité se publie depuis la page publique de la campagne, par son porteur. Elle se corrige et se supprime ici, sur la fiche de la campagne.</target>
+            </trans-unit>
+            <trans-unit id="sgyVhOY">
+                <source>description.guided_project_crowdfunding_publish</source>
+                <target>Une campagne s'écrit masquée : hors de la liste, du plan du site et du panier, sa page répondant 404. On la regarde comme le visiteur la lira, puis on retire le masque.</target>
+            </trans-unit>
+            <trans-unit id="_lmRooz">
+                <source>description.guided_project_crowdfunding_trash</source>
+                <target>Supprimer demande deux gestes et deux écrans : le premier se défait depuis la corbeille, le second ne se défait pas.</target>
+            </trans-unit>
             <trans-unit id="wJ18L1_">
                 <source>description.guided_step_crowdfunding_blocks_add</source>
-                <target>Section « Blocs », tout en bas du formulaire. Textes, images, boutons, tableaux : les mêmes qu'une page du site, et ils se déplacent de la même façon.</target>
+                <target>Section « Blocs », tout en bas du formulaire. Textes, images, boutons, tableaux : les mêmes qu'une page du site - plus une catégorie « Financement participatif ». Trois y sont propres à cette campagne et la lisent au lieu de la recopier : Visuels de la campagne, Contreparties de la campagne et Loterie de la campagne.</target>
             </trans-unit>
             <trans-unit id="gxuhOnD">
                 <source>description.guided_step_crowdfunding_blocks_done</source>
@@ -37,6 +81,10 @@
             <trans-unit id="DDEqPtb">
                 <source>description.guided_step_crowdfunding_blocks_edit</source>
                 <target>Le crayon, sur la ligne de la campagne à compléter.</target>
+            </trans-unit>
+            <trans-unit id="mjiMXgY">
+                <source>description.guided_step_crowdfunding_blocks_listing</source>
+                <target>Un quatrième bloc, « Campagnes », ne se pose pas ici mais sur une page ordinaire du site : il y liste les campagnes ouvertes avec leur avancement, et se met à jour tout seul.</target>
             </trans-unit>
             <trans-unit id="kmrhQv4">
                 <source>description.guided_step_crowdfunding_blocks_open</source>
@@ -150,6 +198,10 @@
                 <source>description.guided_step_crowdfunding_lottery_prizes</source>
                 <target>Un lot par rang, du premier au dernier. Un billet ne gagne qu'une fois : un billet déjà sorti est retiré des tirages suivants.</target>
             </trans-unit>
+            <trans-unit id="AcMOgkG">
+                <source>description.guided_step_crowdfunding_media_cover</source>
+                <target>Une image, celle que le catalogue et les réseaux sociaux montrent de la campagne. Elle est affichée entière, jamais recadrée.</target>
+            </trans-unit>
             <trans-unit id="PvP917x">
                 <source>description.guided_step_crowdfunding_media_done</source>
                 <target>La page publique montre vos images. Rien à publier de plus : ce qui est enregistré est en ligne.</target>
@@ -157,6 +209,10 @@
             <trans-unit id="zOOKTt9">
                 <source>description.guided_step_crowdfunding_media_edit</source>
                 <target>Le crayon, sur la ligne de la campagne à illustrer.</target>
+            </trans-unit>
+            <trans-unit id="wO25COi">
+                <source>description.guided_step_crowdfunding_media_hero</source>
+                <target>Une image, celle sur laquelle la page de la campagne s'ouvre, imprimée sous son titre.</target>
             </trans-unit>
             <trans-unit id="OyJ02qF">
                 <source>description.guided_step_crowdfunding_media_open</source>
@@ -169,6 +225,98 @@
             <trans-unit id="h8uTQLk">
                 <source>description.guided_step_crowdfunding_media_videos</source>
                 <target>Juste en dessous. Une vidéo de campagne accepte un fichier téléversé ou, plus simplement, une adresse YouTube : c'est la voie à prendre pour un fichier lourd.</target>
+            </trans-unit>
+            <trans-unit id="h56Q.Qc">
+                <source>description.guided_step_crowdfunding_news_done</source>
+                <target>La correction est visible aussitôt sur la page de la campagne. Pour publier une nouvelle actualité, c'est la page publique et pas cet écran : voir la procédure « Publier une actualité de campagne ».</target>
+            </trans-unit>
+            <trans-unit id="LDsJslP">
+                <source>description.guided_step_crowdfunding_news_edit</source>
+                <target>Ouvrez la campagne dont une actualité est à reprendre.</target>
+            </trans-unit>
+            <trans-unit id="34zwwM1">
+                <source>description.guided_step_crowdfunding_news_expand</source>
+                <target>Une actualité se replie sur son titre. Ouvrez-la : le titre et le texte sont à l'intérieur, et se reprennent comme n'importe quel autre champ.</target>
+            </trans-unit>
+            <trans-unit id="3XzUlLc">
+                <source>description.guided_step_crowdfunding_news_fieldset</source>
+                <target>Toutes les actualités de la campagne sont là, la plus récente en tête. C'est aussi d'ici qu'une actualité se supprime.</target>
+            </trans-unit>
+            <trans-unit id="MEKl1be">
+                <source>description.guided_step_crowdfunding_news_open</source>
+                <target>Les actualités appartiennent à une campagne et se reprennent sur sa fiche : il n'y a pas d'écran d'actualités.</target>
+            </trans-unit>
+            <trans-unit id="l6S1nwM">
+                <source>description.guided_step_crowdfunding_publish_done</source>
+                <target>Elle peut être masquée de nouveau à tout moment par le même commutateur : elle quitte la liste et sa page répond de nouveau 404, sans rien perdre de ce qu'elle contient.</target>
+            </trans-unit>
+            <trans-unit id="vKwabam">
+                <source>description.guided_step_crowdfunding_publish_edit</source>
+                <target>De retour sur la liste, le crayon ouvre le formulaire de la campagne.</target>
+            </trans-unit>
+            <trans-unit id="Oy9jAW1">
+                <source>description.guided_step_crowdfunding_publish_hidden</source>
+                <target>Juste sous le titre. Éteignez-le et la campagne rejoint la liste, le plan du site et le panier, et sa page répond.</target>
+            </trans-unit>
+            <trans-unit id="8MqHMdX">
+                <source>description.guided_step_crowdfunding_publish_open</source>
+                <target>Toutes les campagnes du site, ouvertes ou non : celle à publier est parmi elles.</target>
+            </trans-unit>
+            <trans-unit id="GOb7cyi">
+                <source>description.guided_step_crowdfunding_publish_preview</source>
+                <target>Le bouton en forme d'œil ouvre la page de la campagne dans un nouvel onglet, telle que le visiteur la lira - sans le cache des blocs, et avec un bandeau disant qu'elle n'est pas encore ouverte.</target>
+            </trans-unit>
+            <trans-unit id="8ZMso2I">
+                <source>description.guided_step_crowdfunding_publish_qrcode</source>
+                <target>Le code qui mène à la page publique, à imprimer sur une affiche ou un flyer.</target>
+            </trans-unit>
+            <trans-unit id="CFl_OS0">
+                <source>description.guided_step_crowdfunding_publish_reopen</source>
+                <target>L'enregistrement vous a ramené à la liste. Rouvrez la campagne avec le crayon : le code QR n'est dessiné que sur son formulaire.</target>
+            </trans-unit>
+            <trans-unit id="XNWHIBI">
+                <source>description.guided_step_crowdfunding_publish_visit</source>
+                <target>Le bouton de prévisualisation a laissé place à un lien externe : la page de la campagne est désormais celle que tout le monde lit.</target>
+            </trans-unit>
+            <trans-unit id="iNzzZZT">
+                <source>description.guided_step_crowdfunding_trash_bin</source>
+                <target>Au-dessus de la liste, le bouton Corbeille montre les campagnes qui en ont été sorties, et elles seules.</target>
+            </trans-unit>
+            <trans-unit id="0tj3CPQ">
+                <source>description.guided_step_crowdfunding_trash_delete</source>
+                <target>Le bouton en forme de carton sur la ligne de la campagne. Il demande confirmation, puis sort la campagne de la liste : sa page répond 410 et elle garde tout ce qu'elle contient.</target>
+            </trans-unit>
+            <trans-unit id="5CL1y0.">
+                <source>description.guided_step_crowdfunding_trash_done</source>
+                <target>Tant qu'une campagne est dans la corbeille, elle peut revenir. La vider est une décision à part, prise ligne par ligne.</target>
+            </trans-unit>
+            <trans-unit id="We..oY8">
+                <source>description.guided_step_crowdfunding_trash_open</source>
+                <target>La campagne à retirer est dans cette liste.</target>
+            </trans-unit>
+            <trans-unit id="kZI5Ik8">
+                <source>description.guided_step_crowdfunding_trash_purge</source>
+                <target>Le dernier geste, et le seul qui ne se défait pas : la campagne, ses médias, ses contreparties, ses tirages et les contributions reçues partent pour de bon, et une redirection gone est laissée à son adresse.</target>
+            </trans-unit>
+            <trans-unit id="UI0HAAt">
+                <source>description.guided_step_crowdfunding_trash_restore</source>
+                <target>Ramène la campagne avec tout ce qu'elle contient encore. Elle revient masquée, son propre commutateur ayant été mis en marche à sa mise à la corbeille.</target>
+            </trans-unit>
+            <trans-unit id="W6mSS0W">
+                <source>flash.counterparts_kept_subscribed</source>
+                <target>Contreparties conservées, des contributeurs y ont déjà souscrit : %counterparts%</target>
+            </trans-unit>
+            <trans-unit id="_8DWjT5">
+                <source>flash.crowdfunding_deleted_permanently</source>
+                <target>La campagne est supprimée pour de bon, avec tout ce qu'elle contenait.</target>
+            </trans-unit>
+            <trans-unit id="lKWAzmQ">
+                <source>flash.crowdfunding_restored</source>
+                <target>La campagne est restaurée, masquée : ouvrez-la une fois sa page recomposée.</target>
+            </trans-unit>
+            <trans-unit id="O5f2GCG">
+                <source>flash.lotteries_kept_drawn</source>
+                <target>Loteries conservées, des billets y ont déjà été vendus : %lotteries%</target>
             </trans-unit>
             <trans-unit id="Gc5WKsr">
                 <source>label.add_news</source>
@@ -186,6 +334,14 @@
                 <source>label.amount_achieved</source>
                 <target>Montant réalisé</target>
             </trans-unit>
+            <trans-unit id="PmT6SQr">
+                <source>label.anchor</source>
+                <target>Ancre</target>
+            </trans-unit>
+            <trans-unit id="ufovuez">
+                <source>label.anchor_help</source>
+                <target>Identifiant court pour lier le menu à cette section (ex. "financements"). Vide = déduit du titre.</target>
+            </trans-unit>
             <trans-unit id="rB0F4ao">
                 <source>label.anonymous</source>
                 <target>Anonyme</target>
@@ -202,9 +358,17 @@
                 <source>label.begin_date</source>
                 <target>Date début</target>
             </trans-unit>
-            <trans-unit id="tlWkHoQ">
-                <source>label.block_columns</source>
-                <target>Nombre de colonnes</target>
+            <trans-unit id="ZYSu8_e">
+                <source>label.block_campaigns</source>
+                <target>Financements participatifs</target>
+            </trans-unit>
+            <trans-unit id="lSGVTVq">
+                <source>label.block_campaigns_description</source>
+                <target>Les campagnes ouvertes, chacune sur sa carte avec sa jauge et son échéance, mises à jour toutes seules.</target>
+            </trans-unit>
+            <trans-unit id="diEBoLH">
+                <source>label.block_content</source>
+                <target>Description</target>
             </trans-unit>
             <trans-unit id="7QcgnDK">
                 <source>label.block_counterparts</source>
@@ -212,7 +376,11 @@
             </trans-unit>
             <trans-unit id="qb7ukag">
                 <source>label.block_counterparts_description</source>
-                <target>Les contreparties de la campagne, en grille, avec un palier mis en avant et le stock restant.</target>
+                <target>Les contreparties de la campagne, en lignes dépliables, avec un palier mis en avant et le stock restant.</target>
+            </trans-unit>
+            <trans-unit id="EOPRqPX">
+                <source>label.block_eyebrow</source>
+                <target>Surtitre</target>
             </trans-unit>
             <trans-unit id="_GdsAH3">
                 <source>label.block_highlighted_counterpart</source>
@@ -226,6 +394,18 @@
                 <source>label.block_intro</source>
                 <target>Introduction</target>
             </trans-unit>
+            <trans-unit id="XvzdMRN">
+                <source>label.block_link_label</source>
+                <target>Libellé du lien de la section</target>
+            </trans-unit>
+            <trans-unit id="lUsV6nU">
+                <source>label.block_link_url</source>
+                <target>Adresse du lien de la section</target>
+            </trans-unit>
+            <trans-unit id="TbQrtiQ">
+                <source>label.block_link_url_help</source>
+                <target>Le lien se pose au bout de la ligne du titre. Les deux champs sont nécessaires : l'un sans l'autre n'affiche rien.</target>
+            </trans-unit>
             <trans-unit id="bOvLcOe">
                 <source>label.block_lottery</source>
                 <target>Loterie de la campagne</target>
@@ -237,6 +417,10 @@
             <trans-unit id="mx.fFeq">
                 <source>label.block_low_stock_threshold</source>
                 <target>Seuil de stock bas</target>
+            </trans-unit>
+            <trans-unit id="N3IDrzI">
+                <source>label.block_max_campaigns</source>
+                <target>Nombre de campagnes (vide = toutes)</target>
             </trans-unit>
             <trans-unit id="XmO5Zkc">
                 <source>label.block_ratio</source>
@@ -270,9 +454,21 @@
                 <source>label.block_slider_description</source>
                 <target>Les visuels de la campagne dans un diaporama, sans avoir à les téléverser de nouveau.</target>
             </trans-unit>
+            <trans-unit id="t9d9.Qz">
+                <source>label.block_title</source>
+                <target>Titre</target>
+            </trans-unit>
             <trans-unit id="OncQEBy">
                 <source>label.blocks</source>
                 <target>Blocs</target>
+            </trans-unit>
+            <trans-unit id="3Lb2a5V">
+                <source>label.campaign</source>
+                <target>Campagne</target>
+            </trans-unit>
+            <trans-unit id="Yhua9nL">
+                <source>label.campaigns</source>
+                <target>Campagnes</target>
             </trans-unit>
             <trans-unit id="pXoyqkP">
                 <source>label.category_crowdfunding</source>
@@ -302,13 +498,13 @@
                 <source>label.contributors</source>
                 <target>Contributeurs</target>
             </trans-unit>
-            <trans-unit id="blga5_q">
-                <source>label.counterpart_entitles</source>
-                <target>Cette contrepartie vous donne droit à :</target>
-            </trans-unit>
             <trans-unit id="wW2Rykr">
                 <source>label.counterparts</source>
                 <target>Contreparties</target>
+            </trans-unit>
+            <trans-unit id="iFh7z4x">
+                <source>label.cover</source>
+                <target>Couverture de la campagne</target>
             </trans-unit>
             <trans-unit id="emPIlPf">
                 <source>label.creation</source>
@@ -410,6 +606,18 @@
                 <source>label.guided_project_crowdfunding_media</source>
                 <target>Illustrer la campagne</target>
             </trans-unit>
+            <trans-unit id="BU0nB.g">
+                <source>label.guided_project_crowdfunding_news</source>
+                <target>Corriger une actualité</target>
+            </trans-unit>
+            <trans-unit id="TQxRx26">
+                <source>label.guided_project_crowdfunding_publish</source>
+                <target>Ouvrir la campagne au public</target>
+            </trans-unit>
+            <trans-unit id="On0Ss.9">
+                <source>label.guided_project_crowdfunding_trash</source>
+                <target>Retirer une campagne</target>
+            </trans-unit>
             <trans-unit id="MG1lau0">
                 <source>label.guided_step_crowdfunding_blocks_add</source>
                 <target>Ajouter des blocs</target>
@@ -421,6 +629,10 @@
             <trans-unit id="DMiqtI_">
                 <source>label.guided_step_crowdfunding_blocks_edit</source>
                 <target>Ouvrir la campagne</target>
+            </trans-unit>
+            <trans-unit id="cbIbuxK">
+                <source>label.guided_step_crowdfunding_blocks_listing</source>
+                <target>Lister les campagnes ailleurs</target>
             </trans-unit>
             <trans-unit id="XxPn7h8">
                 <source>label.guided_step_crowdfunding_blocks_open</source>
@@ -554,6 +766,10 @@
                 <source>label.guided_step_crowdfunding_lottery_save</source>
                 <target>Enregistrer</target>
             </trans-unit>
+            <trans-unit id="pwVa2mi">
+                <source>label.guided_step_crowdfunding_media_cover</source>
+                <target>La couverture</target>
+            </trans-unit>
             <trans-unit id="49.9gFs">
                 <source>label.guided_step_crowdfunding_media_done</source>
                 <target>C'est fait</target>
@@ -561,6 +777,10 @@
             <trans-unit id="xH_WYSz">
                 <source>label.guided_step_crowdfunding_media_edit</source>
                 <target>Ouvrir la campagne</target>
+            </trans-unit>
+            <trans-unit id="2ph0PBB">
+                <source>label.guided_step_crowdfunding_media_hero</source>
+                <target>L'image d'ouverture</target>
             </trans-unit>
             <trans-unit id="BRCuw7c">
                 <source>label.guided_step_crowdfunding_media_open</source>
@@ -577,6 +797,98 @@
             <trans-unit id="WJs2doU">
                 <source>label.guided_step_crowdfunding_media_videos</source>
                 <target>Les vidéos</target>
+            </trans-unit>
+            <trans-unit id="cxvRzIZ">
+                <source>label.guided_step_crowdfunding_news_done</source>
+                <target>C'est fait</target>
+            </trans-unit>
+            <trans-unit id="lIzpyWf">
+                <source>label.guided_step_crowdfunding_news_edit</source>
+                <target>Modifier la campagne</target>
+            </trans-unit>
+            <trans-unit id="7eV9COe">
+                <source>label.guided_step_crowdfunding_news_expand</source>
+                <target>Déplier l'actualité</target>
+            </trans-unit>
+            <trans-unit id="UhuQj3a">
+                <source>label.guided_step_crowdfunding_news_fieldset</source>
+                <target>Le pavé Actualités</target>
+            </trans-unit>
+            <trans-unit id="_aQo4q1">
+                <source>label.guided_step_crowdfunding_news_open</source>
+                <target>Vos campagnes</target>
+            </trans-unit>
+            <trans-unit id="X3.0lsm">
+                <source>label.guided_step_crowdfunding_news_save</source>
+                <target>Enregistrer</target>
+            </trans-unit>
+            <trans-unit id="aahJWRJ">
+                <source>label.guided_step_crowdfunding_publish_done</source>
+                <target>La campagne est ouverte</target>
+            </trans-unit>
+            <trans-unit id="yNVhJzv">
+                <source>label.guided_step_crowdfunding_publish_edit</source>
+                <target>Ouvrir la campagne</target>
+            </trans-unit>
+            <trans-unit id="O6VP7K8">
+                <source>label.guided_step_crowdfunding_publish_hidden</source>
+                <target>Le commutateur Masquée</target>
+            </trans-unit>
+            <trans-unit id="yoc46C1">
+                <source>label.guided_step_crowdfunding_publish_open</source>
+                <target>L'écran des campagnes</target>
+            </trans-unit>
+            <trans-unit id="9zddXhO">
+                <source>label.guided_step_crowdfunding_publish_preview</source>
+                <target>Prévisualiser</target>
+            </trans-unit>
+            <trans-unit id="9MQ3uq0">
+                <source>label.guided_step_crowdfunding_publish_qrcode</source>
+                <target>Le QR code</target>
+            </trans-unit>
+            <trans-unit id="HuDqn0M">
+                <source>label.guided_step_crowdfunding_publish_reopen</source>
+                <target>Rouvrir la campagne</target>
+            </trans-unit>
+            <trans-unit id="NoXwuPH">
+                <source>label.guided_step_crowdfunding_publish_save</source>
+                <target>Enregistrer</target>
+            </trans-unit>
+            <trans-unit id="hxq6JX7">
+                <source>label.guided_step_crowdfunding_publish_visit</source>
+                <target>Voir sur le site</target>
+            </trans-unit>
+            <trans-unit id="i99y59p">
+                <source>label.guided_step_crowdfunding_trash_bin</source>
+                <target>Ouvrir la corbeille</target>
+            </trans-unit>
+            <trans-unit id="2XSjGoo">
+                <source>label.guided_step_crowdfunding_trash_delete</source>
+                <target>Mettre à la corbeille</target>
+            </trans-unit>
+            <trans-unit id="MWCl.8k">
+                <source>label.guided_step_crowdfunding_trash_done</source>
+                <target>Rien ne se perd par accident</target>
+            </trans-unit>
+            <trans-unit id="a0hA5Ux">
+                <source>label.guided_step_crowdfunding_trash_open</source>
+                <target>L'écran des campagnes</target>
+            </trans-unit>
+            <trans-unit id="NPhUOMU">
+                <source>label.guided_step_crowdfunding_trash_purge</source>
+                <target>Supprimer définitivement</target>
+            </trans-unit>
+            <trans-unit id="XOsvtWe">
+                <source>label.guided_step_crowdfunding_trash_restore</source>
+                <target>Restaurer</target>
+            </trans-unit>
+            <trans-unit id="F3Oy_bs">
+                <source>label.hero</source>
+                <target>Image d'ouverture</target>
+            </trans-unit>
+            <trans-unit id="w3xdU2K">
+                <source>label.hidden</source>
+                <target>Masquée</target>
             </trans-unit>
             <trans-unit id="CXV._FX">
                 <source>label.i_contribute</source>
@@ -621,6 +933,10 @@
             <trans-unit id=".B3ED5Q">
                 <source>label.most_chosen</source>
                 <target>Le plus choisi</target>
+            </trans-unit>
+            <trans-unit id="aSiMEIt">
+                <source>label.name</source>
+                <target>Nom</target>
             </trans-unit>
             <trans-unit id="QiGcdrp">
                 <source>label.news</source>
@@ -682,6 +998,10 @@
                 <source>label.presentation</source>
                 <target>Présentation</target>
             </trans-unit>
+            <trans-unit id="ljaH9fz">
+                <source>label.preview_mode</source>
+                <target>Cette campagne n'est pas encore ouverte : vous êtes seul à lire cette page.</target>
+            </trans-unit>
             <trans-unit id="xOZNrCi">
                 <source>label.price</source>
                 <target>Prix</target>
@@ -698,6 +1018,10 @@
                 <source>label.project</source>
                 <target>Projet</target>
             </trans-unit>
+            <trans-unit id="uPsqmgW">
+                <source>label.qrcode</source>
+                <target>QR code</target>
+            </trans-unit>
             <trans-unit id="SxGGYuv">
                 <source>label.quantity</source>
                 <target>Quantité</target>
@@ -709,6 +1033,34 @@
             <trans-unit id="PcJ4rF3">
                 <source>label.requires_shipping</source>
                 <target>Nécessite une expédition</target>
+            </trans-unit>
+            <trans-unit id="LqQIe5o">
+                <source>label.section_background</source>
+                <target>Fond de la section</target>
+            </trans-unit>
+            <trans-unit id="S3aOJc1">
+                <source>label.section_background_dark</source>
+                <target>Foncé</target>
+            </trans-unit>
+            <trans-unit id="dG59CiC">
+                <source>label.section_background_help</source>
+                <target>Peint la section en aplat pleine largeur - les textes, filets et boutons qu'elle contient s'inversent automatiquement pour rester lisibles.</target>
+            </trans-unit>
+            <trans-unit id="gxWXTr3">
+                <source>label.section_background_muted</source>
+                <target>Gris clair</target>
+            </trans-unit>
+            <trans-unit id="UcA_IiR">
+                <source>label.section_background_none</source>
+                <target>Aucun (fond de page)</target>
+            </trans-unit>
+            <trans-unit id="r82HE3G">
+                <source>label.section_background_primary</source>
+                <target>Couleur principale</target>
+            </trans-unit>
+            <trans-unit id="WTG_sdU">
+                <source>label.slides</source>
+                <target>Slider</target>
             </trans-unit>
             <trans-unit id="B3H3lVW">
                 <source>label.ticket_number</source>
@@ -754,9 +1106,29 @@
                 <source>label.youtube_or_upload</source>
                 <target>SOIT un identifiant Youtube, SOIT un fichier vidéo ci-dessous</target>
             </trans-unit>
+            <trans-unit id="1fbQEIp">
+                <source>text.counterparts_ended</source>
+                <target>Le financement est terminé : ces contreparties ne sont plus disponibles.</target>
+            </trans-unit>
+            <trans-unit id="hyFlSD_">
+                <source>text.counterparts_not_started</source>
+                <target>Le financement n'a pas encore commencé : ces contreparties seront disponibles à partir du</target>
+            </trans-unit>
+            <trans-unit id="w_F5eaP">
+                <source>text.cover</source>
+                <target>L'image qui représente la campagne partout où elle est nommée sans être ouverte : la carte du catalogue et le lien partagé sur les réseaux sociaux. Montrée entière, jamais recadrée. Une seule par campagne.</target>
+            </trans-unit>
             <trans-unit id="lMuHD.4">
                 <source>text.crowdfundings</source>
                 <target>Tous nos financements participatifs</target>
+            </trans-unit>
+            <trans-unit id="ExVqe8o">
+                <source>text.hero</source>
+                <target>L'image sur laquelle la page de la campagne s'ouvre, imprimée sous son titre. Le catalogue et les réseaux sociaux montrent la couverture ci-dessus. Une seule par campagne.</target>
+            </trans-unit>
+            <trans-unit id="8y0K8dr">
+                <source>text.hidden</source>
+                <target>Une campagne masquée n'apparaît ni dans la liste, ni dans le sitemap, ni dans le panier, et sa page répond 404 : elle se lit avec l'action Prévisualiser.</target>
             </trans-unit>
             <trans-unit id="8c.LYZW">
                 <source>text.items_management</source>
@@ -773,6 +1145,14 @@
             <trans-unit id="9pUi4A6">
                 <source>text.lottery_ticket_winner</source>
                 <target>Vous avez participé à une loterie liée à un financement participatif et vous avez gagné !</target>
+            </trans-unit>
+            <trans-unit id="KpQXqZC">
+                <source>text.qrcode</source>
+                <target>À imprimer sur une affiche ou un flyer : il mène à la page publique de la campagne.</target>
+            </trans-unit>
+            <trans-unit id="mX8rxjn">
+                <source>text.slides</source>
+                <target>Les images que fait défiler le slider de la page. Pour montrer la même en ouverture et dans le slider, chargez-la sur chacun des deux champs.</target>
             </trans-unit>
         </body>
     </file>

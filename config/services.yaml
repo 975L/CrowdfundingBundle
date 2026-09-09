@@ -17,6 +17,23 @@ services:
     c975L\CrowdfundingBundle\Service\ScriptProvider:
         tags:
             - { name: 'ui.script', priority: 100 }
+
+    # The one kind of this bundle placed on an ordinary page rather than on a campaign's own: it lists the campaigns a visitor may read, live from the repository (see CrowdfundingBlockExtension), with no "contexts" hence offered everywhere - and never cached, for the reason the counterparts are not, each card printing the days left against today where no event fires the day a campaign starts or ends
+    crowdfunding.block.campaigns:
+        class: stdClass
+        tags:
+            - name: ui.block
+              kind: crowdfunding_campaigns
+              label: 'label.block_campaigns'
+              description: 'label.block_campaigns_description'
+              translation_domain: 'crowdfunding'
+              category: 'label.category_crowdfunding'
+              form: 'c975L\CrowdfundingBundle\Form\Block\CampaignsBlockType'
+              translatable: 'eyebrow, title, content, linkLabel'
+              template: '@c975LCrowdfunding/blocks/Campaigns.html.twig'
+              pickable: true
+              cacheable: false
+
     # The three kinds composing a campaign page: each reads the campaign of the route it is rendered on (see CrowdfundingBlockExtension) and stores only how to show it, "contexts" keeping the sections out of a flex column where a full-width grid of tiers has no room
     crowdfunding.block.slider:
         class: stdClass
@@ -45,11 +62,10 @@ services:
               form: 'c975L\CrowdfundingBundle\Form\Block\CounterpartsBlockType'
               template: '@c975LCrowdfunding/blocks/Counterparts.html.twig'
               pickable: true
-              # "cacheable" stays true and the provider vetoes the entry instead: each tier's button is read against today's date, and no event fires the day a campaign ends
-              cacheable: true
+              # Never cached, as ShopBundle's "shop_search" is not: each tier draws its own button against today's date, and no event fires the day a campaign ends, so an entry that never expires would keep offering to contribute to a campaign that closed - and the basket messages laid beside the tiers belong to whoever is reading, not to everybody
+              cacheable: false
               contexts: 'crowdfunding'
 
-    # "cacheable" stays true, the veto belonging to the instance rather than the kind - CrowdfundingBlockCacheTagProvider returns null for the draws, whose dates are read in the visitor's own timezone and whose button an administrator alone may see
     crowdfunding.block.lottery:
         class: stdClass
         tags:
@@ -62,5 +78,6 @@ services:
               form: 'c975L\CrowdfundingBundle\Form\Block\LotteryBlockType'
               template: '@c975LCrowdfunding/blocks/Lottery.html.twig'
               pickable: true
-              cacheable: true
+              # Never cached either: the draws print their dates in the visitor's own timezone (see Lottery.html.twig, app.session.get('user_timezone')) and offer the draw button to an administrator alone, where an entry is shared by everyone reading the page
+              cacheable: false
               contexts: 'crowdfunding'

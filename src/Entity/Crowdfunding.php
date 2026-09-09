@@ -13,8 +13,10 @@ namespace c975L\CrowdfundingBundle\Entity;
 use c975L\ConfigBundle\Contract\UserInterface;
 use c975L\CrowdfundingBundle\Repository\CrowdfundingRepository;
 use c975L\UiBundle\Contract\HasBlocksInterface;
+use c975L\UiBundle\Contract\TrashableInterface;
 use c975L\UiBundle\Entity\Block;
 use c975L\UiBundle\Entity\Trait\HasBlocksTrait;
+use c975L\UiBundle\Entity\Trait\TrashableTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -24,9 +26,10 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 #[ORM\Entity(repositoryClass: CrowdfundingRepository::class)]
 #[ORM\Table(name: 'crowdfunding_crowdfunding')]
 #[UniqueEntity('slug')]
-class Crowdfunding implements HasBlocksInterface, \Stringable
+class Crowdfunding implements HasBlocksInterface, TrashableInterface, \Stringable
 {
     use HasBlocksTrait;
+    use TrashableTrait;
 
     private string $type = 'crowdfunding';
 
@@ -80,27 +83,37 @@ class Crowdfunding implements HasBlocksInterface, \Stringable
     #[ORM\Column(nullable: true)]
     private ?int $position = null;
 
-    #[ORM\OneToMany(targetEntity: CrowdfundingMedia::class, mappedBy: 'crowdfunding', cascade: ['persist', 'remove'])]
-    #[ORM\OrderBy(['position' => 'ASC'])]
+    // The id breaks the tie, two rows being free to carry the same position an editor typed, and "orphanRemoval" is there for the reason $news carries it: the join column is nullable, so a media removed from the form only lost its campaign and stayed in the table with its file
+    #[ORM\OneToMany(targetEntity: CrowdfundingMedia::class, mappedBy: 'crowdfunding', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OrderBy(['position' => 'ASC', 'id' => 'ASC'])]
     private Collection $medias;
 
-    #[ORM\OneToMany(targetEntity: CrowdfundingContributor::class, mappedBy: 'crowdfunding')]
+    // Cascaded like everything else the campaign holds: without it, deleting a funded campaign for good was refused by the database, its contributors still pointing at the row being deleted. Only the second, deliberate deletion ever reaches here - the recycle bin removes nothing
+    #[ORM\OneToMany(targetEntity: CrowdfundingContributor::class, mappedBy: 'crowdfunding', cascade: ['remove'])]
     #[ORM\OrderBy(['id' => 'ASC'])]
     private Collection $contributors;
 
-    #[ORM\OneToMany(targetEntity: CrowdfundingNews::class, mappedBy: 'crowdfunding', cascade: ['remove'])]
-    #[ORM\OrderBy(['publishedDate' => 'DESC'])]
+    // "persist" and "orphanRemoval" for the back office, where a news is written and corrected on the campaign's own form: without the first a news added there is never written, and without the second a deleted one only loses its campaign - the join column being nullable - and stays in the table forever
+    #[ORM\OneToMany(targetEntity: CrowdfundingNews::class, mappedBy: 'crowdfunding', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OrderBy(['publishedDate' => 'DESC', 'id' => 'DESC'])]
     private Collection $news;
 
-    #[ORM\OneToMany(targetEntity: CrowdfundingCounterpart::class, mappedBy: 'crowdfunding', cascade: ['persist', 'remove'])]
-    #[ORM\OrderBy(['price' => 'ASC'])]
+    // "orphanRemoval" like the collections around it - a counterpart being the one of them a contributor points at, CrowdfundingCrudController::updateEntity() refuses beforehand to remove one that was already subscribed, which the database would otherwise answer with a foreign key error
+    #[ORM\OneToMany(targetEntity: CrowdfundingCounterpart::class, mappedBy: 'crowdfunding', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OrderBy(['price' => 'ASC', 'id' => 'ASC'])]
     private Collection $counterparts;
 
-    #[ORM\OneToMany(targetEntity: CrowdfundingVideo::class, mappedBy: 'crowdfunding', cascade: ['persist', 'remove'])]
+    // "orphanRemoval" like $medias, and for the same file left behind
+    #[ORM\OneToMany(targetEntity: CrowdfundingVideo::class, mappedBy: 'crowdfunding', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $videos;
 
-    #[ORM\OneToMany(targetEntity: Lottery::class, mappedBy: 'crowdfunding', cascade: ['persist', 'remove'])]
+    // "orphanRemoval" like the collections above - a lottery cascades to its own prizes, tickets and videos, so nothing of it is left pointing at a row that is gone
+    #[ORM\OneToMany(targetEntity: Lottery::class, mappedBy: 'crowdfunding', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $lotteries;
+
+    // A campaign is written before it is opened: hidden, it stays out of the listing, out of the sitemap and out of every basket, its page answering 404 in the meantime - an editor reads it through the preview action. The column defaults to false so campaigns already online stay online the day it is created, the property to true so a campaign written from now on starts hidden
+    #[ORM\Column(options: ['default' => false])]
+    private bool $hidden = true;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $creation = null;
@@ -125,6 +138,31 @@ class Crowdfunding implements HasBlocksInterface, \Stringable
     public function __toString(): string
     {
         return (string) $this->title;
+    }
+
+    public function isHidden(): bool
+    {
+        return $this->hidden;
+    }
+
+    public function setHidden(bool $hidden): static
+    {
+        $this->hidden = $hidden;
+
+        return $this;
+    }
+
+    // Trashing a campaign hides it too, the two never disagreeing: a row of the recycle bin is out of the listing whatever its own switch said before
+    #[\Override]
+    public function setIsDeleted(bool $isDeleted): static
+    {
+        $this->isDeleted = $isDeleted;
+
+        if ($isDeleted) {
+            $this->hidden = true;
+        }
+
+        return $this;
     }
 
     public function getType(): string
@@ -325,6 +363,70 @@ class Crowdfunding implements HasBlocksInterface, \Stringable
         }
 
         return $this;
+    }
+
+    // The campaign's cover: the image that stands for it wherever the campaign is named but not opened - the listing card and the link a visitor shares. Shown whole and never cropped, so a banner an author framed themselves stays framed that way, where the opening image is printed over by the title and read full-bleed
+    /** @return Collection<int, CrowdfundingMedia> */
+    public function getCovers(): Collection
+    {
+        return $this->mediasOfKind(CrowdfundingMedia::KIND_COVER);
+    }
+
+    public function addCover(CrowdfundingMedia $media): static
+    {
+        $media->setKind(CrowdfundingMedia::KIND_COVER);
+
+        return $this->addMedia($media);
+    }
+
+    public function removeCover(CrowdfundingMedia $media): static
+    {
+        return $this->removeMedia($media);
+    }
+
+    // The campaign's opening image, the one its page opens on, printed over by its name. Uploaded on a field of its own, which is what sets the kind: nothing here reads "the first media" any more, so a plate added at the top of the slider cannot become the opening by accident. A campaign holding no cover falls back on it (see components/Crowdfunding/Crowdfunding.html.twig), which is what campaigns written before the two were told apart still rely on
+    /** @return Collection<int, CrowdfundingMedia> */
+    public function getHeroes(): Collection
+    {
+        return $this->mediasOfKind(CrowdfundingMedia::KIND_HERO);
+    }
+
+    public function addHero(CrowdfundingMedia $media): static
+    {
+        $media->setKind(CrowdfundingMedia::KIND_HERO);
+
+        return $this->addMedia($media);
+    }
+
+    public function removeHero(CrowdfundingMedia $media): static
+    {
+        return $this->removeMedia($media);
+    }
+
+    // What the campaign's slider runs through. A file has one use: an image wanted both as the cover and in the slider is uploaded on each of the two fields, rather than one row being read twice
+    /** @return Collection<int, CrowdfundingMedia> */
+    public function getSlides(): Collection
+    {
+        return $this->mediasOfKind(CrowdfundingMedia::KIND_SLIDE);
+    }
+
+    public function addSlide(CrowdfundingMedia $media): static
+    {
+        $media->setKind(CrowdfundingMedia::KIND_SLIDE);
+
+        return $this->addMedia($media);
+    }
+
+    public function removeSlide(CrowdfundingMedia $media): static
+    {
+        return $this->removeMedia($media);
+    }
+
+    // The campaign's own files of one kind, in the order they were sorted in
+    /** @return Collection<int, CrowdfundingMedia> */
+    public function mediasOfKind(string $kind): Collection
+    {
+        return $this->medias->filter(static fn (CrowdfundingMedia $media): bool => $kind === $media->getKind());
     }
 
     public function getContributors(): Collection

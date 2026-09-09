@@ -1,0 +1,7 @@
+{# The QR code of a campaign, printed on the edit screen: the widget is bound to no property of its own (see Form/Type/CrowdfundingQrCodeType.php), so it reads the campaign off the form it is nested in #}
+{% block c975l_crowdfunding_qrcode_widget %}
+    {% set crowdfunding = form.parent.vars.data %}
+    <legend class="col-form-label">{{ 'label.qrcode'|trans({}, 'crowdfunding') }}</legend>
+    <p class="text-muted">{{ 'text.qrcode'|trans({}, 'crowdfunding') }}</p>
+    <img src="{{ ea_url().setAction('qrcode').setEntityId(crowdfunding.id) }}" alt="{{ 'label.qrcode'|trans({}, 'crowdfunding') }}">
+{% endblock %}

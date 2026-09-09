@@ -15,15 +15,16 @@ use c975L\CrowdfundingBundle\Service\CrowdfundingBlockCacheTagProvider;
 use c975L\UiBundle\Entity\Block;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Yaml\Yaml;
 
-// The three kinds resolve their campaign live at render time, which no Block event ever signals a change of: one carries a tag of its own, the two reading a date or a visitor answer null instead
+// The three kinds resolve their campaign live at render time, which no Block event ever signals a change of: the slider carries a tag of its own, the two reading a date or a visitor are not cached at all
 class CrowdfundingBlockCacheTagProviderTest extends TestCase
 {
-    // Exactly the three kinds config/services.yaml declares, or a kind renders with no answer at all
-    public function testEveryKindOfThisBundleCarriesAResolver(): void
+    // The one kind of this bundle whose render is cached: a resolver for anything else would be a kind config/services.yaml declares "cacheable: false", where the tag would never be read
+    public function testTheSliderIsTheOnlyKindCarryingAResolver(): void
     {
         $this->assertSame(
-            ['crowdfunding_slider', 'crowdfunding_counterparts', 'crowdfunding_lottery'],
+            ['crowdfunding_slider'],
             array_keys(new CrowdfundingBlockCacheTagProvider()->getCacheTagResolvers()),
         );
     }
@@ -33,7 +34,9 @@ class CrowdfundingBlockCacheTagProviderTest extends TestCase
     {
         $this->assertSame(
             [CrowdfundingBlockCacheInvalidator::CACHE_TAG_CROWDFUNDING],
-            $this->resolve('crowdfunding_slider'),
+            new CrowdfundingBlockCacheTagProvider()->getCacheTagResolvers()['crowdfunding_slider'](
+                new Block()->setKind('crowdfunding_slider'),
+            ),
         );
     }
 
@@ -43,16 +46,32 @@ class CrowdfundingBlockCacheTagProviderTest extends TestCase
         return [['crowdfunding_counterparts'], ['crowdfunding_lottery']];
     }
 
-    // An entry never expires and no event fires the day a campaign ends, so a tier's button and a draw's date are never cached
+    // An entry never expires and no event fires the day a campaign ends, so a tier's button and a draw's date are never cached - said once on the kind rather than vetoed on each of its instances
     #[DataProvider('kindsRenderingLive')]
-    public function testAKindReadingADateOrAVisitorVetoesItsOwnEntry(string $kind): void
+    public function testAKindReadingADateOrAVisitorIsNotCacheable(string $kind): void
     {
-        $this->assertNull($this->resolve($kind));
+        $this->assertFalse($this->blockTag($kind)['cacheable']);
     }
 
-    /** @return ?list<string> */
-    private function resolve(string $kind): ?array
+    // The slider says the opposite, and is what the resolver above is for
+    public function testTheSliderIsDeclaredCacheable(): void
     {
-        return new CrowdfundingBlockCacheTagProvider()->getCacheTagResolvers()[$kind](new Block()->setKind($kind));
+        $this->assertTrue($this->blockTag('crowdfunding_slider')['cacheable']);
+    }
+
+    /** @return array<string, mixed> */
+    private function blockTag(string $kind): array
+    {
+        $services = Yaml::parseFile(\dirname(__DIR__, 2) . '/config/services.yaml')['services'];
+
+        foreach ($services as $definition) {
+            foreach ($definition['tags'] ?? [] as $tag) {
+                if ('ui.block' === ($tag['name'] ?? null) && $kind === ($tag['kind'] ?? null)) {
+                    return $tag;
+                }
+            }
+        }
+
+        $this->fail(sprintf('No "ui.block" tag declares the kind "%s".', $kind));
     }
 }

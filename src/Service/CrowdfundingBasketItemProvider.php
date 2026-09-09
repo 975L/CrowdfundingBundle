@@ -47,6 +47,11 @@ class CrowdfundingBasketItemProvider implements BasketItemProviderInterface
             return $this->translator->trans('label.unavailable', [], 'crowdfunding');
         }
 
+        // A campaign not opened yet, or one sitting in the recycle bin, is not contributed to - its page is a 404 or a 410, and a tier already in a basket would otherwise still go through checkout
+        if ($item->getCrowdfunding()->isHidden() || $item->getCrowdfunding()->isDeleted()) {
+            return $this->translator->trans('label.unavailable', [], 'crowdfunding');
+        }
+
         // A campaign without dates is not open for contributions
         if (null === $item->getCrowdfunding()->getBeginDate() || null === $item->getCrowdfunding()->getEndDate()) {
             return $this->translator->trans('label.unavailable', [], 'crowdfunding');

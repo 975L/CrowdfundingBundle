@@ -32,11 +32,14 @@ Add CrowdfundingBundle on top of the shared [UiBundle](https://github.com/975L/U
 - Lottery tied to a crowdfunding campaign (prizes, tickets, winner draw)
 - Plugs into PaymentBundle's Basket/checkout engine via `BasketItemProviderInterface`
 - EasyAdmin CRUD for crowdfunding, from which counterparts, medias, videos and the lottery are all edited
+- A campaign hidden until it is opened, previewed from the back office, and deleted in two steps through a
+  recycle bin — see [opening, previewing and deleting a campaign](#opening-previewing-and-deleting-a-campaign)
 - Sitemap generation (index and campaign pages), via ConfigBundle's `SitemapProviderInterface`
 - Its own `crowdfunding` translation catalogue, in English, French and Spanish
 - Stylesheet and Stimulus barrel contributed to UiBundle's registries — nothing to register by hand
 - Campaign pages composed in the back office with UiBundle's block kinds (`HasBlocksInterface`), plus
-  three kinds of its own — see [composing a campaign page](#composing-a-campaign-page)
+  three kinds of its own, and a fourth listing the campaigns on any page of the site — see
+  [composing a campaign page](#composing-a-campaign-page)
 - Three transactional emails composable in the back office, via UiBundle's `EmailTemplateProviderInterface`
 - Campaign pages offered as menu targets (`LinkableRouteProviderInterface`) and media folders declared to the backup
 - Pending lottery draws reported to the status dashboard (`StatusProviderInterface`)
@@ -185,25 +188,53 @@ section at a time. Nothing has to be migrated.
 
 ### The shape of the page
 
-The page is read in four movements, the funding never leaving the screen:
+The page is read in three movements. The funding is said once, by the rail: a strip stuck under the site's
+header used to double it the whole way down, which said the same amounts and the same gauge twice on one
+screen.
 
-1. **`Crowdfunding:FundingTopBar`** — a strip stuck under the site's header the whole way down: the
-   amounts, the gauge and the button. The rail below ends with the story, this does not.
-2. **`Crowdfunding:Hero`** — the campaign's opening image, its name printed over it. Stands aside for a
+1. **`Crowdfunding:Hero`** — the campaign's opening image, its name printed over it. Stands aside for a
    composed `banner_title`, which is an editor saying where the opening goes; the layout's own heading is
    then left on, since only the editor knows what level their banner carries.
-3. **The story and the funding**, side by side: one column on a phone, a 380px rail from 1024px up. The
-   rail sticks below the strip rather than behind it.
-4. **`Crowdfunding:UseFor` and `Crowdfunding:Author`** on one dark band between the story and the tiers —
+2. **The story and the funding**, side by side: one column on a phone, a 380px rail from 1024px up. The
+   rail sticks under the site's header and holds the *Campaign* card, then the campaign's draws in full —
+   what a contribution is weighed against, both in sight while the story is read.
+3. **`Crowdfunding:UseFor` and `Crowdfunding:Author`** on one tinted band between the story and the tiers —
    the two answers a visitor weighs a tier against, read together rather than one at each end of the page.
-   The tiers follow, then the chronicle, on two columns from 1024px up.
+   The tiers follow, then the chronicle, on two columns from 1024px up. A tier is a row, not a card:
+   `<details name="counterparts">`, so only one opens at a time — HTML's own exclusive accordion, the same
+   row ShopBundle gives a product's items, with the picture as the row's full-height left column and the
+   price in a column of its own, on one line whatever a tier is named.
 
 Where the campaign stands is worked out once, by `crowdfunding_funding_state()`
 (`Twig\Extension\CrowdfundingFundingExtension`): whether it opened, whether it closed, how far it got and
-how many days it still has. The strip, the rail and the tier buttons all read that same answer, so none of
-them can say something the others contradict.
+how many days it still has. The rail and the tiers read that same answer, so neither of them
+can say something the others contradict — and a tier carries a way to join only while the campaign can be
+joined: closed or not yet open, the rail says it once for the whole page rather than every card saying it.
 
-### The three kinds
+### What a media is for
+
+A campaign holds one collection of images, and each carries the use it was uploaded under
+(`CrowdfundingMedia::$kind`). The campaign's screen has a field per use, and the page reads each one where
+it shows it:
+
+| Kind | Field | Read by |
+| --- | --- | --- |
+| `hero` | *Opening image* | `Crowdfunding:Hero`, the catalogue's thumbnail, the `og:image` |
+| `slide` | *Slider* | the page's slider and the `crowdfunding_slider` block |
+
+The field a file is dropped on is what sets its kind (`Crowdfunding::addHero()`, `addSlide()`), so a site
+never names any of them. **One file, one use**: nothing reads "the first media" any more, and a campaign
+with no opening image opens without one rather than on whichever plate happened to be sorted first. The
+same image wanted in both places is uploaded on both fields — two rows, moved and removed apart.
+
+An editor reading the page hovers any of those sections and gets the same pencil a composed block carries:
+`crowdfunding_edit_url()` (`Twig\Extension\CrowdfundingEditExtension`) writes a `data-block-edit-url` on
+the section, which UiBundle's own overlay picks up, and the campaign's form opens on the very field the
+section is written in — the opening image on `heroes`, the story on `description`, the use of the funds on
+`useFor`, the author on `authorName`, the funding on `amountGoal`, the tiers on `counterparts`, the draws
+on `lotteries`. Anyone but an editor gets no url, so nothing of it reaches the page a visitor reads.
+
+### The three kinds of a campaign page
 
 | Kind | Takes over | Form | Template |
 | --- | --- | --- | --- |
@@ -214,19 +245,44 @@ them can say something the others contradict.
 None of them stores what to show — only how. The medias, the tiers, the draws and their prizes are read
 from the campaign's own rows at render time, through `crowdfunding_block_campaign()`
 (`Twig\Extension\CrowdfundingBlockExtension`), which resolves the campaign from the `crowdfunding_display`
-route being rendered. So a block never goes stale against the funding, no form ever asks which campaign
-to show, and one of these kinds placed on a page that is not a campaign renders nothing at all.
+or `crowdfunding_preview` route being rendered. So a block never goes stale against the funding, no form
+ever asks which campaign to show, and one of these kinds placed on a page that is not a campaign renders
+nothing at all.
 
 `crowdfunding_slider` shows the campaign's medias and nothing else, so its render is cached under a
-campaign tag dropped by `CrowdfundingCacheInvalidationListener` whenever a campaign, a media, a
-counterpart or a contribution changes.
+campaign tag dropped by `CrowdfundingCacheInvalidationListener` whenever a campaign or one of its
+medias changes. A tier or a contribution drops nothing: no cached render is drawn from either, and a
+kind reading them would have to join that listener along with its own resolver.
 
-The two others **render live**, vetoing their own entry through `CrowdfundingBlockCacheTagProvider`. A
+The two others are declared `cacheable: false` and **render live**, the same way ShopBundle's
+`shop_search` is not cached — the answer belongs to the kind, not to one of its instances. A
 block cache entry never expires and no event fires the day a campaign ends, so a cached grid of tiers
 would keep offering to contribute to a campaign that closed — each tier's button being read against
 today's date — and the basket messages laid beside them belong to whoever is reading. The draws have
 the same trouble twice over: their dates are printed in the visitor's own timezone and the draw button
 is an administrator's alone.
+
+### The listing kind
+
+`crowdfunding_campaigns` is the one kind of this bundle placed on an ordinary page rather than on a
+campaign's own — the section a site opens its home page with, say. It lists the campaigns a visitor may
+read, each on the card the `/crowdfunding` page already shows (`Crowdfunding:Crowdfunding`): the cover,
+the dates, the gauge, the amount achieved against the goal and where the campaign stands.
+
+| Kind | Shows | Form | Template |
+| --- | --- | --- | --- |
+| `crowdfunding_campaigns` | `Crowdfunding:Crowdfunding`, one card per campaign | `Form\Block\CampaignsBlockType` | `blocks/Campaigns.html.twig` |
+
+Being a section of a page and not a slot of a campaign, it is the only kind carrying a head of its own —
+anchor, eyebrow, title, paragraph, link and colored flat — so the section and its cards are one row in the
+back office instead of a `text_section` that has to be moved, hidden and translated beside it. Its only
+other field is a maximum, empty meaning every visible campaign.
+
+The rows are read live through `crowdfunding_block_campaigns()`, which runs the very query the
+`/crowdfunding` page runs (`CrowdfundingRepository::findAllSorted()`), so a campaign opened, closed or
+reordered in the back office shows up without anyone touching the page, and the listing and that page
+never name two different sets. It is declared `cacheable: false` for the reason the tiers are: each card
+counts the days left against today, and no event fires the day a campaign starts or ends.
 
 ### The silhouette in the picker
 
@@ -250,6 +306,46 @@ Its button points at `#counterparts`, which both the `crowdfunding_counterparts`
 section carry, so it lands wherever the tiers were put.
 
 ---
+
+## Opening, previewing and deleting a campaign
+
+A campaign is written before it is opened, and removed in two deliberate steps — the same three gestures
+ShopBundle gives a product and SiteBundle gives a page.
+
+**Hidden.** `Crowdfunding::$hidden` is a switch on the campaign's screen. A hidden campaign is out of the
+listing, out of `sitemap-crowdfunding.xml`, out of the menu targets and out of the basket, and its page
+answers 404 — it is not written anywhere that it exists. The column defaults to `false`, so campaigns
+already online stay online; the property defaults to `true`, so a campaign created from now on starts
+hidden and is opened once its page is composed.
+
+**Preview.** `/crowdfunding/{slug}/preview` (route `crowdfunding_preview`, behind `site-role-editor`) serves
+that very page, with two differences: a banner says it is a preview, and the render never touches the
+block cache (`BlockRenderContext::disableCache()`), so what is read is what was just saved and nothing of
+it is served to a visitor afterwards. The kinds of this bundle compose it as they compose the public page.
+
+**Who administers a campaign.** The whole CRUD sits behind `site-role-editor`, as SiteBundle's pages do:
+index, form, entity permission, QR code and the two buttons leading to the site. Only the recycle bin's own
+two gestures are stricter, on `site-role-admin`, and so is the lottery's draw.
+
+**What the form deletes.** The campaign's five collections carry `orphanRemoval`, so a media, a tier, a
+video, a news or a draw taken off the form is removed rather than left behind with a null campaign. Two are
+put back by `CrowdfundingCrudController::updateEntity()`, which says so in a message: a counterpart a
+contributor already paid for, whose removal the contributors' own rows would have the database refuse, and a
+draw a ticket was sold on, which refuses nothing on its own and would take its winner with it.
+
+**Recycle bin.** Deleting a campaign from the back office writes `isDeleted` and nothing else — no row is
+removed, no file is deleted, its medias, counterparts, news and draws all stay where they are. A trashed
+campaign is hidden with it and its page answers **410**, which a search engine acts on far faster than a
+404. The recycle bin is the index's own view (`?trash=1`), and it is the only place the two irreversible
+gestures live:
+
+| Action | What it does |
+| --- | --- |
+| *Restore* | writes `isDeleted = false`; the campaign comes back **hidden**, to be read once before it is opened again |
+| *Delete permanently* | removes the campaign and everything cascading from it — its medias, its counterparts, its news, its draws, **and the contributions it received**, tickets included — and writes a `gone` Redirect at its url so the 410 outlives the row; the redirects that pointed at it become `gone` rows too, and a path an admin already redirected keeps its own target |
+
+Both are `GET` actions guarded by a csrf token and by `site-role-admin`, and both refuse a campaign that is
+not in the recycle bin.
 
 ## Status report
 
@@ -300,6 +396,10 @@ left every page showing raw keys on a site running a campaign without the shop �
 The draw wheel's own wording is not in that catalogue: it is written by JavaScript after a fetch, where a
 Twig `|trans` never reaches, so it lives in `assets/js/translations.js`, keyed by locale.
 
+Nor does `trans_default_domain` reach what a template writes between the tags of a component: that content
+is compiled as an embedded template of its own, so every key named inside a `<twig:…>…</twig:…>` spells its
+domain out. Worth knowing before overriding one of the components, where a key left bare prints raw.
+
 A second catalogue, `translations/crowdfunding_narration.{en,fr}.xlf`, holds what the guided steps and the
 menu entries *sound* like when they are spoken rather than read — the sentences the films of the back
 office say. They are never drawn, which is why they stop at two languages where the rest of the bundle
@@ -309,11 +409,12 @@ speaks three.
 
 ## Guided projects and the procedures
 
-The bundle contributes six guided projects, in the 9000 block `GuidedProjectProviderInterface` reserves it:
-creating a campaign, illustrating it, offering a counterpart, composing the rest of its page in blocks,
-opening a lottery, and publishing the video of its draw. All six open on the same screen — this bundle
-holds a single CRUD, a campaign carrying its media, its counterparts, its lottery and its blocks on its own
-form — so what tells them apart is the fieldset they walk to.
+The bundle contributes nine guided projects, in the 9000 block `GuidedProjectProviderInterface` reserves it:
+creating a campaign, opening it to the public, illustrating it, offering a counterpart, composing the rest of
+its page in blocks, correcting a news entry, opening a lottery, publishing the video of its draw, and the two
+gestures that remove a campaign. All nine open on the same screen — this bundle holds a single CRUD, a
+campaign carrying its media, its counterparts, its news, its lottery and its blocks on its own form — so what
+tells them apart is the fieldset they walk to.
 
 The draw itself is not one of them, and cannot be. The guided panel only lives in the back office, while a
 draw happens on the lottery's **public** page, where the drum and the buttons are rendered for
@@ -326,10 +427,11 @@ prize hands back the winner already drawn rather than picking another one.
 Note that the video of a draw goes on the *lottery*, whose `videos` field only takes an uploaded file. Only
 a *campaign* video carries a `youtubeUrl`, which is the way out for a file too heavy to upload.
 
-A campaign's news entries are the second procedure, `publier-actualite-campagne`, for the same reason: the
-CRUD declares no `news` collection, so the form exists nowhere in the back office. It is rendered on the
-campaign's public page, for its owner or an administrator, and an admin looking for it in management never
-finds it.
+A campaign's news entries are the second procedure, `publier-actualite-campagne`, for a related reason: they
+are written in one place and corrected in another. The form that *publishes* one is rendered on the
+campaign's public page, for its owner or an editor - the campaign's author posts a follow-up from the
+campaign itself, without a back-office account being needed for that alone. Correcting a typo and removing an
+entry are the CRUD's `news` collection, on the campaign's own screen: the public form only ever adds.
 
 ---
 
@@ -353,7 +455,7 @@ answer — it is only worth writing down:
 
 | Point | Why not |
 | --- | --- |
-| Config keys (`configs.json`) | it reads only its dependencies' — the six `shop-email-*` and `shop-name` of PaymentBundle, `site-url` and `site-role-admin` of the core |
+| Config keys (`configs.json`) | it reads only its dependencies' — the six `shop-email-*` and `shop-name` of PaymentBundle, `site-url`, `site-role-editor` and `site-role-admin` of the core |
 | "What's new" (`whatsnew.json`) | prose to be written when the bundle is actually deployed somewhere, not before — its guided projects and its procedures are written, see above |
 | Maintenance task | nothing here runs on a schedule: a lottery is drawn by an admin's click, and a campaign ends by its own date |
 | Import / export | a campaign is not a catalogue: it is written once, read for a few weeks and archived |

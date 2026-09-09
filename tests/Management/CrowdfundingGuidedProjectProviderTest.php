@@ -29,8 +29,11 @@ class CrowdfundingGuidedProjectProviderTest extends TestCase
         $generator->method('setAction')->willReturnSelf();
         $generator->method('generateUrl')->willReturn('/management/crowdfunding');
 
+        // Told apart rather than answered the same twice: the two bars this provider reads are the whole point of the test below
         $configService = $this->createStub(ConfigServiceInterface::class);
-        $configService->method('get')->willReturn('ROLE_ADMIN');
+        $configService->method('get')->willReturnCallback(
+            static fn (string $key): string => 'site-role-admin' === $key ? 'ROLE_ADMIN' : 'ROLE_EDITOR'
+        );
 
         return new CrowdfundingGuidedProjectProvider($generator, $configService);
     }
@@ -41,10 +44,10 @@ class CrowdfundingGuidedProjectProviderTest extends TestCase
         $projects = $this->createProvider()->getGuidedProjects();
 
         $this->assertSame(
-            ['crowdfunding-campaign', 'crowdfunding-media', 'crowdfunding-counterpart', 'crowdfunding-blocks', 'crowdfunding-lottery', 'crowdfunding-draw-video'],
+            ['crowdfunding-campaign', 'crowdfunding-publish', 'crowdfunding-media', 'crowdfunding-counterpart', 'crowdfunding-blocks', 'crowdfunding-news', 'crowdfunding-lottery', 'crowdfunding-draw-video', 'crowdfunding-trash'],
             array_column($projects, 'slug')
         );
-        $this->assertSame([9010, 9020, 9030, 9040, 9050, 9060], array_column($projects, 'order'));
+        $this->assertSame([9010, 9015, 9020, 9030, 9040, 9045, 9050, 9060, 9070], array_column($projects, 'order'));
     }
 
     public function testEverySlugIsPrefixedWithTheBundleName(): void
@@ -62,11 +65,13 @@ class CrowdfundingGuidedProjectProviderTest extends TestCase
         }
     }
 
-    // Every screen of this bundle sits behind the site's admin role, index to delete (see CrowdfundingCrudController::configureActions): a parcours offered below it walks a 403
-    public function testEveryProjectCarriesTheAdminRole(): void
+    // A parcours offered below the bar of the screens it walks ends on a 403: the CRUD sits behind the editor's role (see CrowdfundingCrudController::configureActions), and only the recycle bin's own two actions are stricter
+    public function testEveryProjectCarriesTheRoleOfTheScreensItWalks(): void
     {
         foreach ($this->createProvider()->getGuidedProjects() as $project) {
-            $this->assertSame('ROLE_ADMIN', $project['role']);
+            $expected = 'crowdfunding-trash' === $project['slug'] ? 'ROLE_ADMIN' : 'ROLE_EDITOR';
+
+            $this->assertSame($expected, $project['role'], sprintf('Project "%s" is offered behind the wrong bar', $project['slug']));
         }
     }
 
@@ -102,7 +107,7 @@ class CrowdfundingGuidedProjectProviderTest extends TestCase
         $controllers = [];
         $this->createProvider($controllers)->getGuidedProjects();
 
-        $this->assertSame(array_fill(0, 6, 'CrowdfundingCrudController'), array_map(
+        $this->assertSame(array_fill(0, 9, 'CrowdfundingCrudController'), array_map(
             static fn (string $fqcn): string => basename(str_replace('\\', '/', $fqcn)),
             $controllers
         ));
@@ -121,10 +126,36 @@ class CrowdfundingGuidedProjectProviderTest extends TestCase
             }
         }
 
-        $this->assertCount(6, $saveSteps, 'Each of the six parcours walks the user to the save button once');
+        // Eight of the nine: removing a campaign is done from the listing alone, with no form to save
+        $this->assertCount(8, $saveSteps, 'Each parcours walking a form walks the user to the save button once');
 
         foreach ($saveSteps as $step) {
             $this->assertSame('.action-saveAndReturn', $step['highlight']);
+        }
+    }
+
+    // An action of this CRUD is highlighted by the "action-<name>" class EasyAdmin builds from its own name: renamed in configureActions() or taken off it, the step goes on showing its panel and outlines nothing
+    public function testEveryActionHighlightedIsStillDeclared(): void
+    {
+        $controller = (string) file_get_contents(\dirname(__DIR__, 2) . '/src/Controller/Management/CrowdfundingCrudController.php');
+        // EasyAdmin's own, named by a constant rather than declared here
+        $builtIn = ['new', 'edit', 'delete', 'saveAndReturn'];
+
+        $actions = [];
+        foreach ($this->highlights() as $highlight) {
+            if (preg_match('/^\.action-([A-Za-z]+)$/', $highlight, $matches)) {
+                $actions[] = $matches[1];
+            }
+        }
+
+        $this->assertNotEmpty($actions);
+
+        foreach ($actions as $action) {
+            if (\in_array($action, $builtIn, true)) {
+                continue;
+            }
+
+            $this->assertStringContainsString(sprintf("Action::new('%s'", $action), $controller, sprintf('The screen declares no "%s" action any more', $action));
         }
     }
 

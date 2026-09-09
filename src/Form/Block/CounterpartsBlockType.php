@@ -11,7 +11,6 @@
 namespace c975L\CrowdfundingBundle\Form\Block;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -37,13 +36,6 @@ class CounterpartsBlockType extends AbstractType
                 'label' => 'label.block_low_stock_threshold',
                 'required' => false,
                 'attr' => ['min' => 0],
-            ])
-            ->add('columns', ChoiceType::class, [
-                'label' => 'label.block_columns',
-                'choices' => ['2' => 2, '3' => 3, '4' => 4],
-                'required' => false,
-                'placeholder' => false,
-                'choice_translation_domain' => false,
             ])
         ;
     }

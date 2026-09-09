@@ -11,15 +11,22 @@
 namespace c975L\CrowdfundingBundle\Management;
 
 use c975L\ConfigBundle\Management\MenuProviderInterface;
+use c975L\ConfigBundle\Service\ConfigServiceInterface;
 use c975L\CrowdfundingBundle\Controller\Management\CrowdfundingCrudController;
 
 class MenuProvider implements MenuProviderInterface
 {
+    public function __construct(
+        private readonly ConfigServiceInterface $configService,
+    ) {
+    }
+
     public function getMenuSection(): array
     {
         return [
             'label' => 'label.crowdfundings',
             'translation_domain' => 'crowdfunding',
+            'icon' => 'fas fa-hand-holding-heart',
         ];
     }
 
@@ -28,13 +35,14 @@ class MenuProvider implements MenuProviderInterface
         return [
             'crowdfunding' => [
                 'controller' => CrowdfundingCrudController::class,
-                'label' => 'label.crowdfundings',
+                'label' => 'label.campaigns',
                 'narration' => 'narration.crowdfundings',
                 'translation_domain' => 'crowdfunding',
                 'icon' => 'fas fa-money-bill',
                 // The very text the campaigns screen opens on (see crowdfunding_crud_index.html.twig), reused as-is for the onboarding tour rather than written again for it
                 'description' => 'label.info_crowdfunding',
-                // No 'role': the whole CRUD sits behind site-role-admin (see CrowdfundingCrudController::configureActions), which is the key this entry already defaults to
+                // The bar CrowdfundingCrudController sets on its own index - named rather than left to the entry's own default, which is site-role-admin and would keep the screen out of the menu of the editors that may now reach it
+                'role' => $this->configService->get('site-role-editor'),
             ],
         ];
     }
@@ -47,7 +55,9 @@ class MenuProvider implements MenuProviderInterface
                 'narration' => 'narration.crowdfunding_index',
                 'name' => 'crowdfunding_index',
                 'translation_domain' => 'crowdfunding',
-                'icon' => '',
+                'icon' => 'fas fa-hand-holding-dollar',
+                // Leaves the admin for the site's own public page, so it opens in a new tab and joins the "Liens" section rather than this bundle's own entries (see MenuBuilder::getMenuItems())
+                'target' => '_blank',
                 // What the public index announces itself as (see crowdfunding/index.html.twig), rather than a sentence written for the tour alone
                 'description' => 'text.crowdfundings',
             ],

@@ -10,8 +10,8 @@
 
 namespace c975L\CrowdfundingBundle\Tests\Twig;
 
+use c975L\CrowdfundingBundle\Entity\Crowdfunding;
 use c975L\CrowdfundingBundle\Repository\CrowdfundingRepository;
-use c975L\CrowdfundingBundle\Service\CrowdfundingBlockCacheTagProvider;
 use c975L\CrowdfundingBundle\Twig\Extension\CrowdfundingBlockExtension;
 use c975L\UiBundle\Entity\Block;
 use PHPUnit\Framework\TestCase;
@@ -62,21 +62,23 @@ class CrowdfundingBlockExtensionTest extends TestCase
         $this->assertNull(new CrowdfundingBlockExtension($repository, $stack)->getCampaign());
     }
 
+    // The preview is the campaign's own page, minus the block cache: the kinds of this bundle compose it there as they do on the public route, or an editor would read a page with every one of its blocks blank
+    public function testTheCampaignIsAlsoReadOnThePreviewRoute(): void
+    {
+        $repository = $this->createMock(CrowdfundingRepository::class);
+        $repository->expects($this->once())->method('findOneBySlug')->with('sauver-les-chats')->willReturn(new Crowdfunding());
+
+        $request = new Request();
+        $request->attributes->set('_route', 'crowdfunding_preview');
+        $request->attributes->set('slug', 'sauver-les-chats');
+
+        $this->assertInstanceOf(Crowdfunding::class, new CrowdfundingBlockExtension($repository, new RequestStack([$request]))->getCampaign());
+    }
+
     // Nothing at all outside a request - a warm-up, a command, a test rendering the template by hand
     public function testWithoutARequestNoCampaignIsRead(): void
     {
         $this->assertNull($this->extension()->getCampaign());
-    }
-
-    // Two of the three kinds have to be rendered live: "cacheable" is declared once per kind, while what forbids an entry belongs to what they draw - a button read against today's date, a date read in the visitor's own timezone
-    public function testOnlyTheSliderIsCached(): void
-    {
-        $resolvers = new CrowdfundingBlockCacheTagProvider()->getCacheTagResolvers();
-        $block = new Block();
-
-        $this->assertSame(['crowdfunding_campaign'], $resolvers['crowdfunding_slider']($block));
-        $this->assertNull($resolvers['crowdfunding_counterparts']($block));
-        $this->assertNull($resolvers['crowdfunding_lottery']($block));
     }
 
     private function extension(): CrowdfundingBlockExtension

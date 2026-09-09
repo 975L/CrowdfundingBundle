@@ -1,12 +1,10 @@
-<hr>
+{# <twig:c975LCrowdfunding:CrowdfundingCounterpart:Quantity limited="{{ counterpart.limitedQuantity }}" ordered="{{ counterpart.orderedQuantity }}"/> #}
+{# How many of a tier were taken, and how many are left when the campaign capped it. The delivery and the cap itself are said by the row's own summary, where they are read without opening anything #}
 <div class="limited-quantity">
     {% if null != limited %}
-        <p class="primary bold">{{ 'label.limited_quantity'|trans({}, 'crowdfunding') }} : {{ limited }}</p>
         <p>{{ 'label.ordered_quantity'|trans({}, 'crowdfunding') }} : <strong>{{ ordered ?? 0 }}</strong></p>
         <p>{{ 'label.remaining_quantity'|trans({}, 'crowdfunding') }} : <strong>{{ limited - ordered }}</strong></p>
     {% else %}
         <p>{{ 'label.ordered_quantity'|trans({}, 'crowdfunding') }} : <strong>{{ ordered ?? 0 }}</strong></p>
     {% endif %}
-    <p>{{ 'label.expected_delivery'|trans({}, 'crowdfunding') }} : <strong>{{ expectedDelivery }}</strong></p>
 </div>
-<hr>

@@ -12,6 +12,7 @@ namespace c975L\CrowdfundingBundle\Tests\Controller;
 
 use c975L\ConfigBundle\Service\ConfigServiceInterface;
 use c975L\CrowdfundingBundle\Controller\LotteryController;
+use c975L\CrowdfundingBundle\Entity\Crowdfunding;
 use c975L\CrowdfundingBundle\Entity\CrowdfundingContributor;
 use c975L\CrowdfundingBundle\Entity\Lottery;
 use c975L\CrowdfundingBundle\Entity\LotteryTicket;
@@ -19,6 +20,8 @@ use c975L\CrowdfundingBundle\Service\LotteryServiceInterface;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\GoneHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -34,7 +37,21 @@ class LotteryControllerTest extends TestCase
         $this->assertSame('@c975LCrowdfunding/lottery/display.html.twig', $response->getContent());
     }
 
-    // The draw is an admin's action, and the endpoint is a POST reachable by anyone who knows the lottery's url
+    // The draw is an admin's action on a POST anyone knowing the lottery's url reaches, so its own url would otherwise lead round what the campaign page hides
+    public function testADrawOfATrashedCampaignAnswersGone(): void
+    {
+        $this->expectException(GoneHttpException::class);
+
+        $this->createController()->display(new Lottery()->setCrowdfunding(new Crowdfunding()->setIsDeleted(true)));
+    }
+
+    public function testADrawOfACampaignNotOpenedYetAnswersNotFound(): void
+    {
+        $this->expectException(NotFoundHttpException::class);
+
+        $this->createController()->display(new Lottery()->setCrowdfunding(new Crowdfunding()));
+    }
+
     public function testDrawingAPrizeIsRefusedToAnybodyButAnAdmin(): void
     {
         $this->expectException(AccessDeniedException::class);

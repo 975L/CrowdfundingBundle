@@ -15,7 +15,7 @@ use Symfony\Contracts\Cache\TagAwareCacheInterface;
 // The tag every cached block of this bundle carries, and the one place it is dropped from. UiBundle's BlockCacheInvalidationListener only ever invalidates the changed Block itself, and knows nothing of the campaign those blocks read at render time - the same gap ShopBundle closes for its catalog
 class CrowdfundingBlockCacheInvalidator
 {
-    // Carried by the kinds reading a campaign: its medias, its counterparts, the quantities already ordered
+    // Carried by "crowdfunding_slider", the one kind of this bundle whose render is cached: it draws the campaign's medias, which is all this tag has to be dropped on
     public const string CACHE_TAG_CROWDFUNDING = 'crowdfunding_campaign';
 
     public function __construct(private readonly TagAwareCacheInterface $cache)

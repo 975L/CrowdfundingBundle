@@ -31,6 +31,17 @@ class CrowdfundingRepositoryTest extends TestCase
         $this->assertStringContainsString('ORDER BY c.position ASC', $repository->dql);
     }
 
+    // A hidden campaign is not opened yet and a trashed one is on its way out: neither belongs to the listing the index, the sitemap and the linkable routes are all drawn from
+    public function testFindAllSortedLeavesOutTheHiddenAndTheTrashed(): void
+    {
+        $repository = $this->createRepository();
+
+        $repository->findAllSorted();
+
+        $this->assertStringContainsString('c.hidden = false', $repository->dql);
+        $this->assertStringContainsString('c.isDeleted = false', $repository->dql);
+    }
+
     // Seven collections on one page: without them the campaign page issued a query per counterpart, per news and per contributor
     public function testFindOneBySlugFetchesEverythingTheCampaignPageDraws(): void
     {

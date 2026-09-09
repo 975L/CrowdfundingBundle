@@ -1,5 +1,8 @@
+{# "editUrl" is the presentation's own, narrowed to the videos field: the overlay hands the pencil to the innermost [data-block-edit-url] under the cursor, so a video leads to the videos and the text around it to the story #}
 {% if videos is not empty %}
-    {% for video in videos %}
-        <twig:c975LCrowdfunding:Crowdfunding:Video video="{{ video }}"/>
-    {% endfor %}
+    <div{% if editUrl|default('') %} data-block-edit-url="{{ editUrl }}"{% endif %}>
+        {% for video in videos %}
+            <twig:c975LCrowdfunding:Crowdfunding:Video video="{{ video }}"/>
+        {% endfor %}
+    </div>
 {% endif %}

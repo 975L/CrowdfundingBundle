@@ -1,33 +1,61 @@
 {% trans_default_domain 'crowdfunding' %}
-{# Highlighting and the low-stock badge are the counterparts block's own settings, defaulted here so the page rendering this card without a block keeps the card it always had #}
+{# One row per tier, only one open at a time: the shared "name" is HTML's own exclusive accordion, so the bundle ships no controller for it - the same row ShopBundle gives a product's items, and the highlighting and the low-stock badge are the counterparts block's own settings, defaulted here so a page rendering this row without a block keeps the row it would have had #}
 {% set highlighted = highlighted|default(false) %}
 {% set lowStockThreshold = lowStockThreshold|default(0) %}
+
+{# A tier carries a way to join only while the campaign can be joined: closed or not yet open, the button is the same on every row, and the campaign said it once already in its funding rail #}
+{% set state = crowdfunding_funding_state(counterpart.crowdfunding) %}
+{% set isOpen = state.isStarted and false == state.isEnded %}
 
 {# Factual scarcity only: a tier says how few are left when the campaign itself limited it, and only under the threshold the editor set #}
 {% set remaining = counterpart.limitedQuantity is not null ? counterpart.limitedQuantity - (counterpart.orderedQuantity ?? 0) : null %}
 {% set isLowStock = lowStockThreshold > 0 and remaining is not null and remaining > 0 and remaining <= lowStockThreshold %}
 
-<twig:c975LUi:Card:Card tag="article" id="{{ counterpart.slug }}" level="h3" title="#{{ number }} - {{ counterpart.title }}" class="crowdfunding-counterpart{{ highlighted ? ' crowdfunding-counterpart--highlighted' : '' }}">
-    <div>
-        {% if highlighted %}
-            <p class="crowdfunding-counterpart__flag">{{ 'label.most_chosen'|trans }}</p>
-        {% endif %}
-        {% if counterpart.media != null and counterpart.media.name != null %}
-            <div class="card-img">
-                <twig:c975LUi:Image:Image src="{{ counterpart.media.name }}" class="img-shadow" width="100"/>
-            </div>
-        {% endif %}
-        <div class="card-data">
-            {{ 'label.counterpart_entitles'|trans }}
-            <twig:c975LCrowdfunding:Lottery:TicketsQuantity tickets="{{ counterpart.lotteryTickets }}"/>
-            <p class="description">{{ counterpart.description|raw|nl2br }}</p>
-            <p class="price-counterpart">{{ (counterpart.price / 100)|format_currency(counterpart.currency, {fraction_digit: 0}) }}</p>
-            {% if isLowStock %}
-                <p class="crowdfunding-counterpart__low-stock">{{ 'label.only_left'|trans({'%count%': remaining}) }}</p>
+{# Read from the same two keys PaymentBundle's Item:Type prints, and written as a span: what a summary accepts is phrasing content, where that component wraps its label in a paragraph #}
+{% set kind = counterpart.requiresShipping ? 'label.counterpart_with_shipping' : 'label.counterpart_without_shipping' %}
+
+{# Whether the row opens on a band or on its own title, said as a class rather than left to CSS to find out: ":has()" would have carried it, and a browser without it drops the very rule that keeps the text off the picture #}
+{% set hasPicture = counterpart.media != null and counterpart.media.name != null %}
+<details class="crowdfunding-counterpart{{ highlighted ? ' crowdfunding-counterpart--highlighted' : '' }}{{ hasPicture ? ' crowdfunding-counterpart--pictured' : '' }}" name="counterparts" id="{{ counterpart.slug }}"{% if open|default(false) %} open{% endif %}>
+    <summary class="crowdfunding-counterpart__summary">
+        {# Written whether the tier has a picture or not: the slot is what holds the left edge of every row on one line, an empty one showing the flat rather than closing up #}
+        <span class="crowdfunding-counterpart__visual">
+            {% if hasPicture %}
+                {# A bare img and not the Image component: what the summary of a details element accepts is phrasing content, and the component wraps its picture in a paragraph #}
+                <img src="{{ asset(counterpart.media.name) }}" alt="{{ counterpart.media.alt|default('') ?: counterpart.title }}" loading="lazy">
             {% endif %}
-            <twig:c975LPayment:Item:Type item="{{ counterpart }}"/>
-            <twig:c975LCrowdfunding:CrowdfundingCounterpart:Quantity limited="{{ counterpart.limitedQuantity }}" ordered="{{ counterpart.orderedQuantity }}" expectedDelivery="{{ counterpart.expectedDelivery }}"/>
-        </div>
+        </span>
+        <span class="crowdfunding-counterpart__data">
+            <span class="crowdfunding-counterpart__heading">
+                <strong>#{{ number }} - {{ counterpart.title }}</strong>
+                <span class="crowdfunding-counterpart__kind">{{ kind|trans({}, 'payment') }}</span>
+                {% if highlighted %}
+                    <span class="crowdfunding-counterpart__flag">{{ 'label.most_chosen'|trans({}, 'crowdfunding') }}</span>
+                {% endif %}
+            </span>
+            {% if counterpart.lotteryTickets > 0 %}
+                <span class="crowdfunding-counterpart__tickets">{{ 'label.lottery_tickets'|trans({}, 'crowdfunding') }} : <strong>{{ counterpart.lotteryTickets }}</strong></span>
+            {% endif %}
+            {% if counterpart.expectedDelivery %}
+                <span class="crowdfunding-counterpart__delivery">{{ 'label.expected_delivery'|trans({}, 'crowdfunding') }} : {{ counterpart.expectedDelivery }}</span>
+            {% endif %}
+            {% if isLowStock %}
+                <span class="crowdfunding-counterpart__low-stock">{{ 'label.only_left'|trans({'%count%': remaining}, 'crowdfunding') }}</span>
+            {% endif %}
+        </span>
+        <span class="crowdfunding-counterpart__price">
+            <strong>{{ (counterpart.price / 100)|format_currency(counterpart.currency, {fraction_digit: 0}) }}</strong>
+            {% if counterpart.limitedQuantity %}
+                <span class="crowdfunding-counterpart__limited">{{ 'label.limited_quantity'|trans({}, 'crowdfunding') }} : {{ counterpart.limitedQuantity }}</span>
+            {% endif %}
+        </span>
+    </summary>
+    {# What the open row reveals: everything the tier gives, the quantities it was taken in, and the button that adds one to the basket #}
+    <div class="crowdfunding-counterpart__panel">
+        <p class="description">{{ counterpart.description|raw|nl2br }}</p>
+        <twig:c975LCrowdfunding:CrowdfundingCounterpart:Quantity limited="{{ counterpart.limitedQuantity }}" ordered="{{ counterpart.orderedQuantity }}"/>
+        {% if isOpen %}
+            <twig:c975LCrowdfunding:CrowdfundingCounterpart:AddButton crowdfundingCounterpart="{{ counterpart }}"/>
+        {% endif %}
     </div>
-    <twig:c975LCrowdfunding:CrowdfundingCounterpart:AddButton crowdfundingCounterpart="{{ counterpart }}"/>
-</twig:c975LUi:Card:Card>
+</details>

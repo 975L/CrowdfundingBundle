@@ -10,15 +10,18 @@
 
 namespace c975L\CrowdfundingBundle\Tests\Form\Block;
 
+use c975L\CrowdfundingBundle\Form\Block\CampaignsBlockType;
 use c975L\CrowdfundingBundle\Form\Block\CounterpartsBlockType;
 use c975L\CrowdfundingBundle\Form\Block\LotteryBlockType;
 use c975L\CrowdfundingBundle\Form\Block\SliderBlockType;
 use c975L\CrowdfundingBundle\Tests\Form\FormFieldsTestCase;
+use c975L\UiBundle\Service\BlockAnchorSlugger;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 
-// The three kinds composing a campaign page: what they let an editor set, and what they deliberately do not
+// The block kinds this bundle registers: what they let an editor set, and what they deliberately do not
 class BlockTypesTest extends FormFieldsTestCase
 {
     /** @return iterable<string, array{AbstractType}> */
@@ -27,6 +30,7 @@ class BlockTypesTest extends FormFieldsTestCase
         yield 'slider' => [new SliderBlockType()];
         yield 'counterparts' => [new CounterpartsBlockType()];
         yield 'lottery' => [new LotteryBlockType()];
+        yield 'campaigns' => [new CampaignsBlockType(new BlockAnchorSlugger(new AsciiSlugger()))];
     }
 
     // BlockType translates the embedded data form in the "ui" domain: a type forgetting this renders every one of its labels raw
@@ -53,8 +57,8 @@ class BlockTypesTest extends FormFieldsTestCase
     {
         $fields = $this->buildFields(new CounterpartsBlockType());
 
-        $this->assertSame(['title', 'highlightedSlug', 'lowStockThreshold', 'columns'], array_keys($fields));
-        $this->assertSame(['2' => 2, '3' => 3, '4' => 4], $fields['columns']['options']['choices']);
+        // No "columns" any more: the tiers are read as rows, one open at a time, so there is no column count to choose
+        $this->assertSame(['title', 'highlightedSlug', 'lowStockThreshold'], array_keys($fields));
     }
 
     // The prizes are read from the LotteryPrize rows the draw is actually made on: typing them here would let the page and the draw disagree
@@ -71,5 +75,13 @@ class BlockTypesTest extends FormFieldsTestCase
         $fields = array_keys($this->buildFields(new SliderBlockType()));
 
         $this->assertSame(['duration', 'ratio'], $fields);
+    }
+
+    // The one kind placed on an ordinary page, hence the only one carrying a head: the section it opens is written here rather than in a "text_section" laid above it, the two having to be moved, hidden and translated together
+    public function testTheCampaignsBlockCarriesItsOwnSectionHead(): void
+    {
+        $fields = array_keys($this->buildFields(new CampaignsBlockType(new BlockAnchorSlugger(new AsciiSlugger()))));
+
+        $this->assertSame(['anchor', 'eyebrow', 'title', 'content', 'linkLabel', 'linkUrl', 'max', 'background'], $fields);
     }
 }

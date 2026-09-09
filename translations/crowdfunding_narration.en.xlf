@@ -12,7 +12,7 @@
             </trans-unit>
             <trans-unit id="THG7mHh">
                 <source>narration.guided_step_crowdfunding_blocks_add</source>
-                <target>At the very bottom of the form, the "Blocks" section. Texts, pictures, buttons, tables: they are the same as a page of the site's, and they move around the same way.</target>
+                <target>At the very bottom of the form, the "Blocks" section. Texts, pictures, buttons and tables, the same as a page of the site's - and, under the "Crowdfunding" category, three blocks of this campaign's own: its medias as a slideshow, its counterparts as unfoldable rows, and its lottery. A fourth one sits there too, which the next step is about.</target>
             </trans-unit>
             <trans-unit id="O99Sw6N">
                 <source>narration.guided_step_crowdfunding_blocks_done</source>
@@ -21,6 +21,10 @@
             <trans-unit id="Y7Ua_lX">
                 <source>narration.guided_step_crowdfunding_blocks_edit</source>
                 <target>Open with the pencil the campaign to fill in.</target>
+            </trans-unit>
+            <trans-unit id="TBRFdVf">
+                <source>narration.guided_step_crowdfunding_blocks_listing</source>
+                <target>A fourth block is named "Campaigns". That one does not go on a campaign's own page but on an ordinary page of the site, where it lists the open campaigns with their progress - a campaign opened or closed from the back office shows up or drops off on its own.</target>
             </trans-unit>
             <trans-unit id="K.pUwda">
                 <source>narration.guided_step_crowdfunding_blocks_open</source>
@@ -154,6 +158,10 @@
                 <source>narration.guided_step_crowdfunding_lottery_save</source>
                 <target>Save to open the lottery.</target>
             </trans-unit>
+            <trans-unit id="23CNLqW">
+                <source>narration.guided_step_crowdfunding_media_cover</source>
+                <target>The Campaign cover field takes one image: the one the catalogue and the social networks show of the campaign. It is shown whole, so frame it yourself.</target>
+            </trans-unit>
             <trans-unit id="l79C0HL">
                 <source>narration.guided_step_crowdfunding_media_done</source>
                 <target>The public page shows your pictures. There is nothing more to publish: what is saved is online.</target>
@@ -161,6 +169,10 @@
             <trans-unit id="z4IqhU1">
                 <source>narration.guided_step_crowdfunding_media_edit</source>
                 <target>Open the campaign to illustrate with the pencil, on its row.</target>
+            </trans-unit>
+            <trans-unit id="3jTRc.B">
+                <source>narration.guided_step_crowdfunding_media_hero</source>
+                <target>The Opening image field takes one image: the one the campaign page opens on, printed under its title. The catalogue and the social networks show the cover instead.</target>
             </trans-unit>
             <trans-unit id="rI9vIoG">
                 <source>narration.guided_step_crowdfunding_media_open</source>
@@ -177,6 +189,90 @@
             <trans-unit id="3pamyEn">
                 <source>narration.guided_step_crowdfunding_media_videos</source>
                 <target>Just below, the videos. A campaign video takes an uploaded file or, more simply, a YouTube address: that is the way to go for a heavy file.</target>
+            </trans-unit>
+            <trans-unit id="6R_3wuu">
+                <source>narration.guided_step_crowdfunding_news_done</source>
+                <target>The correction shows on the campaign's page at once; publishing a new entry is the public page and not this screen.</target>
+            </trans-unit>
+            <trans-unit id="aJCpS_8">
+                <source>narration.guided_step_crowdfunding_news_edit</source>
+                <target>Open the campaign holding the news entry to go back over.</target>
+            </trans-unit>
+            <trans-unit id="2W_9U8P">
+                <source>narration.guided_step_crowdfunding_news_expand</source>
+                <target>A news entry folds onto its title: open it, as the title and the text are inside.</target>
+            </trans-unit>
+            <trans-unit id="JYY4dKr">
+                <source>narration.guided_step_crowdfunding_news_fieldset</source>
+                <target>Every news entry of the campaign is there, the most recent first, and it is also where a news entry is removed from.</target>
+            </trans-unit>
+            <trans-unit id="geV_AR0">
+                <source>narration.guided_step_crowdfunding_news_open</source>
+                <target>News entries belong to a campaign and are gone back over on its screen: there is no news screen.</target>
+            </trans-unit>
+            <trans-unit id="pU3fass">
+                <source>narration.guided_step_crowdfunding_news_save</source>
+                <target>Save.</target>
+            </trans-unit>
+            <trans-unit id="TgnbxDb">
+                <source>narration.guided_step_crowdfunding_publish_done</source>
+                <target>The campaign is open. The same switch masks it again at any time, without losing anything it holds.</target>
+            </trans-unit>
+            <trans-unit id="Rv3LM4Z">
+                <source>narration.guided_step_crowdfunding_publish_edit</source>
+                <target>Come back to the listing and click the pencil on the same row: the form of the campaign opens.</target>
+            </trans-unit>
+            <trans-unit id="AKvMdbn">
+                <source>narration.guided_step_crowdfunding_publish_hidden</source>
+                <target>Just under the title sits the Masked switch. Turn it off: the campaign joins the listing, the sitemap and the basket, and its page answers.</target>
+            </trans-unit>
+            <trans-unit id="CV1wuoC">
+                <source>narration.guided_step_crowdfunding_publish_open</source>
+                <target>In the left-hand column, open the Campaigns menu: every campaign of the site is there, opened or not.</target>
+            </trans-unit>
+            <trans-unit id="i6bvPJZ">
+                <source>narration.guided_step_crowdfunding_publish_preview</source>
+                <target>On the row of the campaign, click the eye-shaped button: its page opens in a new tab, exactly as the visitor will read it, with a banner saying it is not open yet.</target>
+            </trans-unit>
+            <trans-unit id="7IWxzDn">
+                <source>narration.guided_step_crowdfunding_publish_qrcode</source>
+                <target>The QR code is drawn from the campaign's public address. Print it on a poster or a flyer, it leads straight there.</target>
+            </trans-unit>
+            <trans-unit id="9oRh_Ac">
+                <source>narration.guided_step_crowdfunding_publish_reopen</source>
+                <target>The save brought you back to the campaigns listing. Click the row's pencil again: the QR code is drawn on the campaign's form, and nowhere else.</target>
+            </trans-unit>
+            <trans-unit id="vEhErv5">
+                <source>narration.guided_step_crowdfunding_publish_save</source>
+                <target>At the bottom of the form, click Save and return: the campaign is open.</target>
+            </trans-unit>
+            <trans-unit id="VxPI7Ow">
+                <source>narration.guided_step_crowdfunding_publish_visit</source>
+                <target>On the row of the campaign, the eye has given way to an external link: click it to read the page everybody now reads.</target>
+            </trans-unit>
+            <trans-unit id="mbKKSXG">
+                <source>narration.guided_step_crowdfunding_trash_bin</source>
+                <target>Above the list, click the Recycle bin button: the campaigns taken out of the listing are shown there, and only those.</target>
+            </trans-unit>
+            <trans-unit id="fmAEW7n">
+                <source>narration.guided_step_crowdfunding_trash_delete</source>
+                <target>On that row, click the box-shaped button and confirm: the campaign leaves the listing for the recycle bin, keeping everything it holds.</target>
+            </trans-unit>
+            <trans-unit id="phhtfea">
+                <source>narration.guided_step_crowdfunding_trash_done</source>
+                <target>As long as a campaign sits in the recycle bin it can come back. Emptying it is a decision of its own, taken row by row.</target>
+            </trans-unit>
+            <trans-unit id="YD41NXq">
+                <source>narration.guided_step_crowdfunding_trash_open</source>
+                <target>In the left-hand column, open the Campaigns menu, and find the row of the campaign to remove.</target>
+            </trans-unit>
+            <trans-unit id="1ooV8xW">
+                <source>narration.guided_step_crowdfunding_trash_purge</source>
+                <target>The red button beside it deletes the campaign for good, with its medias, its counterparts, its draws and the contributions it received. Nothing brings it back.</target>
+            </trans-unit>
+            <trans-unit id="AqjbtkM">
+                <source>narration.guided_step_crowdfunding_trash_restore</source>
+                <target>On the row of the campaign, the Restore button brings it back with everything it still holds. It comes back masked.</target>
             </trans-unit>
         </body>
     </file>

@@ -79,6 +79,24 @@ class CrowdfundingBasketItemProviderTest extends TestCase
         $this->assertSame('label.crowdfunding_not_started', $this->createProvider()->validateAddition($counterpart, 1));
     }
 
+    // A campaign not opened yet is not contributed to: its page answers 404, and a tier reached from anywhere else must not go into a basket either
+    public function testValidateAdditionRefusesAHiddenCampaign(): void
+    {
+        $counterpart = $this->createCounterpart();
+        $counterpart->getCrowdfunding()->setHidden(true);
+
+        $this->assertSame('label.unavailable', $this->createProvider()->validateAddition($counterpart, 1));
+    }
+
+    // Same for a campaign sitting in the recycle bin, whose page answers 410
+    public function testValidateAdditionRefusesATrashedCampaign(): void
+    {
+        $counterpart = $this->createCounterpart();
+        $counterpart->getCrowdfunding()->setIsDeleted(true);
+
+        $this->assertSame('label.unavailable', $this->createProvider()->validateAddition($counterpart, 1));
+    }
+
     // The end date is inclusive: the campaign runs to the last second of the day it names
     public function testValidateAdditionAcceptsTheVeryLastDayOfACampaign(): void
     {
@@ -343,6 +361,7 @@ class CrowdfundingBasketItemProviderTest extends TestCase
     private function createCounterpart(string $beginDate = '-10 days', string $endDate = '+10 days'): CrowdfundingCounterpart
     {
         $crowdfunding = new Crowdfunding();
+        $crowdfunding->setHidden(false);
         $crowdfunding->setBeginDate(new \DateTime($beginDate));
         $crowdfunding->setEndDate(new \DateTime($endDate));
         $crowdfunding->setAmountAchieved(0);

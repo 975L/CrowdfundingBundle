@@ -27,7 +27,7 @@ class CrowdfundingServiceTest extends TestCase
         $this->assertInstanceOf(CrowdfundingServiceInterface::class, $this->createService());
     }
 
-    // A news is written from the campaign page by its author, and reaches the database in one flush
+    // A news is written from the campaign page by its author and reaches the database in one flush, its dates being CrowdfundingNewsListener's so one added from the back office is stamped too (see CrowdfundingNewsListenerTest)
     public function testAddNewsTiesTheNewsToItsCampaignAndSavesIt(): void
     {
         $crowdfunding = new Crowdfunding();
@@ -40,28 +40,6 @@ class CrowdfundingServiceTest extends TestCase
         $this->createService(entityManager: $entityManager)->addNews($crowdfunding, $news);
 
         $this->assertSame($crowdfunding, $news->getCrowdfunding());
-    }
-
-    // Three DATETIME_MUTABLE columns: an immutable stamp on any of them is refused by Doctrine at the very flush above
-    public function testAddNewsStampsTheThreeDatesWithMutableOnes(): void
-    {
-        $news = new CrowdfundingNews();
-
-        $this->createService()->addNews(new Crowdfunding(), $news);
-
-        $this->assertInstanceOf(\DateTime::class, $news->getCreation());
-        $this->assertInstanceOf(\DateTime::class, $news->getModification());
-        $this->assertInstanceOf(\DateTime::class, $news->getPublishedDate());
-    }
-
-    // Published straight away: the form has no draft state, and a news nobody reads has no reason to be written
-    public function testAddNewsPublishesTheNewsAsItIsWritten(): void
-    {
-        $news = new CrowdfundingNews();
-
-        $this->createService()->addNews(new Crowdfunding(), $news);
-
-        $this->assertEqualsWithDelta($news->getCreation()->getTimestamp(), $news->getPublishedDate()->getTimestamp(), 1);
     }
 
     // The controller asks the service, which asks the factory: a site overriding the news form replaces the factory alone

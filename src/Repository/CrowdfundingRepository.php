@@ -24,12 +24,17 @@ class CrowdfundingRepository extends ServiceEntityRepository
         parent::__construct($registry, Crowdfunding::class);
     }
 
-    // Finds all crowfundings sorted
+    // Finds all crowfundings sorted - the ones a visitor may read: a hidden campaign is not opened yet and a trashed one is on its way out, neither belonging to the listing nor to the sitemap
+    /**
+     * @return list<Crowdfunding>
+     */
     public function findAllSorted(): array
     {
         return $this->createQueryBuilder('c')
             ->select('c, cm')
             ->leftJoin('c.medias', 'cm')
+            ->andWhere('c.hidden = false')
+            ->andWhere('c.isDeleted = false')
             ->orderBy('c.position', 'ASC')
             ->getQuery()
             ->getResult()

@@ -13,7 +13,7 @@ export default class extends Controller {
 
     static values = {
         identifier: String,
-        drawUrl: { type: String, default: "/shop/lottery/IDENTIFIER/draw/PRIZE_RANK" }
+        drawUrl: { type: String, default: "/crowdfunding/lottery/IDENTIFIER/draw/PRIZE_RANK" }
     };
 
     // Draws the lottery

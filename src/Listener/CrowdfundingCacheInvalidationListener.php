@@ -11,9 +11,6 @@
 namespace c975L\CrowdfundingBundle\Listener;
 
 use c975L\CrowdfundingBundle\Entity\Crowdfunding;
-use c975L\CrowdfundingBundle\Entity\CrowdfundingContributor;
-use c975L\CrowdfundingBundle\Entity\CrowdfundingCounterpart;
-use c975L\CrowdfundingBundle\Entity\CrowdfundingCounterpartMedia;
 use c975L\CrowdfundingBundle\Entity\CrowdfundingMedia;
 use c975L\CrowdfundingBundle\Service\CrowdfundingBlockCacheInvalidator;
 use Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener;
@@ -22,7 +19,7 @@ use Doctrine\ORM\Event\PostUpdateEventArgs;
 use Doctrine\ORM\Event\PreRemoveEventArgs;
 use Doctrine\ORM\Events;
 
-// Drops the cached renders of this bundle's blocks whenever the campaign they read changes - the campaign itself, its medias, a counterpart or any of its own, and a contribution raising both the amount achieved and the ordered quantities. postPersist as much as postUpdate, a brand new counterpart on a cached campaign being an INSERT
+// Drops the cached renders of this bundle's blocks whenever what they read changes - the campaign itself and its medias, which is all "crowdfunding_slider" draws and the only kind of this bundle whose render is cached (the two others are "cacheable: false", see config/services.yaml). A tier or a contribution is left out on purpose: no cache entry holds either, and a kind reading them would have to be added here along with its resolver. postPersist as much as postUpdate, a plate added to a cached campaign being an INSERT
 #[AsDoctrineListener(event: Events::postPersist)]
 #[AsDoctrineListener(event: Events::postUpdate)]
 #[AsDoctrineListener(event: Events::preRemove)]
@@ -49,13 +46,7 @@ class CrowdfundingCacheInvalidationListener
 
     private function invalidate(object $entity): void
     {
-        if (
-            $entity instanceof Crowdfunding
-            || $entity instanceof CrowdfundingMedia
-            || $entity instanceof CrowdfundingCounterpart
-            || $entity instanceof CrowdfundingCounterpartMedia
-            || $entity instanceof CrowdfundingContributor
-        ) {
+        if ($entity instanceof Crowdfunding || $entity instanceof CrowdfundingMedia) {
             $this->invalidator->invalidateCrowdfunding();
         }
     }

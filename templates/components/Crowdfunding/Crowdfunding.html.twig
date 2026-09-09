@@ -1,5 +1,58 @@
-<article class="crowdfunding {{ class|default("") }}" id="crowdfunding-{{ crowdfunding.id }}">
-    {% set imageSrc = crowdfunding.medias|first != false ? crowdfunding.medias|first : "bundles/c975lcrowdfunding/images/no-product-image.webp" %}
-    <twig:c975LUi:Image:Link src="{{ asset(imageSrc) }}" url="{{ path('crowdfunding_display', {'slug': crowdfunding.slug}) }}" class="img-shadow img-crowdfunding" width="150"/>
-    <h3>{{ crowdfunding.title }}</h3>
-</article>
+{# <twig:c975LCrowdfunding:Crowdfunding:Crowdfunding crowdfunding="{{ crowdfunding }}" [class=""]/> #}
+{# A campaign as the listing shows it, read through crowdfunding_funding_state() so a card and the page it leads to never say two different things, drawn as a UiBundle card rather than a box of its own - and the domain is named again on every key written between its tags, a slot being compiled as an embedded template "trans_default_domain" does not reach (see tests/TranslationDomainTest.php) #}
+{% trans_default_domain 'crowdfunding' %}
+
+{% set state = crowdfunding_funding_state(crowdfunding) %}
+{% set url = path('crowdfunding_display', {'slug': crowdfunding.slug}) %}
+
+{# The campaign's cover, the image standing for it wherever it is named but not opened. The opening image takes over for a campaign written before the two were told apart, which holds none - and the placeholder for one holding neither, not for one whose image is filed under another use. Passed as the plain path, Image:Link resolving it through asset() itself #}
+{% set imageSrc = crowdfunding.covers|first ?: crowdfunding.heroes|first ?: "bundles/c975lcrowdfunding/images/no-product-image.webp" %}
+
+{# Both date columns are nullable and a null date prints as today: a campaign whose dates nobody typed yet says nothing above its state rather than a range that would be made up. Drawn inside the card and no longer beside the title, which takes the header's whole width #}
+{% set dateRange = crowdfunding.beginDate and crowdfunding.endDate ? crowdfunding.beginDate|date('d/m/Y') ~ ' - ' ~ crowdfunding.endDate|date('d/m/Y') : '' %}
+
+{# The pencil UiBundle's overlay draws on any [data-block-edit-url] (see block-edit-overlay.js), pointing at the campaign's own screen. Spread rather than written as an attribute of the card: a component renders an empty prop as an attribute all the same, and every visitor would carry a marker leading nowhere. Answers null to anyone but an editor #}
+{% set editUrl = crowdfunding_edit_url(crowdfunding, 'title') %}
+{% set editAttributes = editUrl ? {'data-block-edit-url': editUrl} : {} %}
+
+{% set amounts = [
+    {label: 'label.amount_achieved'|trans, value: (crowdfunding.amountAchieved / 100)|format_currency(crowdfunding.currency, {fraction_digit: 0})},
+    {label: 'label.goal'|trans, value: (crowdfunding.amountGoal / 100)|format_currency(crowdfunding.currency, {fraction_digit: 0})}
+] %}
+
+<twig:c975LUi:Card:Card
+    tag="article"
+    level="h3"
+    id="crowdfunding-{{ crowdfunding.id }}"
+    class="crowdfunding-card {{ class|default('') }}"
+    title="{{ crowdfunding.title }}"
+    titleUrl="{{ url }}"
+    src="{{ imageSrc }}"
+    :stats="amounts"
+    {{...editAttributes }}
+>
+    <twig:c975LUi:Progress:Bar progressPercent="{{ state.progressPercent }}" text="false"/>
+
+    {# The range the campaign runs over, read right above the state it is in. Written only when both dates are known, an empty paragraph taking its margin all the same #}
+    {% if dateRange %}
+        <p class="crowdfunding-card__dates">{{ dateRange }}</p>
+    {% endif %}
+
+    {# Where the campaign stands, in the three states the page says too - the listing being where a visitor compares campaigns, a closed one has to say so here and not once the link is followed #}
+    {% if false == state.isStarted %}
+        <p class="crowdfunding-card__status crowdfunding-card__status--soon">
+            {{ 'label.crowdfunding_not_started'|trans({}, 'crowdfunding') }}{% if crowdfunding.beginDate %}, {{ 'label.come_back_on'|trans({}, 'crowdfunding') }} {{ crowdfunding.beginDate|date('d/m/Y') }}{% endif %}
+        </p>
+    {% elseif state.isEnded %}
+        <p class="crowdfunding-card__status crowdfunding-card__status--ended">{{ 'label.crowdfunding_ended'|trans({}, 'crowdfunding') }}</p>
+    {% else %}
+        <p class="crowdfunding-card__status crowdfunding-card__status--running">
+            <twig:c975LUi:Image:Icon src="bundles/c975lcrowdfunding/icons/calendar-days.svg" width="24" height="24"/>
+            {% if state.isLastDay %}
+                <strong>{{ 'label.last_day'|trans({}, 'crowdfunding') }}</strong>
+            {% else %}
+                <strong>{{ state.daysLeft }}</strong> {{ 'label.days_left'|trans({}, 'crowdfunding') }}
+            {% endif %}
+        </p>
+    {% endif %}
+</twig:c975LUi:Card:Card>

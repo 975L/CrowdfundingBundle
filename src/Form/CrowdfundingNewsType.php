@@ -29,8 +29,7 @@ class CrowdfundingNewsType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => CrowdfundingNews::class,
+            'translation_domain' => 'crowdfunding',
         ]);
-
-        $resolver->setRequired('config');
     }
 }

@@ -16,7 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CrowdfundingNewsRepository::class)]
 #[ORM\Table(name: 'crowdfunding_news')]
-class CrowdfundingNews
+class CrowdfundingNews implements \Stringable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -41,6 +41,12 @@ class CrowdfundingNews
     #[ORM\ManyToOne(targetEntity: Crowdfunding::class, inversedBy: 'news')]
     #[ORM\JoinColumn(nullable: true)]
     private ?Crowdfunding $crowdfunding = null;
+
+    // What EasyAdmin prints on the fold of a collection entry: without it a news folds onto its class name rather than onto its title, and a campaign holding a dozen of them is unreadable
+    public function __toString(): string
+    {
+        return (string) $this->title;
+    }
 
     public function getId(): ?int
     {

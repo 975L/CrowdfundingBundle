@@ -1,0 +1,34 @@
+{# Adapter for the dynamic Block system - the campaigns are resolved live (see CrowdfundingBlockExtension), the block only storing how many to show and the head it shows them under, and the cards are looped here rather than through components/Crowdfunding/Crowdfundings.html.twig, which writes the /crowdfunding page's own section and pencil that the Blocks wrapper already draws #}
+{% set campaigns = crowdfunding_block_campaigns(max ?? null) %}
+{% if campaigns is not empty %}
+    {# Matched, not interpolated: the value comes from stored block data and must not write any class name #}
+    {% set flat = background|default('') in ['muted', 'primary', 'dark'] ? ' section--bg-' ~ background : '' %}
+    {# Both needed: either alone prints a broken link, the same rule as every other section of the page #}
+    {% set hasLink = linkLabel|default('') and linkUrl|default('') %}
+    {# A headingless <section> is invalid HTML, hence the <div> fallback #}
+    {% set tag = (eyebrow|default('') or title|default('')) ? 'section' : 'div' %}
+    {# ".block-section" is how a satellite bundle joins the page's vertical rhythm without UiBundle having to name this kind (see its sass/_page-sections.scss) #}
+    <{{ tag }} class="block-section crowdfunding-listing{{ flat }}" id="{{ anchor_id }}">
+        <div class="section-wrap">
+            {# The link stands on the head's own line, against the far edge - the same place BookBundle's listings put theirs #}
+            {% if hasLink %}
+                <div class="crowdfunding-listing__head">
+                    <div>{{ include('@c975LUi/components/Section/_head.html.twig') }}</div>
+                    <a class="section-btn section-btn--ghost" href="{{ linkUrl }}">{{ linkLabel }}</a>
+                </div>
+            {% else %}
+                {{ include('@c975LUi/components/Section/_head.html.twig') }}
+            {% endif %}
+            {# The paragraph opening the section. No nl2br: Trix already encodes its line breaks, so it would double them into blank lines #}
+            {% if content|default('') %}
+                <div class="crowdfunding-listing__intro">{{ content|raw }}</div>
+            {% endif %}
+            {# The ecosystem's own row of cards (UiBundle sass/_cards.scss): it stretches the cards to a common height and spaces them by the site's --cards-gap #}
+            <div class="cards crowdfundings">
+                {% for crowdfunding in campaigns %}
+                    <twig:c975LCrowdfunding:Crowdfunding:Crowdfunding crowdfunding="{{ crowdfunding }}"/>
+                {% endfor %}
+            </div>
+        </div>
+    </{{ tag }}>
+{% endif %}

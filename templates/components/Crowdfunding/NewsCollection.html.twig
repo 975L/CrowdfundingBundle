@@ -1,4 +1,6 @@
-<section id="news">
+{# The pencil UiBundle's overlay draws on any [data-block-edit-url] (see block-edit-overlay.js): the form below only ever adds a news, correcting or removing one being the campaign's edit form, and the collection may well be empty - which is when an editor most needs the way there. Answers null to anyone but an editor #}
+{% set editUrl = crowdfunding_edit_url(crowdfunding, 'news') %}
+<section id="news"{% if editUrl %} data-block-edit-url="{{ editUrl }}"{% endif %}>
     <h2>{{ 'label.news'|trans({}, 'crowdfunding') }}</h2>
     {# Add news form #}
     {% if null != form and null != app.user %}
@@ -8,7 +10,7 @@
                 <input type="submit" name="submit" class="btn btn-primary" value="{{ 'label.add_news'|trans({}, 'crowdfunding') }}">
             </div>
             {# Champ obligatoire #}
-            <p class="text-muted">
+            <p class="crowdfunding-meta">
                 {{ 'label.mandatory_field'|trans({}, 'site') }}
             </p>
         {{ form_end(form) }}

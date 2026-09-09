@@ -40,7 +40,7 @@ class Lottery
     private bool $isActive = true;
 
     #[ORM\OneToMany(targetEntity: LotteryPrize::class, mappedBy: 'lottery', cascade: ['persist', 'remove'])]
-    #[ORM\OrderBy(['rank' => 'ASC'])]
+    #[ORM\OrderBy(['rank' => 'ASC', 'id' => 'ASC'])]
     private Collection $prizes;
 
     #[ORM\OneToMany(targetEntity: LotteryTicket::class, mappedBy: 'lottery', cascade: ['persist', 'remove'])]

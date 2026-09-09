@@ -1,4 +1,17 @@
 /* LOTTERY */
+/* The prizes of a draw, read side by side: their descriptions are of unequal lengths, so what a card says about the draw is pinned to its bottom and the winning tickets line up across the run. ".cards" already stretches the cards themselves to a common height; this is what stretches the body the pinning needs room in */
+.crowdfunding-prize .card-body,
+.crowdfunding-prize [data-prize-rank] {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.crowdfunding-prize__draw {
+    margin-top: auto;
+    padding-top: 1em;
+}
+
 #tickets div{
     display: flex;
     flex-wrap: wrap;

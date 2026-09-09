@@ -5,63 +5,52 @@
 
 {% set state = crowdfunding_funding_state(crowdfunding) %}
 
-<aside class="crowdfunding-funding" id="funding" aria-label="{{ 'label.funding'|trans }}">
-    <p class="crowdfunding-funding__amounts">
-        <strong>{{ (crowdfunding.amountAchieved / 100)|format_currency(crowdfunding.currency, {fraction_digit: 0}) }}</strong>
-        {{ 'label.outof'|trans }}
-        <strong>{{ (crowdfunding.amountGoal / 100)|format_currency(crowdfunding.currency, {fraction_digit: 0}) }}</strong>
-    </p>
-    <twig:c975LUi:Progress:Bar progressPercent="{{ state.progressPercent }}" text="true"/>
-    <twig:c975LCrowdfunding:Crowdfunding:ContributorsNumber contributorsLength="{{ crowdfunding.contributors|length }}"/>
+{# The pencil UiBundle's overlay draws on any [data-block-edit-url] (see block-edit-overlay.js), pointing at the very field the section is written in and answering null to anyone but an editor - carried by the wrapper rather than the card, a component rendering an empty prop as an attribute all the same #}
+{% set editUrl = crowdfunding_edit_url(crowdfunding, 'amountGoal') %}
+<aside id="funding" aria-label="{{ 'label.funding'|trans }}"{% if editUrl %} data-block-edit-url="{{ editUrl }}"{% endif %}>
+    {# A card and not a bare box: the rail names what it says - the campaign - the way the lottery card under it names the draw #}
+    <twig:c975LUi:Card:Card title="{{ 'label.campaign'|trans({}, 'crowdfunding') }}" class="crowdfunding-funding">
+        <div class="crowdfunding-funding__body">
+            <p class="crowdfunding-funding__amounts">
+                <strong>{{ (crowdfunding.amountAchieved / 100)|format_currency(crowdfunding.currency, {fraction_digit: 0}) }}</strong>
+                {{ 'label.outof'|trans({}, 'crowdfunding') }}
+                <strong>{{ (crowdfunding.amountGoal / 100)|format_currency(crowdfunding.currency, {fraction_digit: 0}) }}</strong>
+                <span class="crowdfunding-funding__percent">{{ state.progressPercent }}&nbsp;%</span>
+            </p>
+            {# The percent read beside the amounts rather than inside the bar: the bar's own label is drawn white across the whole track, so at a low percent it fell on the empty part of it #}
+            <twig:c975LUi:Progress:Bar progressPercent="{{ state.progressPercent }}" text="false"/>
+            <twig:c975LCrowdfunding:Crowdfunding:ContributorsNumber contributorsLength="{{ crowdfunding.contributors|length }}"/>
 
-    {# The two dates the days below are counted against, said once beside the amounts they run for #}
-    <p class="crowdfunding-funding__range">
-        <twig:c975LUi:Image:Icon src="bundles/c975lcrowdfunding/icons/calendar-check.svg" width="20" height="20"/>
-        <strong>{{ crowdfunding.beginDate|date('d/m/Y') }} - {{ crowdfunding.endDate|date('d/m/Y') }}</strong>
-    </p>
-
-    {# Factual urgency only, and for a running campaign alone: the two buttons below already say in full that a campaign has not opened or has closed #}
-    {% if state.isStarted and false == state.isEnded %}
-        <p class="crowdfunding-funding__dates">
-            <twig:c975LUi:Image:Icon src="bundles/c975lcrowdfunding/icons/calendar-days.svg" width="20" height="20"/>
-            {% if state.isLastDay %}
-                <strong>{{ 'label.last_day'|trans }}</strong>
-            {% else %}
-                <strong>{{ state.daysLeft }}</strong> {{ 'label.days_left'|trans }}
+            {# The two dates the days below are counted against, said once beside the amounts they run for - out entirely where the campaign carries none, both columns being nullable and Twig's date filter turning a null into today #}
+            {% if crowdfunding.beginDate and crowdfunding.endDate %}
+                <p class="crowdfunding-funding__range">
+                    <twig:c975LUi:Image:Icon src="bundles/c975lcrowdfunding/icons/calendar-check.svg" width="20" height="20"/>
+                    <strong>{{ crowdfunding.beginDate|date('d/m/Y') }} - {{ crowdfunding.endDate|date('d/m/Y') }}</strong>
+                </p>
             {% endif %}
-        </p>
-    {% endif %}
 
-    {% if false == state.isStarted %}
-        <twig:c975LCrowdfunding:CrowdfundingCounterpart:AddButtonNotStarted type="primary" beginDate="{{ crowdfunding.beginDate }}"/>
-    {% elseif state.isEnded %}
-        <twig:c975LCrowdfunding:CrowdfundingCounterpart:AddButtonIsEnded type="primary"/>
-    {% else %}
-        {# Reaches the counterparts wherever they are laid out, composed as a block or rendered by the page: both carry the "counterparts" anchor #}
-        <twig:c975LUi:Button:Button label="{{ 'label.contribute'|trans }}" url="#counterparts"/>
+            {# Factual urgency only, and for a running campaign alone: the two buttons below already say in full that a campaign has not opened or has closed #}
+            {% if state.isStarted and false == state.isEnded %}
+                <p class="crowdfunding-funding__dates">
+                    <twig:c975LUi:Image:Icon src="bundles/c975lcrowdfunding/icons/calendar-days.svg" width="20" height="20"/>
+                    {% if state.isLastDay %}
+                        <strong>{{ 'label.last_day'|trans({}, 'crowdfunding') }}</strong>
+                    {% else %}
+                        <strong>{{ state.daysLeft }}</strong> {{ 'label.days_left'|trans({}, 'crowdfunding') }}
+                    {% endif %}
+                </p>
+            {% endif %}
 
-        {# The first tiers within reach, so the rail answers "how much" and not only "how far": each jumps to its own card, where the tier is described in full and actually joined #}
-        {% if crowdfunding.counterparts is not empty %}
-            <ul class="crowdfunding-funding__tiers">
-                {% for counterpart in crowdfunding.counterparts|slice(0, 3) %}
-                    <li>
-                        <a href="#{{ counterpart.slug }}">
-                            <strong>{{ (counterpart.price / 100)|format_currency(counterpart.currency, {fraction_digit: 0}) }}</strong>
-                            <span>{{ counterpart.title }}</span>
-                        </a>
-                    </li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-    {% endif %}
-
-    {# The draw a contribution also enters, named and dated: the prizes themselves are read further down, where the lottery is laid out in full #}
-    {% for lottery in crowdfunding.lotteries|slice(0, 1) %}
-        <div class="crowdfunding-funding__lottery">
-            <p class="crowdfunding-funding__lottery-title">{{ 'label.lottery'|trans }}</p>
-            {# "#lotteries", the wrapper both paths carry: the composed block and the hardcoded section each print it, where the card's own "#lottery" only exists without a block #}
-            <p><a href="#lotteries">{{ lottery.identifier }}</a></p>
-            <p>{{ 'label.draw_date'|trans }} : <strong>{{ lottery.drawDate|date('d/m/Y') }}</strong></p>
+            {# A campaign that cannot be joined says so, it does not offer a button that refuses the click: a disabled control reads as something broken where there is nothing wrong - the tiers carry the same word where a visitor goes looking for it (see components/Crowdfunding/CounterParts.html.twig) #}
+            {% if false == state.isStarted %}
+                {# The second line only where there is a date to name: "beginDate" is nullable and Twig's date filter turns a null into today (same guard as components/Crowdfunding/CounterParts.html.twig) #}
+                <p class="crowdfunding-funding__state">{{ 'label.crowdfunding_not_started'|trans({}, 'crowdfunding') }}{% if crowdfunding.beginDate %}<br>{{ 'label.come_back_on'|trans({}, 'crowdfunding')|capitalize }} {{ crowdfunding.beginDate|date('d/m/Y') }}{% endif %}</p>
+            {% elseif state.isEnded %}
+                <p class="crowdfunding-funding__state">{{ 'label.crowdfunding_ended'|trans({}, 'crowdfunding') }}</p>
+            {% else %}
+                {# The one way in and no price beside it, the tiers saying what they cost where they are joined, and the anchor reaches them wherever they are laid out - composed as a block or rendered by the page, both carry it #}
+                <twig:c975LUi:Button:Button label="{{ 'label.contribute'|trans({}, 'crowdfunding') }}" url="#counterparts"/>
+            {% endif %}
         </div>
-    {% endfor %}
+    </twig:c975LUi:Card:Card>
 </aside>

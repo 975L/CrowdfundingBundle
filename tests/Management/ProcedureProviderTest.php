@@ -49,14 +49,14 @@ class ProcedureProviderTest extends TestCase
         $this->assertStringContainsString('seconde prise', $entry['body']['fr']);
     }
 
-    // The one thing this procedure exists to say: the form is nowhere in the back-office, so an admin looking for it in management never finds it
-    public function testTheNewsProcedureSaysTheFormIsOnThePublicPage(): void
+    // The one thing this procedure exists to say: a news is written in one place and corrected in another, so neither screen is looked for where it is not
+    public function testTheNewsProcedureSaysWhereANewsIsWrittenAndWhereItIsCorrected(): void
     {
         $entry = $this->rawEntries()[1];
 
         $this->assertSame('publier-actualite-campagne', $entry['slug']);
         $this->assertStringContainsString('page publique', $entry['body']['fr']);
-        $this->assertStringContainsString('back-office', $entry['body']['fr']);
+        $this->assertStringContainsString('Actualités', $entry['body']['fr']);
     }
 
     private function rawEntries(): array

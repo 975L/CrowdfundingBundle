@@ -12,7 +12,7 @@
             </trans-unit>
             <trans-unit id="THG7mHh">
                 <source>narration.guided_step_crowdfunding_blocks_add</source>
-                <target>Tout en bas du formulaire, la section « Blocs ». Textes, images, boutons, tableaux : ce sont les mêmes qu'une page du site, et ils se déplacent de la même façon.</target>
+                <target>Tout en bas du formulaire, la section « Blocs ». Textes, images, boutons et tableaux, les mêmes qu'une page du site - et, dans la catégorie « Financement participatif », trois blocs propres à cette campagne : ses visuels en diaporama, ses contreparties en lignes dépliables, et sa loterie. Un quatrième y figure aussi, dont l'étape suivante parle.</target>
             </trans-unit>
             <trans-unit id="O99Sw6N">
                 <source>narration.guided_step_crowdfunding_blocks_done</source>
@@ -21,6 +21,10 @@
             <trans-unit id="Y7Ua_lX">
                 <source>narration.guided_step_crowdfunding_blocks_edit</source>
                 <target>Ouvrez avec le crayon la campagne à compléter.</target>
+            </trans-unit>
+            <trans-unit id="TBRFdVf">
+                <source>narration.guided_step_crowdfunding_blocks_listing</source>
+                <target>Un quatrième bloc porte le nom « Campagnes ». Celui-là ne va pas sur la fiche d'une campagne mais sur une page ordinaire du site, où il liste les campagnes ouvertes avec leur avancement - une campagne ouverte ou fermée depuis le back-office y apparaît ou en disparaît toute seule.</target>
             </trans-unit>
             <trans-unit id="K.pUwda">
                 <source>narration.guided_step_crowdfunding_blocks_open</source>
@@ -154,6 +158,10 @@
                 <source>narration.guided_step_crowdfunding_lottery_save</source>
                 <target>Enregistrez pour ouvrir la loterie.</target>
             </trans-unit>
+            <trans-unit id="23CNLqW">
+                <source>narration.guided_step_crowdfunding_media_cover</source>
+                <target>Le champ Couverture de la campagne prend une seule image : celle que le catalogue et les réseaux sociaux montrent de la campagne. Elle est affichée entière, alors cadrez-la vous-même.</target>
+            </trans-unit>
             <trans-unit id="l79C0HL">
                 <source>narration.guided_step_crowdfunding_media_done</source>
                 <target>La page publique montre vos images. Il n'y a rien à publier de plus : ce qui est enregistré est en ligne.</target>
@@ -161,6 +169,10 @@
             <trans-unit id="z4IqhU1">
                 <source>narration.guided_step_crowdfunding_media_edit</source>
                 <target>Ouvrez la campagne à illustrer avec le crayon, sur sa ligne.</target>
+            </trans-unit>
+            <trans-unit id="3jTRc.B">
+                <source>narration.guided_step_crowdfunding_media_hero</source>
+                <target>Le champ Image d'ouverture prend une seule image : celle sur laquelle la page de la campagne s'ouvre, imprimée sous son titre. Le catalogue et les réseaux sociaux, eux, montrent la couverture.</target>
             </trans-unit>
             <trans-unit id="rI9vIoG">
                 <source>narration.guided_step_crowdfunding_media_open</source>
@@ -177,6 +189,90 @@
             <trans-unit id="3pamyEn">
                 <source>narration.guided_step_crowdfunding_media_videos</source>
                 <target>Juste en dessous, les vidéos. Une vidéo de campagne accepte un fichier téléversé ou, plus simplement, une adresse YouTube : c'est la voie à prendre pour un fichier lourd.</target>
+            </trans-unit>
+            <trans-unit id="6R_3wuu">
+                <source>narration.guided_step_crowdfunding_news_done</source>
+                <target>La correction est visible aussitôt sur la page de la campagne ; pour publier une nouvelle actualité, c'est la page publique et pas cet écran.</target>
+            </trans-unit>
+            <trans-unit id="aJCpS_8">
+                <source>narration.guided_step_crowdfunding_news_edit</source>
+                <target>Ouvrez la campagne dont une actualité est à reprendre.</target>
+            </trans-unit>
+            <trans-unit id="2W_9U8P">
+                <source>narration.guided_step_crowdfunding_news_expand</source>
+                <target>Une actualité se replie sur son titre : ouvrez-la, car le titre et le texte sont à l'intérieur.</target>
+            </trans-unit>
+            <trans-unit id="JYY4dKr">
+                <source>narration.guided_step_crowdfunding_news_fieldset</source>
+                <target>Toutes les actualités de la campagne sont là, la plus récente en tête, et c'est aussi d'ici qu'une actualité se supprime.</target>
+            </trans-unit>
+            <trans-unit id="geV_AR0">
+                <source>narration.guided_step_crowdfunding_news_open</source>
+                <target>Les actualités appartiennent à une campagne et se reprennent sur sa fiche : il n'y a pas d'écran d'actualités.</target>
+            </trans-unit>
+            <trans-unit id="pU3fass">
+                <source>narration.guided_step_crowdfunding_news_save</source>
+                <target>Enregistrez.</target>
+            </trans-unit>
+            <trans-unit id="TgnbxDb">
+                <source>narration.guided_step_crowdfunding_publish_done</source>
+                <target>La campagne est ouverte. Le même commutateur la masque de nouveau à tout moment, sans rien perdre de ce qu'elle contient.</target>
+            </trans-unit>
+            <trans-unit id="Rv3LM4Z">
+                <source>narration.guided_step_crowdfunding_publish_edit</source>
+                <target>Revenez sur la liste et cliquez le crayon de la même ligne : le formulaire de la campagne s'ouvre.</target>
+            </trans-unit>
+            <trans-unit id="AKvMdbn">
+                <source>narration.guided_step_crowdfunding_publish_hidden</source>
+                <target>Juste sous le titre se trouve le commutateur Masquée. Éteignez-le : la campagne rejoint la liste, le plan du site et le panier, et sa page répond.</target>
+            </trans-unit>
+            <trans-unit id="CV1wuoC">
+                <source>narration.guided_step_crowdfunding_publish_open</source>
+                <target>Dans la colonne de gauche, ouvrez le menu Campagnes : toutes les campagnes du site s'y trouvent, ouvertes ou non.</target>
+            </trans-unit>
+            <trans-unit id="i6bvPJZ">
+                <source>narration.guided_step_crowdfunding_publish_preview</source>
+                <target>Sur la ligne de la campagne, cliquez le bouton en forme d'œil : sa page s'ouvre dans un nouvel onglet, telle que le visiteur la lira, avec un bandeau disant qu'elle n'est pas encore ouverte.</target>
+            </trans-unit>
+            <trans-unit id="7IWxzDn">
+                <source>narration.guided_step_crowdfunding_publish_qrcode</source>
+                <target>Le QR code est dessiné à partir de l'adresse publique de la campagne. Imprimez-le sur une affiche ou un flyer, il y mène directement.</target>
+            </trans-unit>
+            <trans-unit id="9oRh_Ac">
+                <source>narration.guided_step_crowdfunding_publish_reopen</source>
+                <target>L'enregistrement vous a ramené à la liste des campagnes. Cliquez à nouveau sur le crayon de la ligne : le code QR est dessiné sur le formulaire de la campagne, et nulle part ailleurs.</target>
+            </trans-unit>
+            <trans-unit id="vEhErv5">
+                <source>narration.guided_step_crowdfunding_publish_save</source>
+                <target>En bas du formulaire, cliquez sur Enregistrer et revenir : la campagne est ouverte.</target>
+            </trans-unit>
+            <trans-unit id="VxPI7Ow">
+                <source>narration.guided_step_crowdfunding_publish_visit</source>
+                <target>Sur la ligne de la campagne, l'œil a laissé place à un lien externe : cliquez-le pour lire la page que tout le monde lit désormais.</target>
+            </trans-unit>
+            <trans-unit id="mbKKSXG">
+                <source>narration.guided_step_crowdfunding_trash_bin</source>
+                <target>Au-dessus de la liste, cliquez le bouton Corbeille : les campagnes sorties de la liste s'y trouvent, et elles seules.</target>
+            </trans-unit>
+            <trans-unit id="fmAEW7n">
+                <source>narration.guided_step_crowdfunding_trash_delete</source>
+                <target>Sur cette ligne, cliquez le bouton en forme de carton et confirmez : la campagne quitte la liste pour la corbeille, en gardant tout ce qu'elle contient.</target>
+            </trans-unit>
+            <trans-unit id="phhtfea">
+                <source>narration.guided_step_crowdfunding_trash_done</source>
+                <target>Tant qu'une campagne est dans la corbeille, elle peut revenir. La vider est une décision à part, prise ligne par ligne.</target>
+            </trans-unit>
+            <trans-unit id="YD41NXq">
+                <source>narration.guided_step_crowdfunding_trash_open</source>
+                <target>Dans la colonne de gauche, ouvrez le menu Campagnes, et trouvez la ligne de la campagne à retirer.</target>
+            </trans-unit>
+            <trans-unit id="1ooV8xW">
+                <source>narration.guided_step_crowdfunding_trash_purge</source>
+                <target>Le bouton rouge à côté supprime la campagne pour de bon, avec ses médias, ses contreparties, ses tirages et les contributions reçues. Rien ne la ramène.</target>
+            </trans-unit>
+            <trans-unit id="AqjbtkM">
+                <source>narration.guided_step_crowdfunding_trash_restore</source>
+                <target>Sur la ligne de la campagne, le bouton Restaurer la ramène avec tout ce qu'elle contient encore. Elle revient masquée.</target>
             </trans-unit>
         </body>
     </file>

@@ -17,14 +17,17 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\Service\ResetInterface;
 use Twig\Attribute\AsTwigFunction;
 
-// Resolves, at render time, the campaign the block templates of this bundle display - a Block only ever stores how to show it (a number of columns, a threshold), never the campaign itself, so a block never goes stale against the funding. Same split as ShopBundle's ShopBlockExtension and BookBundle's BookBlockExtension
+// Resolves, at render time, the campaigns the block templates of this bundle display - a Block only ever stores how to show it (a number of columns, a threshold), never the campaign itself, so a block never goes stale against the funding. Same split as ShopBundle's ShopBlockExtension and BookBundle's BookBlockExtension
 class CrowdfundingBlockExtension implements ResetInterface
 {
-    // The route a campaign is served under, and the one a block reads its campaign from - the kinds of this bundle only ever compose that page
-    private const string CROWDFUNDING_ROUTE = 'crowdfunding_display';
+    // The two routes a campaign is served under, and the ones a block reads its campaign from - the kinds of this bundle only ever compose that page, and the preview joins the public route so a campaign is composed and read before it is opened
+    private const array CROWDFUNDING_ROUTES = ['crowdfunding_display', 'crowdfunding_preview'];
 
     /** @var array<string, ?Crowdfunding> */
     private array $bySlug = [];
+
+    /** @var ?list<Crowdfunding> */
+    private ?array $campaigns = null;
 
     public function __construct(
         private readonly CrowdfundingRepository $crowdfundingRepository,
@@ -43,6 +46,18 @@ class CrowdfundingBlockExtension implements ResetInterface
         }
 
         return $this->bySlug[$slug] ??= $this->crowdfundingRepository->findOneBySlug($slug);
+    }
+
+    // The campaigns an ordinary page lists, the ones a visitor may read and in the order the back office puts them - the same query the /crowdfunding page runs, so a listing block and that page never name two different sets. Read straight from the repository and not through getCampaign(), which answers null off a campaign's own route
+    /**
+     * @return list<Crowdfunding>
+     */
+    #[AsTwigFunction('crowdfunding_block_campaigns')]
+    public function getCampaigns(?int $max = null): array
+    {
+        $campaigns = $this->campaigns ??= $this->crowdfundingRepository->findAllSorted();
+
+        return null !== $max && $max > 0 ? \array_slice($campaigns, 0, $max) : $campaigns;
     }
 
     // Every kind held by a campaign, two levels of slots included: what a hardcoded section of crowdfunding/display.html.twig reads to step aside once the editor has placed the block taking it over
@@ -72,6 +87,7 @@ class CrowdfundingBlockExtension implements ResetInterface
     public function reset(): void
     {
         $this->bySlug = [];
+        $this->campaigns = null;
     }
 
     // The campaign of the page being rendered, and only there: a block placed on a page that is not a campaign has no campaign to show
@@ -79,7 +95,7 @@ class CrowdfundingBlockExtension implements ResetInterface
     {
         $request = $this->requestStack->getCurrentRequest();
 
-        if (null === $request || self::CROWDFUNDING_ROUTE !== $request->attributes->get('_route')) {
+        if (null === $request || !\in_array($request->attributes->get('_route'), self::CROWDFUNDING_ROUTES, true)) {
             return null;
         }
 

@@ -3,10 +3,14 @@
 {% trans_default_domain 'crowdfunding' %}
 {% props crowdfunding %}
 
-<section class="crowdfunding-hero">
-    {% if crowdfunding.medias is not empty %}
-        {# Decorative: the title beside it already names the campaign, and the same image is described in the slider further down #}
-        <img class="crowdfunding-hero__image" src="{{ asset(crowdfunding.medias[0].name) }}" alt="" aria-hidden="true" loading="eager" fetchpriority="high">
+{# The pencil UiBundle's overlay draws on any [data-block-edit-url] (see block-edit-overlay.js): a composed block gets one through CrowdfundingBlockEditUrlProvider, a section the page hardcodes gets it here, pointing at the very field the section is written in. Answers null to anyone but an editor #}
+{% set editUrl = crowdfunding_edit_url(crowdfunding, 'heroes') %}
+<section class="crowdfunding-hero"{% if editUrl %} data-block-edit-url="{{ editUrl }}"{% endif %}>
+    {# The campaign's own opening image, uploaded on its own field: no fallback on the slider's first plate, which would open the page on whatever an editor happened to sort first #}
+    {% set opening = crowdfunding.heroes|first %}
+    {% if opening %}
+        {# Decorative: the title beside it already names the campaign #}
+        <img class="crowdfunding-hero__image" src="{{ asset(opening.name) }}" alt="" aria-hidden="true" loading="eager" fetchpriority="high">
     {% endif %}
     <div class="crowdfunding-hero__caption">
         <p class="crowdfunding-hero__meta">

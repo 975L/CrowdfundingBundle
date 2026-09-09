@@ -6,13 +6,37 @@
  * with this source code in the file LICENSE.
  */
 /* CROWDFUNDING */
-.crowdfundings {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  flex-wrap: wrap;
-  width: 100%;
-  justify-content: center;
+/* The listing is a row of UiBundle cards now (see components/Crowdfunding/Crowdfundings.html.twig), which brings the layout the ".crowdfundings" rule used to restate: what is left here is what a campaign card says on top of a card - its state. The class stays on the markup as the hook a site's own sheet may already be written against */
+/* The campaign's cover shown whole. UiBundle's "stat" card crops its picture to a square so a row of them lines up (see the bundle's sass/_cards.scss), which cut the ends off a cover drawn as a banner - and a cover is the one image whose framing its author chose. Both classes named, the rule being the exact weight of the one it undoes, which a single class would have lost to depending on the order the two sheets happen to load in */
+.crowdfunding-card.card--stat .card-body img {
+  aspect-ratio: auto;
+}
+
+/* The card's own picture is its cover and nothing else: UiBundle sizes every image inside a "stat" card's body to the card's full width (see its sass/_cards.scss), which blew the calendar of the status line below up to the width of the card. The size is restated and not released to "auto" - these icons are Font Awesome files carrying a viewBox and no dimensions of their own, so "auto" is the 300px every sizeless replaced element falls back on. The ecosystem's own icon measure (UiBundle sass/_images.scss), which the rule undone outranks */
+.crowdfunding-card.card--stat .card-body img.icon {
+  width: 24px;
+  height: 24px;
+  aspect-ratio: auto;
+}
+
+/* The state is said in words, the shade only underlining it: a status carried by color alone is lost on a colorblind reader and in a printout */
+.crowdfunding-card__status {
+  margin: 0.5em 0 0;
+  text-align: center;
+  font-weight: bold;
+}
+
+/* The dates the campaign runs over, kept at the weight they had beside the title before moving under the card's bar (see UiBundle --card-header-aside-size), so the card still reads as a name then a range */
+.crowdfunding-card__dates {
+  margin: 0.5em 0 0;
+  text-align: center;
+  font-size: var(--card-header-aside-size);
+}
+
+/* The ecosystem's own recipe for a muted line (see UiBundle --input-placeholder-color), mixed out of the two tokens rather than stated: it follows any palette a site sets, in either mode */
+.crowdfunding-card__dates,
+.crowdfunding-card__status--ended {
+  color: color-mix(in srgb, var(--text) 70%, var(--background));
 }
 
 .crowdfunding {
@@ -23,6 +47,11 @@
   margin: 0 auto;
   padding: 10px;
   text-align: center;
+}
+
+/* The ecosystem's own vertical step between the campaign page's bands (see UiBundle sass/_page-sections.scss), read through the token so a site retunes the rhythm from its theme.css. On the column, the blanket "margin: 0 auto" below wiping any vertical margin a band brings of its own. Kept on the modifier rather than moved onto ".crowdfunding" itself, the two rules being what the page wrapper wears together (see crowdfunding/display.html.twig) */
+.crowdfunding--page {
+  gap: var(--section-space, clamp(48px, 8vw, 84px));
 }
 
 .crowdfunding h2 {
@@ -38,7 +67,8 @@
   font-size: 1em;
 }
 
-.crowdfunding section {
+/* Every section but the ones painting past the column: a type selector outranks their own class, so "margin: 0 auto" and "width: 100%" undid the full-bleed recipe and the hero opened 695px to the right of the page */
+.crowdfunding section:not(.crowdfunding-hero, .section--bg-muted, .section--bg-primary, .section--bg-dark) {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -48,19 +78,20 @@
   width: 100%;
 }
 
-.crowdfunding section::after {
-  content: "";
-  position: relative;
-  display: block;
-  height: 8px;
-  width: 100%;
-  margin-top: 20px;
-  background-image: linear-gradient(45deg, transparent 33.333%, var(--primary) 33.333%, var(--primary) 66.667%, transparent 66.667%), linear-gradient(-45deg, transparent 33.333%, var(--primary) 33.333%, var(--primary) 66.667%, transparent 66.667%);
-  background-size: 16px 16px;
-  background-position: 0 0;
+/* The lines a campaign says beside what it shows - who signed a message and when, what a form asks for. Its own class and not the ".text-muted" they carried: that one is written by SiteBundle, which this bundle does not require (see composer.json), so on an app without it these lines had no style at all. The ecosystem's own recipe for a muted line, mixed out of the two tokens so it follows any palette in either mode - at 70% and not the 62% UiBundle reads by, which lands at 4.46:1 on a pale ground, under the 4.5 WCAG AA asks of a line this size */
+.crowdfunding-meta {
+  color: color-mix(in srgb, var(--text) 70%, var(--background));
+  font-size: 0.9em;
+  font-style: italic;
 }
 
+/* A campaign's own films, kept to a measure a page can be read at: UiBundle draws them "img-responsive", so a portrait file took the column's whole width and ran a thousand pixels tall, one video filling the screen before the next. Both dimensions left to "auto" so either cap can be the one that binds - stated, the width would win and the height cap would never apply */
 .crowdfunding video {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 70vh;
   margin: 1em auto;
 }
 
@@ -84,33 +115,10 @@
   text-align: center;
 }
 
-.crowdfunding .card-data .description {
-  margin: 1em 0.5em;
-  text-align: left;
-}
-
 .crowdfunding .description br {
   content: "";
   display: block;
   margin-top: 0.75em;
-}
-
-.crowdfunding .price-counterpart {
-  text-align: center;
-  font-weight: var(--font-title-weight);
-  font-size: 1.8em;
-  margin: 0 auto 0.5em auto;
-  font-family: var(--font-family-title);
-  background-color: var(--primary);
-  color: #fff;
-  border-radius: 50%;
-  padding: 50px;
-  width: 3em;
-  height: 3em;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: var(--box-shadow);
 }
 
 .crowdfunding .date {
@@ -151,10 +159,6 @@
   filter: invert(11%) sepia(98%) saturate(4648%) hue-rotate(159deg) brightness(87%) contrast(101%);
 }
 
-#counterparts .card-data {
-  padding: 10px 0;
-}
-
 #news .cards h3 {
   margin: 0 auto;
 }
@@ -179,6 +183,19 @@
 }
 
 /* LOTTERY */
+/* The prizes of a draw, read side by side: their descriptions are of unequal lengths, so what a card says about the draw is pinned to its bottom and the winning tickets line up across the run. ".cards" already stretches the cards themselves to a common height; this is what stretches the body the pinning needs room in */
+.crowdfunding-prize .card-body,
+.crowdfunding-prize [data-prize-rank] {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.crowdfunding-prize__draw {
+  margin-top: auto;
+  padding-top: 1em;
+}
+
 #tickets div {
   display: flex;
   flex-wrap: wrap;
@@ -248,61 +265,22 @@
   }
 }
 /* CROWDFUNDING BLOCKS */
-/* The funding kept in sight the whole way down the page, held at the content's width rather than broken out to the viewport's - the breakout recipe needs width/left/right, which "position: sticky" reads as its own thresholds instead */
-.crowdfunding-topbar {
-  position: sticky;
-  /* The clearance the ecosystem's own sticky elements use, so the strip comes to rest under the site's header rather than behind it */
-  top: var(--scroll-offset, 80px);
-  z-index: 6;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin-bottom: 16px;
-  padding: 10px 16px;
-  border-radius: var(--radius-card, 8px);
-  background: var(--primary);
-  color: var(--button-color, #fff);
-}
-
-.crowdfunding-topbar__title {
-  margin: 0;
-  font-weight: bold;
-  /* One line whatever the campaign is called: the figures beside it are what the strip is for */
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.crowdfunding-topbar__gauge {
-  flex: 1;
-  min-width: 0;
-}
-
-.crowdfunding-topbar__figures {
-  margin: 0 0 4px;
-  font-size: 0.9em;
-}
-
-.crowdfunding-topbar__percent,
-.crowdfunding-topbar__days {
-  margin-left: 8px;
-}
-
-/* Its own controls read on the flat behind them, not on the page's background */
-.crowdfunding-topbar .btn {
-  min-height: 44px;
-}
-
-/* The campaign's opening image, its name over it, full-bleed through the recipe the ecosystem's own flats use so it paints edge to edge under a full-width navbar */
+/* The campaign's opening image, its name over it, painting edge to edge under a full-width navbar - no margin of its own, the page's column spacing its bands with the shared step (see sass/_crowdfunding.scss) */
 .crowdfunding-hero {
   position: relative;
-  left: var(--section-flat-offset, 50%);
-  right: var(--section-flat-offset, 50%);
-  width: var(--section-flat-width, 100vw);
-  margin-left: var(--section-flat-margin-x, -50vw);
-  margin-right: var(--section-flat-margin-x, -50vw);
-  margin-bottom: 24px;
   overflow: hidden;
+}
+
+/* The page is a flex column centering its children (see .crowdfunding), where the ecosystem's own breakout recipe lands beside the page: "left: 50%" is measured against the column while the negative margins are folded into the centering itself. Stretched to the column and pulled out of it by its own margins instead - the same edge, reached the way a flex item reaches it */
+.crowdfunding > .crowdfunding-hero,
+.crowdfunding > .section--bg-muted,
+.crowdfunding > .section--bg-primary,
+.crowdfunding > .section--bg-dark {
+  align-self: stretch;
+  left: auto;
+  right: auto;
+  width: auto;
+  margin-inline: calc(50% - 50vw);
 }
 
 .crowdfunding-hero__image {
@@ -319,12 +297,15 @@
   bottom: 0;
   left: 0;
   padding: 32px 16px 20px;
-  background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.75));
+  /* Ink under the whole caption, not only under the title: at "transparent" to "0.75" the meta line above sat on the bare image, which a bright image leaves it unreadable on. The middle stop carries the meta line and is set by what WCAG asks of it - measured over a pale campaign cover, 0.45 left that line at 4.3:1, under the 4.5 a 16px run needs */
+  background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.62) 30%, rgba(0, 0, 0, 0.85));
   color: #fff;
 }
 
 .crowdfunding-hero__meta {
   margin: 0;
+  /* The ink of the caption it sits in: a "p" rule of the theme's outranks inheritance, the same way the strip's own children lose it */
+  color: inherit;
   font-size: 0.85em;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -332,33 +313,62 @@
 
 .crowdfunding-hero__title {
   margin: 6px 0 0;
+  /* The ink of the caption it sits in, not the theme's --title-color: a brand color reads at barely more than 1:1 on the gradient behind it */
+  color: inherit;
 }
 
 /* Mobile first: one column, the funding standing above the story it funds - a column rather than a one-column grid, a grid item's own area being exactly its size, so the rail would have nowhere to stick */
 .crowdfunding-layout {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: var(--section-space-tight, clamp(24px, 4vw, 48px));
   width: 100%;
 }
 
+/* The tight step inside the story, the wide one separating the page's bands: the sections here are read as one continuous account, and this is the room the slider and the lottery lacked - the blanket "margin: 0 auto" on ".crowdfunding section" outranks the 3em UiBundle's own ".slider" asks for, so nothing but the column itself can space them */
 .crowdfunding-main {
   display: flex;
   flex-direction: column;
+  gap: var(--section-space-tight, clamp(24px, 4vw, 48px));
   width: 100%;
   min-width: 0;
+  /* Second on a phone, right after the funding - see the rail below for the order the whole column is read in */
+  order: 2;
 }
 
-/* The funding in full, read once here on a phone where the strip above is what stays in sight - two sticky boxes would take the screen the campaign is read on */
-.crowdfunding-funding {
+/* Phone: the rail steps aside and its three pieces become items of the column itself, which is what lets them be ordered around the band between them - only siblings order against each other. The column then reads the way a campaign is read on a phone: the opening, the funding, the story (".crowdfunding-main", order 2), what the money pays for and who asks for it (".crowdfunding-support", order 3), and only then the draw and the tiers */
+.crowdfunding-rail {
+  display: contents;
+}
+
+.crowdfunding-rail > * {
+  order: 4;
+}
+
+/* The funding, which the rail opens on: it belongs under the campaign's opening image and not at the end of the page */
+.crowdfunding-rail > :first-child {
+  order: 1;
+}
+
+/* A card of UiBundle asks for the page's own measure and centers itself in it (see the bundle's sass/_cards.scss), which in the rail's own cell would narrow it and leave it floating */
+.crowdfunding-rail .card {
+  width: auto;
+  margin: 0;
+}
+
+/* The card brings the outline, the ground and the corners: what is left here is how its content is laid out */
+.crowdfunding-funding__body {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  padding: 12px 16px;
-  border-radius: var(--radius-card, 8px);
-  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.12));
-  background: var(--surface-alt, var(--background));
   text-align: center;
+}
+
+/* The draws sit in the rail as a run of cards, spaced by the rail's own gap - the section around them adds none of its own */
+.crowdfunding-rail .crowdfunding-lotteries {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .crowdfunding-funding__amounts {
@@ -366,44 +376,19 @@
   font-size: 1.1em;
 }
 
+/* The percent beside the amounts it qualifies, the bar below being drawn without a label of its own */
+.crowdfunding-funding__percent {
+  margin-left: 8px;
+}
+
 .crowdfunding-funding__range,
 .crowdfunding-funding__dates {
   margin: 0;
 }
 
-/* The first tiers within reach, each jumping to its own card rather than joining from here - a tier is joined where it is described in full */
-.crowdfunding-funding__tiers {
+/* What stands where the way in would be on an open campaign: said in words, the button a closed campaign used to carry reading as something broken rather than as a campaign that is simply over */
+.crowdfunding-funding__state {
   margin: 0;
-  padding: 0;
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.crowdfunding-funding__tiers a {
-  display: flex;
-  justify-content: space-between;
-  gap: 8px;
-  align-items: center;
-  min-height: 44px;
-  padding: 0 12px;
-  border-radius: var(--radius-btn, 4px);
-  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.12));
-  text-decoration: none;
-}
-
-.crowdfunding-funding__lottery {
-  padding-top: 8px;
-  border-top: 1px solid var(--border-color, rgba(0, 0, 0, 0.12));
-  font-size: 0.9em;
-}
-
-.crowdfunding-funding__lottery p {
-  margin: 2px 0;
-}
-
-.crowdfunding-funding__lottery-title {
   font-weight: bold;
 }
 
@@ -412,69 +397,261 @@
   min-height: 44px;
 }
 
-/* What the money pays for and who asks for it, on the band between the story and the tiers */
+/* What the money pays for and who asks for it, on the band between the story and the tiers - padding only, the room around it coming from the column's own step */
 .crowdfunding-support {
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  margin: 24px 0;
+  gap: var(--section-space-tight, clamp(24px, 4vw, 48px));
   padding: 24px 16px;
+  /* Third on a phone: read before the tiers it is what they are weighed against */
+  order: 3;
 }
 
 .crowdfunding-support > section {
   min-width: 0;
 }
 
+/* Running text is read, not scanned: centered across the whole band it changed direction on every line. The headings stay centered, as everywhere else on the page - what moves is the prose under them */
+.crowdfunding-support > section > :not(h2) {
+  max-width: 62ch;
+  margin-inline: auto;
+  text-align: start;
+}
+
+/* The author's name, under the heading naming what it is: a line of its own rather than a second title */
+.crowdfunding-support #author h3 {
+  text-align: center;
+  font-size: 1.2em;
+}
+
 /* The campaign's chronicle, closing the page */
 .crowdfunding-chronicle {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: var(--section-space-tight, clamp(24px, 4vw, 48px));
+  /* Last on a phone, after the tiers the rail steps aside for */
+  order: 5;
 }
 
 .crowdfunding-chronicle > section {
   min-width: 0;
 }
 
-/* The tiers, laid the way the editor asked - one column on a phone whatever that number is */
-.crowdfunding-counterparts .cards {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 16px;
-}
-
-/* A tier shows what it gives before it says its price: the image tops the card rather than sitting in it as a thumbnail */
-.crowdfunding-counterpart .card-img {
-  margin: 0 0 12px;
-}
-
-.crowdfunding-counterpart .card-img img {
+/* The tiers, as rows only one of which opens at a time - the exclusivity is the shared "name" of the <details> elements, so nothing here needs a controller (the same row ShopBundle gives a product's items) */
+/* The section is a centered flex column (see sass/_crowdfunding.scss), where a flex item is as wide as its own content: without this the rows shrink to their longest word */
+.crowdfunding-counterparts > div,
+.crowdfunding-counterparts__rows {
   width: 100%;
-  height: 180px;
-  object-fit: cover;
+}
+
+.crowdfunding-counterparts__rows {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* The positioning context the visual is pinned against: from a tablet up it is the row's own left column, full height, whether the row is open or closed */
+.crowdfunding-counterpart {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.12));
   border-radius: var(--radius-card, 8px);
+  background: var(--card-background, var(--background));
+  text-align: start;
 }
 
-/* The tier the campaign puts forward: an accent border rather than a bigger card, which would break the grid's rows */
+/* The open row reads darker than the closed ones, the same way a product's item does in the shop */
+.crowdfunding-counterpart[open] {
+  border-color: var(--primary);
+  box-shadow: inset 0 0 0 1px var(--primary);
+  background: var(--surface-alt, var(--background));
+}
+
+/* The tier the campaign puts forward: an accent outline rather than a taller row, which would break the run */
 .crowdfunding-counterpart--highlighted {
-  border: 2px solid var(--primary-ink);
+  border-color: var(--primary-ink);
+  box-shadow: inset 0 0 0 2px var(--primary-ink);
 }
 
+/* The row opens on its picture and says the tier under it: the words are read on the card's own ground, where a plate laid over the file needed a veil opaque enough to hide the very picture it was there to show. What the picture keeps is its last stretch, which fades out under the first lines rather than stopping on a rule */
+.crowdfunding-counterpart__summary {
+  /* The stretch the picture is shown whole on. Read by the mask below as much as by the room left above the text, so the two never drift apart - a breakpoint retunes the band and nothing else */
+  --counterpart-band: 170px;
+  --counterpart-mask: linear-gradient(
+      180deg,
+      #000 calc(var(--counterpart-band) - 24px),
+      rgb(0 0 0 / 30%) calc(var(--counterpart-band) + 40px),
+      rgb(0 0 0 / 12%) calc(var(--counterpart-band) + 88px),
+      rgb(0 0 0 / 12%) calc(100% - 56px),
+      transparent
+  );
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0 12px;
+  padding: 16px;
+  cursor: pointer;
+  align-items: start;
+  /* The default triangle is dropped, the whole row already saying it opens */
+  list-style: none;
+}
+
+/* The room above the text, and only where there is a picture to put in it: a tier without one opens on its own title rather than on a band of nothing. Read off the class the template writes and not off ":has()" - a browser lacking it dropped this rule and laid the text over the band at full strength */
+.crowdfunding-counterpart--pictured .crowdfunding-counterpart__summary {
+  /* The first line starts where the fade below has finished, not inside it: read over a picture still at half strength it would have needed a plate of its own */
+  padding-top: calc(var(--counterpart-band) + 88px);
+}
+
+.crowdfunding-counterpart__summary::-webkit-details-marker {
+  display: none;
+}
+
+/* The row answers the pointer on its picture, the ground it used to lighten being covered by it now */
+@media (hover: hover) {
+  .crowdfunding-counterpart__summary:hover .crowdfunding-counterpart__visual img {
+    filter: brightness(1.08);
+  }
+}
+/* The picture covers the whole row and is taken out of the flow doing so: shown whole down to the band, then held at a wash the text is read over. Empty it paints nothing, which is what a tier without a picture shows */
+.crowdfunding-counterpart__visual {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: block;
+}
+
+.crowdfunding-counterpart__visual img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Cropped from the top down and not from the middle out: what a tier's picture is framed on is at its head, and the row takes what it can hold of it */
+  object-position: 50% 0;
+  /* Full through the band, then down to a wash the text is read over, and out before the foot. Four stops rather than two: the fade starts inside the band and lands in three steps, a single one from full to the wash reading as the very edge it replaces. It ends on nothing, so the picture leaves the row the way it entered it instead of stopping on a line where the panel opens */
+  -webkit-mask-image: var(--counterpart-mask);
+  mask-image: var(--counterpart-mask);
+}
+
+/* No mask, no wash - the picture would run at full strength under the text, which no ink is read on. Held to its band instead, the row then reading as the one it already is above its first line. Both spellings asked for: a browser doing the job under the prefix must not be sent here */
+@supports not ((mask-image: linear-gradient(#000, #000)) or (-webkit-mask-image: linear-gradient(#000, #000))) {
+  .crowdfunding-counterpart__visual {
+    bottom: auto;
+    height: var(--counterpart-band);
+  }
+}
+/* Over the picture the row's own padding already put them under, the wash behind them being what they are read on */
+.crowdfunding-counterpart__data,
+.crowdfunding-counterpart__price {
+  position: relative;
+  z-index: 1;
+}
+
+.crowdfunding-counterpart__data {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.crowdfunding-counterpart__heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.crowdfunding-counterpart__heading strong {
+  font-family: var(--font-family-title);
+  font-weight: var(--font-title-weight);
+  font-size: 1.05em;
+}
+
+.crowdfunding-counterpart__kind {
+  padding: 2px 6px;
+  border-radius: 3px;
+  background: var(--surface-alt, var(--background));
+  color: var(--text);
+  font-size: 0.68em;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* The campaign's hue on the card's ground, the row having no veil to turn it around against any more */
 .crowdfunding-counterpart__flag {
-  margin: 0 0 8px;
-  padding: 2px 10px;
+  padding: 2px 8px;
   border-radius: var(--radius-btn, 4px);
   background: var(--primary);
   color: var(--button-color, #fff);
-  font-size: 0.85em;
+  font-size: 0.68em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
+}
+
+.crowdfunding-counterpart__tickets,
+.crowdfunding-counterpart__delivery {
+  font-size: 0.85em;
 }
 
 /* Factual scarcity: how many are actually left, never a countdown */
 .crowdfunding-counterpart__low-stock {
-  margin: 4px 0;
   color: var(--secondary);
+  font-size: 0.85em;
   font-weight: bold;
+  text-decoration: underline;
+}
+
+/* The one column every row lines its figures up in - what the accordion buys over a grid of cards. A solid flat of the campaign's hue: the price is the figure the row is read for, and an outline of it went unnoticed over the wash the picture leaves behind the text */
+.crowdfunding-counterpart__price {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  align-self: start;
+  gap: 2px;
+  padding: 8px 14px;
+  border-radius: var(--radius-btn, 4px);
+  background: var(--primary);
+  color: var(--button-color, #fff);
+  text-align: center;
+}
+
+.crowdfunding-counterpart__price strong {
+  font-family: var(--font-family-title);
+  font-weight: var(--font-title-weight);
+  font-size: 1.6em;
+  font-variant-numeric: tabular-nums;
+}
+
+.crowdfunding-counterpart__limited {
+  font-size: 0.7em;
+}
+
+/* What the open row reveals: everything the tier gives, the quantities it was taken in, and the button that joins it */
+.crowdfunding-counterpart__panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 0 16px 16px;
+}
+
+.crowdfunding-counterpart__panel .description,
+.crowdfunding-counterpart__panel .limited-quantity p {
+  margin: 0;
+  text-align: start;
+}
+
+.crowdfunding-counterpart__panel .limited-quantity {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 0.9em;
+}
+
+/* The auto margins the theme puts on a button would center it in the panel, where it is the whole of the last line read before the click */
+.crowdfunding-counterpart__panel .btn {
+  width: 100%;
+  min-height: 48px;
+  margin: 0;
 }
 
 .crowdfunding-lotteries {
@@ -483,17 +660,8 @@
   width: 100%;
 }
 
-/* Tablet: the strip reads on one line, the tiers pair up, the funding still above the story */
+/* Tablet: the tiers pair up, the funding still above the story */
 @media (min-width: 700px) {
-  .crowdfunding-topbar {
-    flex-direction: row;
-    align-items: center;
-    gap: 16px;
-  }
-  .crowdfunding-topbar__title {
-    flex: 0 1 auto;
-    max-width: 280px;
-  }
   .crowdfunding-hero__image {
     height: 380px;
   }
@@ -503,10 +671,9 @@
   .crowdfunding-support {
     padding: 32px;
   }
-  .crowdfunding-counterparts--cols3 .cards,
-  .crowdfunding-counterparts--cols4 .cards,
-  .crowdfunding-counterparts--cols2 .cards {
-    grid-template-columns: repeat(2, 1fr);
+  /* Tablet up: the band a row opens on has the room to be taller. Asked of the picture and not of the row - a <details> given a height leaves what its summary does not take under it, and the closed row read as a band of text stuck to the top of a tall box */
+  .crowdfunding-counterpart__summary {
+    --counterpart-band: 210px;
   }
 }
 /* Desktop: the funding becomes the rail, sticking beside the story rather than above it */
@@ -517,12 +684,53 @@
     grid-template-columns: minmax(0, 1fr) 380px;
     align-items: start;
   }
-  .crowdfunding-funding {
+  /* The rail is a column of its own again, beside the story. It scrolls with the page: holding the funding, every tier and the draws, it is taller than the screen on any real campaign - kept sticky it would rest at the top with its end out of reach, and capped with a scrollbar of its own it put a second one beside the page's */
+  .crowdfunding-rail {
     grid-column: 2;
-    grid-row: 1;
+    /* Beside all three blocks of the story's column, not only the first: on row 1 alone the row grew to the rail's own height and the story ended under the slider with the page still running */
+    grid-row: 1/span 3;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  /* Everything that is read stacks in the first column, under the story it continues */
+  .crowdfunding-support,
+  .crowdfunding-chronicle {
+    grid-column: 1;
+  }
+  /* The band paints across the page on a phone, where it is the whole width. Beside a rail it cannot: the three custom properties are the hooks UiBundle offers for exactly that (see its sass/_page-sections.scss), so the flat comes back to the column it sits in rather than over the tiers. The two answers a tier is weighed against then read side by side and weigh the same: at "1.2fr 1fr" the shorter of the two floated in a column wider than its text */
+  .crowdfunding-support {
+    --section-flat-offset: 0;
+    --section-flat-width: 100%;
+    --section-flat-margin-x: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--section-space, clamp(48px, 8vw, 84px));
+    align-items: start;
+    padding: 48px;
+  }
+  /* What actually has to stay in sight, and the only thing short enough to: the amounts, the gauge and the way in. "position: sticky" always opens a stacking context, so it is worn by the card and not by the column - on the column it swallowed the basket bar the tiers carry, which the slider of the story then painted over */
+  .crowdfunding-rail .crowdfunding-funding {
     position: sticky;
-    /* Below the strip, not behind it: the two are stuck to the same edge, the rail clearing the height the strip takes there */
-    top: calc(var(--scroll-offset, 80px) + 84px);
+    /* The clearance the ecosystem's own sticky elements use, so the card comes to rest under the site's header rather than behind it */
+    top: var(--scroll-offset, 80px);
+  }
+  /* The same row, at the measure of a rail 380px wide: a band as tall as the one beside the story would give the funding above it no room left on the screen */
+  .crowdfunding-rail .crowdfunding-counterpart__summary {
+    --counterpart-band: 120px;
+  }
+  .crowdfunding-rail .crowdfunding-counterpart__panel {
+    padding: 0 16px 16px;
+  }
+  .crowdfunding-rail .crowdfunding-counterpart__price {
+    padding: 6px 10px;
+  }
+  .crowdfunding-rail .crowdfunding-counterpart__price strong {
+    font-size: 1.2em;
+  }
+  /* The band a section of the campaign is closed by, which in the rail would rule off every tier run from the funding above it */
+  .crowdfunding-rail section::after {
+    content: none;
   }
   .crowdfunding-main {
     grid-column: 1;
@@ -534,25 +742,35 @@
   .crowdfunding-hero__caption {
     padding: 72px 48px 40px;
   }
-  /* The two answers a tier is weighed against, read side by side */
-  .crowdfunding-support {
-    display: grid;
-    grid-template-columns: 1.2fr 1fr;
-    gap: 48px;
-    padding: 48px;
-  }
   .crowdfunding-chronicle {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 32px;
+    gap: var(--section-space-tight, clamp(24px, 4vw, 48px));
     align-items: start;
   }
-  .crowdfunding-counterparts--cols3 .cards {
-    grid-template-columns: repeat(3, 1fr);
-  }
-  .crowdfunding-counterparts--cols4 .cards {
-    grid-template-columns: repeat(4, 1fr);
-  }
+}
+/* The head of the "crowdfunding_campaigns" listing when it carries a link: the head on the left, the link against the far edge - the same row BookBundle's listings lay theirs in */
+.crowdfunding-listing__head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: clamp(16px, 3vw, 32px);
+}
+
+/* The head's own bottom margin is what parts it from the cards: inside the row it would part it from the link beside it */
+.crowdfunding-listing__head .section-head {
+  margin-bottom: 0;
+}
+
+.crowdfunding-listing__head + * {
+  margin-block-start: 1.5rem;
+}
+
+/* The paragraph opening the section, laid on a reading measure rather than on the cards' full width */
+.crowdfunding-listing__intro {
+  max-width: var(--section-head-max-width, 640px);
+  margin: 0 0 1.5rem;
+  color: var(--section-text-soft, var(--text-muted, var(--text)));
 }
 
 /*# sourceMappingURL=styles.css.map */

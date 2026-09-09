@@ -26,14 +26,14 @@ class CrowdfundingFormFactoryTest extends TestCase
         $this->assertInstanceOf(CrowdfundingFormFactoryInterface::class, new CrowdfundingFormFactory($this->createStub(FormFactoryInterface::class)));
     }
 
-    // The "config" option the type requires is passed here, so a controller never has to know the form asks for one
-    public function testItBuildsTheNewsFormWithTheOptionThatTypeRequires(): void
+    // The one name this bundle declares, resolved to its type
+    public function testItBuildsTheNewsForm(): void
     {
         $news = new CrowdfundingNews();
         $form = $this->createStub(FormInterface::class);
 
         $formFactory = $this->createMock(FormFactoryInterface::class);
-        $formFactory->expects($this->once())->method('create')->with(CrowdfundingNewsType::class, $news, ['config' => []])->willReturn($form);
+        $formFactory->expects($this->once())->method('create')->with(CrowdfundingNewsType::class, $news)->willReturn($form);
 
         $this->assertSame($form, new CrowdfundingFormFactory($formFactory)->create('news', $news));
     }

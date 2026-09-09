@@ -1,4 +1,5 @@
-<section id="author">
+{# "editUrl" comes from the page: this component is given a name and a presentation, never the campaign they belong to #}
+<section id="author"{% if editUrl|default('') %} data-block-edit-url="{{ editUrl }}"{% endif %}>
     <h2>{{ 'label.author'|trans({}, 'crowdfunding') }}</h2>
     <h3 class="text"><strong>{{ name }}</strong></h3>
     {{ presentation|raw }}

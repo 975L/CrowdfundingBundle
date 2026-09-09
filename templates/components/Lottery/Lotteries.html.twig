@@ -1,5 +1,7 @@
+{# The pencil UiBundle's overlay draws on any [data-block-edit-url] (see block-edit-overlay.js), pointing at the very field this section is written in. Answers null to anyone but an editor #}
 {% if lotteries is not empty %}
-    <div id="lotteries">
+    {% set editUrl = crowdfunding_edit_url(lotteries|first.crowdfunding, 'lotteries') %}
+    <div id="lotteries" class="crowdfunding-lotteries"{% if editUrl %} data-block-edit-url="{{ editUrl }}"{% endif %}>
         {% for lottery in lotteries %}
             <twig:c975LCrowdfunding:Lottery:Lottery lottery="{{ lottery }}"/>
         {% endfor %}

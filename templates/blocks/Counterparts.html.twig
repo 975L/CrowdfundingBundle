@@ -1,20 +1,22 @@
-{# The campaign's counterparts, laid out the way the editor asked - the tiers themselves are the campaign's own rows, so a tier added in the back-office joins the grid with nothing to save here #}
+{# The campaign's counterparts, as rows only one of which opens at a time - the tiers themselves are the campaign's own rows, so a tier added in the back-office joins the list with nothing to save here #}
 {% trans_default_domain 'crowdfunding' %}
 {% set crowdfunding = crowdfunding_block_campaign() %}
 {% if crowdfunding %}
-    {% set columns = columns|default(3) %}
     {% set threshold = lowStockThreshold|default(0) %}
+    {% set highlightedSlug = highlightedSlug|default('') %}
     {# The page's own anchor, wherever the editor placed this block: the funding bar's button and any "#counterparts" written in a text all land here #}
     <section id="counterparts" class="crowdfunding-counterparts">
         <h2>{{ title|default('label.counterparts'|trans) }}</h2>
         {% if crowdfunding.counterparts is not empty %}
             <div data-controller="basket">
-                <div class="cards crowdfunding-counterparts--cols{{ columns }}">
+                <div class="crowdfunding-counterparts__rows">
                     {% for counterpart in crowdfunding.counterparts %}
+                        {# The row the campaign puts forward stands open, the first one otherwise: a page whose every "I contribute" is hidden behind a click asks for a gesture before it says what a tier costs #}
                         <twig:c975LCrowdfunding:Crowdfunding:Counterpart
                             counterpart="{{ counterpart }}"
                             number="{{ loop.index }}"
-                            highlighted="{{ highlightedSlug|default('') == counterpart.slug }}"
+                            highlighted="{{ highlightedSlug == counterpart.slug }}"
+                            open="{{ highlightedSlug ? highlightedSlug == counterpart.slug : loop.first }}"
                             lowStockThreshold="{{ threshold }}"
                         />
                     {% endfor %}
