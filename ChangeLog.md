@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.3.1
+
+Larger type in the counterpart rows
+
+- The tier's name reads larger on a counterpart row, and its kind and flag badges with it (10/09/2026)
+- The quantities, delivery, low-stock warning and the open panel's details step up to the same scale (10/09/2026)
+
 ## v1.3
 
 Hidden campaigns, a recycle bin and a page preview

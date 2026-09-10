@@ -303,7 +303,7 @@
 .crowdfunding-counterpart__heading strong {
     font-family: var(--font-family-title);
     font-weight: var(--font-title-weight);
-    font-size: 1.05em;
+    font-size: 1.15em;
 }
 
 .crowdfunding-counterpart__kind {
@@ -311,7 +311,7 @@
     border-radius: 3px;
     background: var(--surface-alt, var(--background));
     color: var(--text);
-    font-size: 0.68em;
+    font-size: 0.78em;
     letter-spacing: 0.06em;
     text-transform: uppercase;
 }
@@ -322,20 +322,20 @@
     border-radius: var(--radius-btn, 4px);
     background: var(--primary);
     color: var(--button-color, #fff);
-    font-size: 0.68em;
+    font-size: 0.78em;
     letter-spacing: 0.06em;
     text-transform: uppercase;
 }
 
 .crowdfunding-counterpart__tickets,
 .crowdfunding-counterpart__delivery {
-    font-size: 0.85em;
+    font-size: 0.95em;
 }
 
 /* Factual scarcity: how many are actually left, never a countdown */
 .crowdfunding-counterpart__low-stock {
     color: var(--secondary);
-    font-size: 0.85em;
+    font-size: 0.95em;
     font-weight: bold;
     text-decoration: underline;
 }
@@ -363,7 +363,7 @@
 }
 
 .crowdfunding-counterpart__limited {
-    font-size: 0.7em;
+    font-size: 0.8em;
 }
 
 /* What the open row reveals: everything the tier gives, the quantities it was taken in, and the button that joins it */
@@ -384,7 +384,7 @@
     display: flex;
     flex-direction: column;
     gap: 2px;
-    font-size: 0.9em;
+    font-size: 0.95em;
 }
 
 /* The auto margins the theme puts on a button would center it in the panel, where it is the whole of the last line read before the click */
