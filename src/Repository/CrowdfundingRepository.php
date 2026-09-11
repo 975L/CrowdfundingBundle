@@ -35,7 +35,7 @@ class CrowdfundingRepository extends ServiceEntityRepository
             ->leftJoin('c.medias', 'cm')
             ->andWhere('c.hidden = false')
             ->andWhere('c.isDeleted = false')
-            ->orderBy('c.position', 'ASC')
+            ->orderBy('c.position', \SortDirection::Ascending)
             ->getQuery()
             ->getResult()
         ;

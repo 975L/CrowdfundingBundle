@@ -78,7 +78,7 @@ class CrowdfundingEmailFactoryTest extends TestCase
     public function testItRefusesToSendAnEmailWithNoBody(): void
     {
         $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage('lottery_tickets');
+        $this->expectExceptionMessageIsOrContains('lottery_tickets');
 
         $this->createFactory(html: null)->create('lottery_tickets', 'label.lottery_tickets', 'camille@example.com');
     }

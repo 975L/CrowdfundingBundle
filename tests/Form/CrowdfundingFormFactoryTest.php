@@ -42,7 +42,7 @@ class CrowdfundingFormFactoryTest extends TestCase
     public function testItRefusesAFormItDoesNotKnow(): void
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Unknown form "contribution"');
+        $this->expectExceptionMessageIsOrContains('Unknown form "contribution"');
 
         new CrowdfundingFormFactory($this->createStub(FormFactoryInterface::class))->create('contribution', new CrowdfundingNews());
     }

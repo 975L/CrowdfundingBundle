@@ -1,5 +1,16 @@
 # Changelog
 
+## v1.4.1
+
+Deprecations reported by PHPStan and the test suite
+
+- `phpstan/phpstan-deprecation-rules` reports any call to a `@deprecated` library API (11/09/2026)
+- PHPStan moves to `require-dev`, no longer installed apart by the CI and `bin/ci.sh` (11/09/2026)
+- `DOCTRINE_DEPRECATIONS=trigger` lets the test suite see Doctrine's deprecations (11/09/2026)
+- Doctrine orderings use the `\SortDirection` enum instead of `'ASC'`/`'DESC'` strings (11/09/2026)
+- `doctrine/orm` constraint raised to `^3.7` (11/09/2026)
+- Tests use `expectExceptionMessageIsOrContains()`, `expectExceptionMessage()` being deprecated (11/09/2026)
+
 ## v1.4.0
 
 Campaigns in every language of the site

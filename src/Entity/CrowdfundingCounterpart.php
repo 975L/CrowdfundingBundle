@@ -72,7 +72,7 @@ class CrowdfundingCounterpart implements \Stringable
     private ?Crowdfunding $crowdfunding = null;
 
     #[ORM\OneToMany(targetEntity: CrowdfundingContributorCounterpart::class, mappedBy: 'counterpart')]
-    #[ORM\OrderBy(['id' => 'ASC'])]
+    #[ORM\OrderBy(['id' => \SortDirection::Ascending])]
     private Collection $contributorCounterparts;
 
     #[ORM\OneToOne(inversedBy: 'crowdfundingCounterpart', cascade: ['persist', 'remove'])]

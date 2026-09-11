@@ -40,15 +40,15 @@ class Lottery
     private bool $isActive = true;
 
     #[ORM\OneToMany(targetEntity: LotteryPrize::class, mappedBy: 'lottery', cascade: ['persist', 'remove'])]
-    #[ORM\OrderBy(['rank' => 'ASC', 'id' => 'ASC'])]
+    #[ORM\OrderBy(['rank' => \SortDirection::Ascending, 'id' => \SortDirection::Ascending])]
     private Collection $prizes;
 
     #[ORM\OneToMany(targetEntity: LotteryTicket::class, mappedBy: 'lottery', cascade: ['persist', 'remove'])]
-    #[ORM\OrderBy(['number' => 'ASC'])]
+    #[ORM\OrderBy(['number' => \SortDirection::Ascending])]
     private Collection $tickets;
 
     #[ORM\OneToMany(targetEntity: LotteryVideo::class, mappedBy: 'lottery', cascade: ['persist', 'remove'])]
-    #[ORM\OrderBy(['id' => 'ASC'])]
+    #[ORM\OrderBy(['id' => \SortDirection::Ascending])]
     private Collection $videos;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]

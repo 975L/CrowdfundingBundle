@@ -41,7 +41,7 @@ class Crowdfunding implements HasBlocksInterface, TrashableInterface, \Stringabl
     // What an admin composes the rest of the campaign page with, on top of the fields above - the same kinds every other page of the site is built from
     #[ORM\ManyToMany(targetEntity: Block::class, cascade: ['persist', 'remove'])]
     #[ORM\JoinTable(name: 'crowdfunding_crowdfunding_block')]
-    #[ORM\OrderBy(['position' => 'ASC'])]
+    #[ORM\OrderBy(['position' => \SortDirection::Ascending])]
     private Collection $blocks;
 
     #[ORM\Column(length: 100)]
@@ -85,22 +85,22 @@ class Crowdfunding implements HasBlocksInterface, TrashableInterface, \Stringabl
 
     // The id breaks the tie, two rows being free to carry the same position an editor typed, and "orphanRemoval" is there for the reason $news carries it: the join column is nullable, so a media removed from the form only lost its campaign and stayed in the table with its file
     #[ORM\OneToMany(targetEntity: CrowdfundingMedia::class, mappedBy: 'crowdfunding', cascade: ['persist', 'remove'], orphanRemoval: true)]
-    #[ORM\OrderBy(['position' => 'ASC', 'id' => 'ASC'])]
+    #[ORM\OrderBy(['position' => \SortDirection::Ascending, 'id' => \SortDirection::Ascending])]
     private Collection $medias;
 
     // Cascaded like everything else the campaign holds: without it, deleting a funded campaign for good was refused by the database, its contributors still pointing at the row being deleted. Only the second, deliberate deletion ever reaches here - the recycle bin removes nothing
     #[ORM\OneToMany(targetEntity: CrowdfundingContributor::class, mappedBy: 'crowdfunding', cascade: ['remove'])]
-    #[ORM\OrderBy(['id' => 'ASC'])]
+    #[ORM\OrderBy(['id' => \SortDirection::Ascending])]
     private Collection $contributors;
 
     // "persist" and "orphanRemoval" for the back office, where a news is written and corrected on the campaign's own form: without the first a news added there is never written, and without the second a deleted one only loses its campaign - the join column being nullable - and stays in the table forever
     #[ORM\OneToMany(targetEntity: CrowdfundingNews::class, mappedBy: 'crowdfunding', cascade: ['persist', 'remove'], orphanRemoval: true)]
-    #[ORM\OrderBy(['publishedDate' => 'DESC', 'id' => 'DESC'])]
+    #[ORM\OrderBy(['publishedDate' => \SortDirection::Descending, 'id' => \SortDirection::Descending])]
     private Collection $news;
 
     // "orphanRemoval" like the collections around it - a counterpart being the one of them a contributor points at, CrowdfundingCrudController::updateEntity() refuses beforehand to remove one that was already subscribed, which the database would otherwise answer with a foreign key error
     #[ORM\OneToMany(targetEntity: CrowdfundingCounterpart::class, mappedBy: 'crowdfunding', cascade: ['persist', 'remove'], orphanRemoval: true)]
-    #[ORM\OrderBy(['price' => 'ASC', 'id' => 'ASC'])]
+    #[ORM\OrderBy(['price' => \SortDirection::Ascending, 'id' => \SortDirection::Ascending])]
     private Collection $counterparts;
 
     // "orphanRemoval" like $medias, and for the same file left behind
