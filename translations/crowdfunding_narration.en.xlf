@@ -250,6 +250,42 @@
                 <source>narration.guided_step_crowdfunding_publish_visit</source>
                 <target>On the row of the campaign, the eye has given way to an external link: click it to read the page everybody now reads.</target>
             </trans-unit>
+            <trans-unit id="nrNMpEj">
+                <source>narration.guided_step_crowdfunding_translate_action</source>
+                <target>This button opens the campaign straight into the first language to translate, without going through the writing screen. It is only there where the site declares more than one language.</target>
+            </trans-unit>
+            <trans-unit id="NI35QH7">
+                <source>narration.guided_step_crowdfunding_translate_author</source>
+                <target>The author's presentation is translated too. The name and the website's address do not change from one language to another.</target>
+            </trans-unit>
+            <trans-unit id="7U4os_V">
+                <source>narration.guided_step_crowdfunding_translate_counterparts</source>
+                <target>Further down, the counterparts are translated the same way, then the news and the lottery's prizes. None can be added or removed here: that would remove them from every language at once.</target>
+            </trans-unit>
+            <trans-unit id="aptxoot">
+                <source>narration.guided_step_crowdfunding_translate_description</source>
+                <target>Then translate the campaign's story. Whatever you leave between brackets shows in the writing language: a half-translated campaign stays readable.</target>
+            </trans-unit>
+            <trans-unit id="jTpFv_a">
+                <source>narration.guided_step_crowdfunding_translate_done</source>
+                <target>Your campaign now reads in this language, at its translated address. The other languages are translated the same way, tab by tab.</target>
+            </trans-unit>
+            <trans-unit id="Yx1qGxo">
+                <source>narration.guided_step_crowdfunding_translate_open</source>
+                <target>The panel takes you back to your campaigns: a translation starts from this very list.</target>
+            </trans-unit>
+            <trans-unit id="A080Xzx">
+                <source>narration.guided_step_crowdfunding_translate_save</source>
+                <target>Save: the translation goes online at once, at that language's own address. The goal, the currency and the dates stay the same everywhere.</target>
+            </trans-unit>
+            <trans-unit id="UpE86.y">
+                <source>narration.guided_step_crowdfunding_translate_tabs</source>
+                <target>The tabs move from one language to another. The first is the one the campaign was written in: it is the one serving as the source.</target>
+            </trans-unit>
+            <trans-unit id="mZjpkA1">
+                <source>narration.guided_step_crowdfunding_translate_title</source>
+                <target>The title shown between brackets is the writing language's own. Start with it: until it is translated, the campaign is not announced to search engines in this language.</target>
+            </trans-unit>
             <trans-unit id="mbKKSXG">
                 <source>narration.guided_step_crowdfunding_trash_bin</source>
                 <target>Above the list, click the Recycle bin button: the campaigns taken out of the listing are shown there, and only those.</target>

@@ -250,6 +250,42 @@
                 <source>narration.guided_step_crowdfunding_publish_visit</source>
                 <target>Sur la ligne de la campagne, l'œil a laissé place à un lien externe : cliquez-le pour lire la page que tout le monde lit désormais.</target>
             </trans-unit>
+            <trans-unit id="nrNMpEj">
+                <source>narration.guided_step_crowdfunding_translate_action</source>
+                <target>Ce bouton ouvre la campagne directement dans la première langue à traduire, sans passer par l'écran d'écriture. Il n'est là que si le site déclare plus d'une langue.</target>
+            </trans-unit>
+            <trans-unit id="NI35QH7">
+                <source>narration.guided_step_crowdfunding_translate_author</source>
+                <target>La présentation de l'auteur se traduit aussi. Le nom et l'adresse du site, eux, ne changent pas d'une langue à l'autre.</target>
+            </trans-unit>
+            <trans-unit id="7U4os_V">
+                <source>narration.guided_step_crowdfunding_translate_counterparts</source>
+                <target>Plus bas, les contreparties se traduisent de la même façon, puis les actualités et les lots de la loterie. On ne peut ni en ajouter ni en retirer ici : ce serait les retirer de toutes les langues à la fois.</target>
+            </trans-unit>
+            <trans-unit id="aptxoot">
+                <source>narration.guided_step_crowdfunding_translate_description</source>
+                <target>Traduisez ensuite le récit de la campagne. Ce que vous laissez entre crochets s'affiche dans la langue d'écriture : une campagne à moitié traduite reste lisible.</target>
+            </trans-unit>
+            <trans-unit id="jTpFv_a">
+                <source>narration.guided_step_crowdfunding_translate_done</source>
+                <target>Votre campagne se lit maintenant dans cette langue, à son adresse traduite. Les autres langues se traduisent de la même façon, onglet par onglet.</target>
+            </trans-unit>
+            <trans-unit id="Yx1qGxo">
+                <source>narration.guided_step_crowdfunding_translate_open</source>
+                <target>Le panneau vous ramène sur vos campagnes : c'est de cette liste que part une traduction.</target>
+            </trans-unit>
+            <trans-unit id="A080Xzx">
+                <source>narration.guided_step_crowdfunding_translate_save</source>
+                <target>Enregistrez : la traduction est en ligne aussitôt, à l'adresse de cette langue. L'objectif, la devise et les dates, eux, restent les mêmes partout.</target>
+            </trans-unit>
+            <trans-unit id="UpE86.y">
+                <source>narration.guided_step_crowdfunding_translate_tabs</source>
+                <target>Les onglets passent d'une langue à l'autre. La première est celle où la campagne a été écrite : c'est elle qui sert de source.</target>
+            </trans-unit>
+            <trans-unit id="mZjpkA1">
+                <source>narration.guided_step_crowdfunding_translate_title</source>
+                <target>Le titre affiché entre crochets est celui de la langue d'écriture. Commencez par lui : tant qu'il n'est pas traduit, la campagne n'est pas signalée aux moteurs de recherche dans cette langue.</target>
+            </trans-unit>
             <trans-unit id="mbKKSXG">
                 <source>narration.guided_step_crowdfunding_trash_bin</source>
                 <target>Au-dessus de la liste, cliquez le bouton Corbeille : les campagnes sorties de la liste s'y trouvent, et elles seules.</target>

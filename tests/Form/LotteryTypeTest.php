@@ -58,4 +58,15 @@ class LotteryTypeTest extends FormFieldsTestCase
 
         $this->assertFalse($fields['isActive']['options']['required'], 'A required checkbox cannot be unticked.');
     }
+
+    // A draw says nothing of its own in any language: its language screen offers the prizes alone, through their own type, and neither adds nor removes one
+    public function testALanguageScreenOffersThePrizesAlone(): void
+    {
+        $fields = $this->buildFields(new LotteryType(), ['translation_locale' => 'en']);
+
+        $this->assertSame(['prizes'], array_keys($fields));
+        $this->assertSame(['translation_locale' => 'en'], $fields['prizes']['options']['entry_options']);
+        $this->assertFalse($fields['prizes']['options']['allow_add']);
+        $this->assertFalse($fields['prizes']['options']['allow_delete']);
+    }
 }

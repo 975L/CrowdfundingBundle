@@ -72,4 +72,18 @@ class CrowdfundingCounterpartTest extends TestCase
     {
         $this->assertSame('Le tote bag', (string) new CrowdfundingCounterpart()->setTitle('Le tote bag'));
     }
+
+    // A language laid over the row is what the page reads, the row keeping the text it was written with - the expected delivery included, a sentence rather than a date
+    public function testATranslationIsReadOverTheTextTheCounterpartWasWrittenWith(): void
+    {
+        $counterpart = new CrowdfundingCounterpart()->setTitle('Le tote bag')->setDescription('En coton bio')->setExpectedDelivery('Mars 2027');
+        $counterpart->setTranslated(['title' => 'The tote bag', 'expectedDelivery' => 'March 2027']);
+
+        $this->assertSame('The tote bag', $counterpart->getTitle());
+        $this->assertSame('March 2027', $counterpart->getExpectedDelivery());
+        $this->assertSame('En coton bio', $counterpart->getDescription());
+        $this->assertSame('Le tote bag', $counterpart->getUntranslated('title'));
+        $this->assertSame('Mars 2027', $counterpart->getUntranslated('expectedDelivery'));
+        $this->assertNull($counterpart->getUntranslated('price'));
+    }
 }

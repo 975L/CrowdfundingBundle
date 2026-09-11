@@ -16,7 +16,7 @@ use c975L\CrowdfundingBundle\Controller\Management\CrowdfundingCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGeneratorInterface;
 
-// This bundle's guided projects, running the 9000 block GuidedProjectProviderInterface reserves them - the same docblock stating every other bundle's, so a range is read there rather than recopied here. They follow the order a campaign is actually lived: the campaign itself, then the opening of it to the public, then what illustrates it, then what is offered in return, then the rest of its page, then its chronicle, then the lottery and the video of its draw, and last the two gestures that remove it. Every one of them opens on the same screen, this bundle holding a single CRUD: a campaign carries its media, its counterparts, its news, its lottery and its blocks on its own edit form, so what tells the parcours apart is the fieldset they walk to, not the screen they open
+// This bundle's guided projects, running the 9000 block GuidedProjectProviderInterface reserves them - the same docblock stating every other bundle's, so a range is read there rather than recopied here. They follow the order a campaign is actually lived: the campaign itself, then the opening of it to the public, then what illustrates it, then what is offered in return, then the rest of its page, then the same campaign in another language, then its chronicle, then the lottery and the video of its draw, and last the two gestures that remove it. Every one of them opens on the same screen, this bundle holding a single CRUD: a campaign carries its media, its counterparts, its news, its lottery and its blocks on its own edit form, so what tells the parcours apart is the fieldset they walk to, not the screen they open
 class CrowdfundingGuidedProjectProvider implements GuidedProjectProviderInterface
 {
     public function __construct(
@@ -33,6 +33,7 @@ class CrowdfundingGuidedProjectProvider implements GuidedProjectProviderInterfac
             $this->mediaProject(),
             $this->counterpartProject(),
             $this->blocksProject(),
+            $this->translateProject(),
             $this->newsProject(),
             $this->lotteryProject(),
             $this->drawVideoProject(),
@@ -347,6 +348,75 @@ class CrowdfundingGuidedProjectProvider implements GuidedProjectProviderInterfac
                     'label' => 'label.guided_step_crowdfunding_blocks_done',
                     'description' => 'description.guided_step_crowdfunding_blocks_done',
                     'narration' => 'narration.guided_step_crowdfunding_blocks_done',
+                ],
+            ],
+        ];
+    }
+
+    // The same campaign said in another language, once its page is composed: its texts alone belong to a language, the goal, the currency and the dates being the same everywhere. Walked on the language screen, where the description is a plain textarea rather than a trix editor
+    private function translateProject(): array
+    {
+        return [
+            'slug' => 'crowdfunding-translate',
+            'label' => 'label.guided_project_crowdfunding_translate',
+            'description' => 'description.guided_project_crowdfunding_translate',
+            'translation_domain' => 'crowdfunding',
+            'order' => 9042,
+            'role' => $this->roleNeeded(),
+            'steps' => [
+                [
+                    'label' => 'label.guided_step_crowdfunding_translate_open',
+                    'description' => 'description.guided_step_crowdfunding_translate_open',
+                    'narration' => 'narration.guided_step_crowdfunding_translate_open',
+                    'url' => $this->indexUrl(),
+                ],
+                [
+                    'label' => 'label.guided_step_crowdfunding_translate_action',
+                    'description' => 'description.guided_step_crowdfunding_translate_action',
+                    'narration' => 'narration.guided_step_crowdfunding_translate_action',
+                    // Only shown where the site declares more than one language, which is what the step's description says
+                    'highlight' => '.action-translate',
+                ],
+                [
+                    'label' => 'label.guided_step_crowdfunding_translate_tabs',
+                    'description' => 'description.guided_step_crowdfunding_translate_tabs',
+                    'narration' => 'narration.guided_step_crowdfunding_translate_tabs',
+                    // Posted by ConfigBundle's own tab strip, which is what carries the "?contenu=xx" the language screens are read at
+                    'highlight' => '[data-content-locales]',
+                ],
+                [
+                    'label' => 'label.guided_step_crowdfunding_translate_title',
+                    'description' => 'description.guided_step_crowdfunding_translate_title',
+                    'narration' => 'narration.guided_step_crowdfunding_translate_title',
+                    'highlight' => '#Crowdfunding_title',
+                ],
+                [
+                    'label' => 'label.guided_step_crowdfunding_translate_description',
+                    'description' => 'description.guided_step_crowdfunding_translate_description',
+                    'narration' => 'narration.guided_step_crowdfunding_translate_description',
+                    'highlight' => '#Crowdfunding_description',
+                ],
+                [
+                    'label' => 'label.guided_step_crowdfunding_translate_author',
+                    'description' => 'description.guided_step_crowdfunding_translate_author',
+                    'narration' => 'narration.guided_step_crowdfunding_translate_author',
+                    'highlight' => '#Crowdfunding_authorPresentation',
+                ],
+                [
+                    'label' => 'label.guided_step_crowdfunding_translate_counterparts',
+                    'description' => 'description.guided_step_crowdfunding_translate_counterparts',
+                    'narration' => 'narration.guided_step_crowdfunding_translate_counterparts',
+                    'highlight' => '#Crowdfunding_counterparts',
+                ],
+                [
+                    'label' => 'label.guided_step_crowdfunding_translate_save',
+                    'narration' => 'narration.guided_step_crowdfunding_translate_save',
+                    'highlight' => '.action-saveAndReturn',
+                ],
+                [
+                    'label' => 'label.guided_step_crowdfunding_translate_done',
+                    'description' => 'description.guided_step_crowdfunding_translate_done',
+                    'narration' => 'narration.guided_step_crowdfunding_translate_done',
                 ],
             ],
         ];

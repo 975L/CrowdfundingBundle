@@ -24,7 +24,7 @@ Add CrowdfundingBundle on top of the shared [UiBundle](https://github.com/975L/U
 ## Contents
 
 - **Setup** — [requirements](#requirements) · [installation](#installation) · [assets](#install-assets) · [config values](#load-configuration-values) · [routes](#enable-routes)
-- **Using it** — [sitemap](#sitemap) · [linking a campaign](#linking-a-campaign-from-a-menu) · [composing a campaign page](#composing-a-campaign-page) · [status report](#status-report) · [emails](#emails) · [backup](#backup) · [translations](#translations) · [what it does not contribute](#what-this-bundle-deliberately-does-not-contribute) · [AI agent skills](#ai-agent-skills) · [data compatibility with ShopBundle](#data-compatibility-with-existing-shopbundle-installations)
+- **Using it** — [sitemap](#sitemap) · [linking a campaign](#linking-a-campaign-from-a-menu) · [composing a campaign page](#composing-a-campaign-page) · [a campaign in every language](#a-campaign-in-every-language) · [status report](#status-report) · [emails](#emails) · [backup](#backup) · [translations](#translations) · [what it does not contribute](#what-this-bundle-deliberately-does-not-contribute) · [AI agent skills](#ai-agent-skills) · [data compatibility with ShopBundle](#data-compatibility-with-existing-shopbundle-installations)
 
 ## Features
 
@@ -34,6 +34,8 @@ Add CrowdfundingBundle on top of the shared [UiBundle](https://github.com/975L/U
 - EasyAdmin CRUD for crowdfunding, from which counterparts, medias, videos and the lottery are all edited
 - A campaign hidden until it is opened, previewed from the back office, and deleted in two steps through a
   recycle bin — see [opening, previewing and deleting a campaign](#opening-previewing-and-deleting-a-campaign)
+- Every public screen answering in every language the site declares, and a campaign, its tiers, its news and its
+  prizes translated from a language screen — see [a campaign in every language](#a-campaign-in-every-language)
 - Sitemap generation (index and campaign pages), via ConfigBundle's `SitemapProviderInterface`
 - Its own `crowdfunding` translation catalogue, in English, French and Spanish
 - Stylesheet and Stimulus barrel contributed to UiBundle's registries — nothing to register by hand
@@ -133,6 +135,9 @@ The urls are declared by `CrowdfundingSitemapProvider` (ConfigBundle's `SitemapP
 one as the archive page it has become. Lotteries are deliberately left out — their url is keyed by a
 13-character identifier rather than a readable slug, and a drawn lottery is over. Nothing to register — the
 provider is picked up automatically.
+
+On a site declaring several languages, each page is declared once per language, every entry carrying its
+`alternates` group — a campaign's group naming only the languages its own title is written in.
 
 `public/sitemap-crowdfunding.xml` and the site's `public/sitemap-index.xml` are written by ConfigBundle,
 which collects every installed bundle's provider:
@@ -245,7 +250,7 @@ on `lotteries`. Anyone but an editor gets no url, so nothing of it reaches the p
 None of them stores what to show — only how. The medias, the tiers, the draws and their prizes are read
 from the campaign's own rows at render time, through `crowdfunding_block_campaign()`
 (`Twig\Extension\CrowdfundingBlockExtension`), which resolves the campaign from the `crowdfunding_display`
-or `crowdfunding_preview` route being rendered. So a block never goes stale against the funding, no form
+or `crowdfunding_preview` route being rendered, whichever of the bare and localised urls answered. So a block never goes stale against the funding, no form
 ever asks which campaign to show, and one of these kinds placed on a page that is not a campaign renders
 nothing at all.
 
@@ -347,6 +352,26 @@ gestures live:
 Both are `GET` actions guarded by a csrf token and by `site-role-admin`, and both refuse a campaign that is
 not in the recycle bin.
 
+## A campaign in every language
+
+On a site declaring several languages, the three public screens answer at a localised url beside their bare
+one — `crowdfunding_index_localized`, `crowdfunding_display_localized` and `lottery_display_localized`, on
+SiteBundle's own pattern — and in every language the site declares, translated or not: the page is largely
+this bundle's own interface, and a title still in the writing language is a page half translated.
+`Service\CrowdfundingTranslatedLocales` holds that rule, and `Service\CrowdfundingLinkLocalizer` writes this
+bundle's links in the language being read.
+
+What an editor types is translated beside the row rather than in a second campaign.
+`Service\CrowdfundingTranslator` covers a campaign's title, description and author presentation, a tier's title,
+description and expected delivery, a news entry's title and content, and a prize's title and description — never
+a slug, an amount or a name. The texts are laid over a row when a public page renders it, never on `postLoad`,
+so the back office keeps showing the text a row was written in.
+
+They are written on the campaign's **language screen**: its edit screen opened on another language, from the
+tabs above the form or the *Translate* action of the list, offering the campaign's own texts and, below them,
+its tiers, news and prizes — neither added nor removed there, a removal reaching every language at once. A row
+deleted takes its translations with it (`Listener\CrowdfundingTranslationPurgeListener`).
+
 ## Status report
 
 `Management\CrowdfundingStatusProvider` reports two numbers under the `crowdfunding` key of
@@ -400,19 +425,18 @@ Nor does `trans_default_domain` reach what a template writes between the tags of
 is compiled as an embedded template of its own, so every key named inside a `<twig:…>…</twig:…>` spells its
 domain out. Worth knowing before overriding one of the components, where a key left bare prints raw.
 
-A second catalogue, `translations/crowdfunding_narration.{en,fr}.xlf`, holds what the guided steps and the
+A second catalogue, `translations/crowdfunding_narration.{en,fr,es}.xlf`, holds what the guided steps and the
 menu entries *sound* like when they are spoken rather than read — the sentences the films of the back
-office say. They are never drawn, which is why they stop at two languages where the rest of the bundle
-speaks three.
+office say.
 
 ---
 
 ## Guided projects and the procedures
 
-The bundle contributes nine guided projects, in the 9000 block `GuidedProjectProviderInterface` reserves it:
+The bundle contributes ten guided projects, in the 9000 block `GuidedProjectProviderInterface` reserves it:
 creating a campaign, opening it to the public, illustrating it, offering a counterpart, composing the rest of
-its page in blocks, correcting a news entry, opening a lottery, publishing the video of its draw, and the two
-gestures that remove a campaign. All nine open on the same screen — this bundle holds a single CRUD, a
+its page in blocks, translating it, correcting a news entry, opening a lottery, publishing the video of its
+draw, and the two gestures that remove a campaign. All ten open on the same screen — this bundle holds a single CRUD, a
 campaign carrying its media, its counterparts, its news, its lottery and its blocks on its own form — so what
 tells them apart is the fieldset they walk to.
 

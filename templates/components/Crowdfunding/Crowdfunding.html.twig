@@ -3,7 +3,7 @@
 {% trans_default_domain 'crowdfunding' %}
 
 {% set state = crowdfunding_funding_state(crowdfunding) %}
-{% set url = path('crowdfunding_display', {'slug': crowdfunding.slug}) %}
+{% set url = localized_path('crowdfunding_display', {'slug': crowdfunding.slug}) %}
 
 {# The campaign's cover, the image standing for it wherever it is named but not opened. The opening image takes over for a campaign written before the two were told apart, which holds none - and the placeholder for one holding neither, not for one whose image is filed under another use. Passed as the plain path, Image:Link resolving it through asset() itself #}
 {% set imageSrc = crowdfunding.covers|first ?: crowdfunding.heroes|first ?: "bundles/c975lcrowdfunding/images/no-product-image.webp" %}

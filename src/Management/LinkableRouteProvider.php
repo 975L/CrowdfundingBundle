@@ -12,6 +12,7 @@ namespace c975L\CrowdfundingBundle\Management;
 
 use c975L\ConfigBundle\Management\LinkableRouteProviderInterface;
 use c975L\CrowdfundingBundle\Service\CrowdfundingServiceInterface;
+use c975L\CrowdfundingBundle\Service\CrowdfundingTranslatedLocales;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 // What a SiteBundle menu item can point at without the site owning a Page for it: the campaign index, and each running campaign by name
@@ -20,6 +21,7 @@ class LinkableRouteProvider implements LinkableRouteProviderInterface
     public function __construct(
         private readonly CrowdfundingServiceInterface $crowdfundingService,
         private readonly TranslatorInterface $translator,
+        private readonly CrowdfundingTranslatedLocales $translatedLocales,
     ) {
     }
 
@@ -29,6 +31,8 @@ class LinkableRouteProvider implements LinkableRouteProviderInterface
             'crowdfunding_index' => [
                 'label' => 'label.our_crowdfundings',
                 'translation_domain' => 'crowdfunding',
+                // Read in another language, a menu item pointing here is written in that language's url - which only holds while the index really answers there (see CrowdfundingTranslatedLocales)
+                'locales' => $this->translatedLocales->forIndex(),
             ],
         ];
 
@@ -45,6 +49,8 @@ class LinkableRouteProvider implements LinkableRouteProviderInterface
                 'translation_domain' => false,
                 'route' => 'crowdfunding_display',
                 'params' => ['slug' => $slug],
+                // Read in another language the item is written in that language's url, a campaign page answering in every language the site declares (see CrowdfundingTranslatedLocales)
+                'locales' => $this->translatedLocales->forCrowdfunding($crowdfunding),
                 'picker_label' => $this->translator->trans('label.crowdfunding', [], 'crowdfunding') . ' - ' . $crowdfunding->getTitle(),
             ];
         }

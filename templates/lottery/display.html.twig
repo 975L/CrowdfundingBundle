@@ -8,7 +8,7 @@
 {% block content %}
     <twig:c975LPayment:Basket:TestMode/>
     <div data-controller="lottery" data-lottery-identifier-value="{{ lottery.identifier }}">
-        <p class="text text-center">{{ 'label.crowdfunding'|trans }} : <a href="{{ absolute_url(path('crowdfunding_display', {'slug': lottery.crowdfunding.slug})) }}">{{ lottery.crowdfunding.title }}</a></p>
+        <p class="text text-center">{{ 'label.crowdfunding'|trans }} : <a href="{{ absolute_url(localized_path('crowdfunding_display', {'slug': lottery.crowdfunding.slug})) }}">{{ lottery.crowdfunding.title }}</a></p>
         <p class="text text-center">{{ 'label.draw_date'|trans({}, 'crowdfunding') }} : <strong>{{ lottery.drawDate|date('d/m/Y - H:i', app.session.get('user_timezone', 'Europe/Paris')) }}</strong></p>
         <twig:c975LCrowdfunding:Lottery:Prizes prizes="{{ lottery.prizes }}"/>
         <twig:c975LCrowdfunding:Lottery:SpinWheel/>

@@ -53,4 +53,16 @@ class CrowdfundingNewsTest extends TestCase
 
         $this->assertSame($crowdfunding, $news->getCrowdfunding());
     }
+
+    // A language laid over the row is what the page reads, the row keeping the text it was written with for the language screen - a field left untranslated falling back on it
+    public function testATranslationIsReadOverTheTextTheNewsWasWrittenWith(): void
+    {
+        $news = new CrowdfundingNews()->setTitle('Nous y sommes')->setContent('Le palier est atteint.');
+        $news->setTranslated(['title' => 'Here we are']);
+
+        $this->assertSame('Here we are', $news->getTitle());
+        $this->assertSame('Le palier est atteint.', $news->getContent());
+        $this->assertSame('Nous y sommes', $news->getUntranslated('title'));
+        $this->assertNull($news->getUntranslated('publishedDate'));
+    }
 }

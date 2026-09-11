@@ -40,4 +40,16 @@ class LotteryPrizeTest extends TestCase
 
         $this->assertSame($ticket, new LotteryPrize()->setWinningTicket($ticket)->getWinningTicket());
     }
+
+    // A language laid over the row is what the page reads, the row keeping the text it was written with
+    public function testATranslationIsReadOverTheTextThePrizeWasWrittenWith(): void
+    {
+        $prize = new LotteryPrize()->setTitle('Un vélo')->setDescription('Rouge');
+        $prize->setTranslated(['title' => 'A bicycle']);
+
+        $this->assertSame('A bicycle', $prize->getTitle());
+        $this->assertSame('Rouge', $prize->getDescription());
+        $this->assertSame('Un vélo', $prize->getUntranslated('title'));
+        $this->assertNull($prize->getUntranslated('rank'));
+    }
 }

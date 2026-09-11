@@ -12,6 +12,7 @@ namespace c975L\CrowdfundingBundle\Tests\Form;
 
 use c975L\CrowdfundingBundle\Form\CrowdfundingCounterpartMediaType;
 use c975L\CrowdfundingBundle\Form\CrowdfundingCounterpartType;
+use c975L\CrowdfundingBundle\Form\Util\CrowdfundingTranslationBuilder;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 
@@ -67,5 +68,18 @@ class CrowdfundingCounterpartTypeTest extends FormFieldsTestCase
 
         $this->assertSame(CrowdfundingCounterpartMediaType::class, $fields['media']['type']);
         $this->assertFalse($fields['media']['options']['label']);
+    }
+
+    // A language screen offers the tier's three texts through the shared builder, and none of what a language may not change - a price, a quantity, a number of tickets
+    public function testALanguageScreenOffersTheTextsAlone(): void
+    {
+        $translationBuilder = $this->createMock(CrowdfundingTranslationBuilder::class);
+        $translationBuilder->expects($this->once())->method('build')->with(
+            $this->anything(),
+            'en',
+            $this->callback(static fn (array $fields): bool => ['title', 'description', 'expectedDelivery'] === array_keys($fields)),
+        );
+
+        $this->assertSame([], $this->buildFields(new CrowdfundingCounterpartType($translationBuilder), ['translation_locale' => 'en']));
     }
 }

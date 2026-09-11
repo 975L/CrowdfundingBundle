@@ -165,6 +165,10 @@ class Crowdfunding implements HasBlocksInterface, TrashableInterface, \Stringabl
         return $this;
     }
 
+    // What this row says in the language being rendered, laid over the texts below and stored nowhere on the row: unmapped on purpose, Doctrine computing its changeset from the mapped properties and never from these getters, so a screen rendered in English cannot write English over the text the row was written in (see CrowdfundingTranslator, the only thing that sets it)
+    /** @var array<string, string|null>|null */
+    private ?array $translated = null;
+
     public function getType(): string
     {
         return $this->type;
@@ -184,7 +188,7 @@ class Crowdfunding implements HasBlocksInterface, TrashableInterface, \Stringabl
 
     public function getTitle(): ?string
     {
-        return $this->title;
+        return $this->translated['title'] ?? $this->title;
     }
 
     public function setTitle(string $title): static
@@ -220,7 +224,7 @@ class Crowdfunding implements HasBlocksInterface, TrashableInterface, \Stringabl
 
     public function getAuthorPresentation(): ?string
     {
-        return $this->authorPresentation;
+        return $this->translated['authorPresentation'] ?? $this->authorPresentation;
     }
 
     public function setAuthorPresentation(string $authorPresentation): static
@@ -244,7 +248,7 @@ class Crowdfunding implements HasBlocksInterface, TrashableInterface, \Stringabl
 
     public function getDescription(): ?string
     {
-        return $this->description;
+        return $this->translated['description'] ?? $this->description;
     }
 
     public function setDescription(string $description): static
@@ -598,5 +602,23 @@ class Crowdfunding implements HasBlocksInterface, TrashableInterface, \Stringabl
         $this->user = $user;
 
         return $this;
+    }
+
+    // Lays what a language says over the texts this row was written with, for the render being built and no longer than that - only CrowdfundingTranslator calls it, and only on the front, a form screen having to go on reading the row
+    /** @param array<string, string|null> $values field => value */
+    public function setTranslated(array $values): void
+    {
+        $this->translated = $values;
+    }
+
+    // The text the row itself carries, whatever language is being rendered - what a language screen offers as the thing to translate, and what tells an untouched field from a written one (see CrowdfundingTranslator)
+    public function getUntranslated(string $field): ?string
+    {
+        return match ($field) {
+            'title' => $this->title,
+            'description' => $this->description,
+            'authorPresentation' => $this->authorPresentation,
+            default => null,
+        };
     }
 }

@@ -12,9 +12,12 @@ namespace c975L\CrowdfundingBundle\Controller;
 
 use c975L\ConfigBundle\Contract\UserInterface;
 use c975L\ConfigBundle\Service\ConfigServiceInterface;
+use c975L\ConfigBundle\Service\LocalizedRouteNegotiator;
 use c975L\CrowdfundingBundle\Entity\Crowdfunding;
 use c975L\CrowdfundingBundle\Entity\CrowdfundingNews;
 use c975L\CrowdfundingBundle\Service\CrowdfundingServiceInterface;
+use c975L\CrowdfundingBundle\Service\CrowdfundingTranslatedLocales;
+use c975L\CrowdfundingBundle\Service\CrowdfundingTranslator;
 use c975L\UiBundle\Service\BlockRenderContext;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -29,26 +32,54 @@ class CrowdfundingController extends AbstractController
         private readonly CrowdfundingServiceInterface $crowdfundingService,
         private readonly ConfigServiceInterface $configService,
         private readonly BlockRenderContext $blockRenderContext,
+        private readonly LocalizedRouteNegotiator $negotiator,
+        private readonly CrowdfundingTranslatedLocales $translatedLocales,
+        private readonly CrowdfundingTranslator $crowdfundingTranslator,
     ) {
     }
 
-    // INDEX
+    // INDEX - the same index, in another language: the writing language keeps "/crowdfunding" byte for byte, the others go through "/{_locale}/crowdfunding". The pattern holds the languages the site declares beside the one it is written in, and matches nothing while there are none (see ConfigBundle's c975LConfigBundle::declareLocalesPattern()), so a single-language site only ever answers on the second
+    #[Route(
+        '/{_locale}/crowdfunding',
+        name: 'crowdfunding_index_localized',
+        requirements: ['_locale' => '%c975l_config.locales_pattern%'],
+        methods: ['GET']
+    )]
     #[Route(
         '/crowdfunding',
         name: 'crowdfunding_index',
         methods: ['GET']
     )]
-    public function index(): Response
+    public function index(Request $request): Response
     {
-        return $this->render(
+        $askedLanguage = $this->negotiator->redirectToAskedLanguage($request, $this->translatedLocales->forIndex(), 'crowdfunding_index');
+        if (null !== $askedLanguage) {
+            return $this->negotiator->vary($request, $askedLanguage);
+        }
+
+        $crowdfundings = $this->crowdfundingService->findAllSorted();
+
+        // The language being read laid over the titles, for this render and no longer: called here rather than on postLoad, the back office having to go on showing the text a row was written in (see CrowdfundingTranslator::apply)
+        $this->crowdfundingTranslator->apply($crowdfundings);
+
+        return $this->negotiator->vary($request, $this->render(
             '@c975LCrowdfunding/crowdfunding/index.html.twig',
             [
-                'crowdfundings' => $this->crowdfundingService->findAllSorted(),
+                'crowdfundings' => $crowdfundings,
             ]
-        );
+        ));
     }
 
-    // DISPLAY
+    // DISPLAY - the same campaign, in another language, answering in every language the site declares whether or not the campaign is translated (see CrowdfundingTranslatedLocales::forCrowdfunding)
+    #[Route(
+        '/{_locale}/crowdfunding/{slug}',
+        name: 'crowdfunding_display_localized',
+        requirements: [
+            '_locale' => '%c975l_config.locales_pattern%',
+            'slug' => '^([a-zA-Z0-9\-]*)',
+        ],
+        methods: ['GET', 'POST']
+    )]
     #[Route(
         '/crowdfunding/{slug}',
         name: 'crowdfunding_display',
@@ -70,6 +101,18 @@ class CrowdfundingController extends AbstractController
             throw $this->createNotFoundException();
         }
 
+        $locales = $this->translatedLocales->forCrowdfunding($crowdfunding);
+
+        // A localised url answers for every language the site declares (see CrowdfundingTranslatedLocales); the guard stays as the one place that would refuse one, and is said before the news form is handled - a POST to a url answering 404 has no business writing a row
+        if (!$this->negotiator->isTranslated($request, $locales)) {
+            throw $this->createNotFoundException();
+        }
+
+        $askedLanguage = $this->negotiator->redirectToAskedLanguage($request, $locales, 'crowdfunding_display', ['slug' => $crowdfunding->getSlug()]);
+        if (null !== $askedLanguage) {
+            return $this->negotiator->vary($request, $askedLanguage);
+        }
+
         // Defines form
         $form = null;
         $user = $this->getUser();
@@ -80,20 +123,29 @@ class CrowdfundingController extends AbstractController
             if ($form->isSubmitted() && $form->isValid()) {
                 $this->crowdfundingService->addNews($crowdfunding, $news);
 
-                return $this->redirectToRoute('crowdfunding_display', [
-                    'slug' => $crowdfunding->getSlug(),
-                    '_fragment' => 'news',
-                ]);
+                // Back to the url the editor was reading, bare or localised: naming crowdfunding_display would send one writing from "/en/crowdfunding/x" back into the writing language the day that url answers
+                return $this->redirectToRoute(
+                    (string) $request->attributes->get('_route'),
+                    (array) $request->attributes->get('_route_params') + ['_fragment' => 'news']
+                );
             }
         }
 
-        return $this->render(
+        // The campaign, its tiers, its follow-ups and the prizes of its draws in the language being read (see CrowdfundingTranslator::apply) - the prizes are listed on this page too, not only on the draw's own
+        $this->crowdfundingTranslator->apply([$crowdfunding]);
+        $this->crowdfundingTranslator->apply($crowdfunding->getCounterparts());
+        $this->crowdfundingTranslator->apply($crowdfunding->getNews());
+        foreach ($crowdfunding->getLotteries() as $lottery) {
+            $this->crowdfundingTranslator->apply($lottery->getPrizes());
+        }
+
+        return $this->negotiator->vary($request, $this->render(
             '@c975LCrowdfunding/crowdfunding/display.html.twig',
             [
                 'crowdfunding' => $crowdfunding,
                 'form' => $form?->createView(),
             ]
-        );
+        ));
     }
 
     // PREVIEW

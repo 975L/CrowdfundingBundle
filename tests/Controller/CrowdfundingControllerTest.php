@@ -12,20 +12,29 @@ namespace c975L\CrowdfundingBundle\Tests\Controller;
 
 use c975L\ConfigBundle\Contract\UserInterface;
 use c975L\ConfigBundle\Service\ConfigServiceInterface;
+use c975L\ConfigBundle\Service\LocalizedRouteNegotiator;
+use c975L\ConfigBundle\Service\SiteLocales;
 use c975L\CrowdfundingBundle\Controller\CrowdfundingController;
 use c975L\CrowdfundingBundle\Entity\Crowdfunding;
+use c975L\CrowdfundingBundle\Entity\Lottery;
+use c975L\CrowdfundingBundle\Entity\LotteryPrize;
 use c975L\CrowdfundingBundle\Service\CrowdfundingServiceInterface;
+use c975L\CrowdfundingBundle\Service\CrowdfundingTranslatedLocales;
+use c975L\CrowdfundingBundle\Service\CrowdfundingTranslator;
 use c975L\UiBundle\Service\BlockRenderContext;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\GoneHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Translation\LocaleSwitcher;
 use Twig\Environment;
 
 // Only "twig" and "security.token_storage" are ever fetched, so a bare Container is enough and no kernel is booted
@@ -38,7 +47,7 @@ class CrowdfundingControllerTest extends TestCase
         $service = $this->createMock(CrowdfundingServiceInterface::class);
         $service->expects($this->once())->method('findAllSorted')->willReturn($crowdfundings);
 
-        $response = $this->createController($service)->index();
+        $response = $this->createController($service)->index(new Request());
 
         $this->assertSame(200, $response->getStatusCode());
         $this->assertSame('@c975LCrowdfunding/crowdfunding/index.html.twig', $response->getContent());
@@ -47,7 +56,26 @@ class CrowdfundingControllerTest extends TestCase
     // The two public pages carried an hour of max-age, which froze a contribution, a threshold reached and a news published for that whole hour. What they hold is cached by fragment by the blocks, which invalidates itself when the content changes
     public function testTheIndexIsNotFrozenForAnHour(): void
     {
-        $this->assertNull($this->createController()->index()->getMaxAge());
+        $this->assertNull($this->createController()->index(new Request())->getMaxAge());
+    }
+
+    // The prizes of a draw are listed on the campaign page as well as on the draw's own, and read there in the language being read too
+    public function testTheCampaignPageTranslatesThePrizesOfItsDraws(): void
+    {
+        $prize = new LotteryPrize();
+        $crowdfunding = $this->createOpenCampaign()->addLottery(new Lottery()->addPrize($prize));
+
+        $translated = [];
+        $crowdfundingTranslator = $this->createStub(CrowdfundingTranslator::class);
+        $crowdfundingTranslator->method('apply')->willReturnCallback(static function (iterable $rows) use (&$translated): void {
+            foreach ($rows as $row) {
+                $translated[] = $row;
+            }
+        });
+
+        $this->createController(crowdfundingTranslator: $crowdfundingTranslator)->display(new Request(), $crowdfunding);
+
+        $this->assertContains($prize, $translated);
     }
 
     public function testTheCampaignPageIsNotFrozenForAnHour(): void
@@ -72,6 +100,36 @@ class CrowdfundingControllerTest extends TestCase
         $response = $this->createController(user: $this->createUserWithAnId())->display(new Request(), $this->createOpenCampaign());
 
         $this->assertSame(200, $response->getStatusCode());
+    }
+
+    // A published follow-up comes back to the url it was written from, the route being read off the request rather than named: an editor writing from "/en/crowdfunding/x" used to land back in the writing language the moment that url answered
+    public function testAPublishedFollowUpComesBackToTheUrlItWasWrittenFrom(): void
+    {
+        $service = $this->createStub(CrowdfundingServiceInterface::class);
+        $service->method('createForm')->willReturn($this->createSubmittedForm());
+
+        $request = new Request();
+        $request->attributes->set('_route', 'crowdfunding_display_localized');
+        $request->attributes->set('_route_params', ['_locale' => 'en', 'slug' => 'toit-ecole']);
+
+        $response = $this->createController($service, $this->createUserWithAnId(), granted: true)
+            ->display($request, $this->createOpenCampaign());
+
+        $this->assertSame(302, $response->getStatusCode());
+        $this->assertSame(
+            '/crowdfunding_display_localized?_locale=en&slug=toit-ecole&_fragment=news',
+            $response->headers->get('Location'),
+        );
+    }
+
+    // A form the editor has just sent and that validates, the choreography of the fields themselves being the form type's own test
+    private function createSubmittedForm(): FormInterface
+    {
+        $form = $this->createStub(FormInterface::class);
+        $form->method('isSubmitted')->willReturn(true);
+        $form->method('isValid')->willReturn(true);
+
+        return $form;
     }
 
     // A trashed campaign is gone rather than missing: a search engine acts on a 410 far faster than on the 404 the same url would otherwise answer
@@ -180,12 +238,45 @@ class CrowdfundingControllerTest extends TestCase
         return new Crowdfunding()->setHidden(false);
     }
 
-    private function createController(?CrowdfundingServiceInterface $service = null, ?UserInterface $user = null, ?BlockRenderContext $blockRenderContext = null, bool $granted = false): CrowdfundingController
+    // A site declaring one language, which is every site until it says otherwise: the negotiator then refuses nothing, redirects nowhere and varies on nothing
+    private static function createSiteLocales(): SiteLocales
+    {
+        return new SiteLocales(['fr'], 'fr');
+    }
+
+    private function createNegotiator(): LocalizedRouteNegotiator
+    {
+        return new LocalizedRouteNegotiator(self::createSiteLocales(), new LocaleSwitcher('fr', []), $this->createRouter());
+    }
+
+    private function createRouter(): UrlGeneratorInterface
+    {
+        $router = $this->createStub(UrlGeneratorInterface::class);
+        $router->method('generate')->willReturnCallback(
+            static fn (string $name, array $parameters = []): string => '/' . $name . '?' . http_build_query($parameters)
+        );
+
+        return $router;
+    }
+
+    // The index reads the campaigns before anything else: a double answering null is a shape findAllSorted() never hands back
+    private function createDefaultService(): CrowdfundingServiceInterface
+    {
+        $service = $this->createStub(CrowdfundingServiceInterface::class);
+        $service->method('findAllSorted')->willReturn([]);
+
+        return $service;
+    }
+
+    private function createController(?CrowdfundingServiceInterface $service = null, ?UserInterface $user = null, ?BlockRenderContext $blockRenderContext = null, bool $granted = false, ?CrowdfundingTranslator $crowdfundingTranslator = null): CrowdfundingController
     {
         $controller = new CrowdfundingController(
-            $service ?? $this->createStub(CrowdfundingServiceInterface::class),
+            $service ?? $this->createDefaultService(),
             $this->createStub(ConfigServiceInterface::class),
             $blockRenderContext ?? new BlockRenderContext(),
+            $this->createNegotiator(),
+            new CrowdfundingTranslatedLocales(self::createSiteLocales(), $this->createStub(CrowdfundingTranslator::class)),
+            $crowdfundingTranslator ?? $this->createStub(CrowdfundingTranslator::class),
         );
 
         $twig = $this->createStub(Environment::class);
@@ -206,6 +297,7 @@ class CrowdfundingControllerTest extends TestCase
 
         $container = new Container();
         $container->set('twig', $twig);
+        $container->set('router', $this->createRouter());
         $container->set('security.token_storage', $tokenStorage);
         $container->set('security.authorization_checker', $authorizationChecker);
         $controller->setContainer($container);

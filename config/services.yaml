@@ -60,6 +60,7 @@ services:
               translation_domain: 'crowdfunding'
               category: 'label.category_crowdfunding'
               form: 'c975L\CrowdfundingBundle\Form\Block\CounterpartsBlockType'
+              translatable: 'title'
               template: '@c975LCrowdfunding/blocks/Counterparts.html.twig'
               pickable: true
               # Never cached, as ShopBundle's "shop_search" is not: each tier draws its own button against today's date, and no event fires the day a campaign ends, so an entry that never expires would keep offering to contribute to a campaign that closed - and the basket messages laid beside the tiers belong to whoever is reading, not to everybody
@@ -76,6 +77,7 @@ services:
               translation_domain: 'crowdfunding'
               category: 'label.category_crowdfunding'
               form: 'c975L\CrowdfundingBundle\Form\Block\LotteryBlockType'
+              translatable: 'title, intro'
               template: '@c975LCrowdfunding/blocks/Lottery.html.twig'
               pickable: true
               # Never cached either: the draws print their dates in the visitor's own timezone (see Lottery.html.twig, app.session.get('user_timezone')) and offer the draw button to an administrator alone, where an entry is shared by everyone reading the page

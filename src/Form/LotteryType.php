@@ -23,6 +23,22 @@ class LotteryType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        // A draw says nothing of its own in any language: its prizes do, offered through the type they are always edited with, and neither added nor removed there
+        $locale = $options['translation_locale'] ?? null;
+        if (null !== $locale) {
+            $builder->add('prizes', CollectionType::class, [
+                'entry_type' => LotteryPrizeType::class,
+                'entry_options' => ['translation_locale' => $locale],
+                'allow_add' => false,
+                'allow_delete' => false,
+                'by_reference' => false,
+                'label' => 'label.prizes',
+                'required' => false,
+            ]);
+
+            return;
+        }
+
         $builder
             ->add('isActive', CheckboxType::class, [
                 'label' => 'label.enable_lottery',
@@ -67,6 +83,9 @@ class LotteryType extends AbstractType
         $resolver->setDefaults([
             'data_class' => Lottery::class,
             'translation_domain' => 'crowdfunding',
+            // A language code opens the row's language screen: its texts alone, unmapped (see CrowdfundingTranslationBuilder)
+            'translation_locale' => null,
         ]);
+        $resolver->setAllowedTypes('translation_locale', ['null', 'string']);
     }
 }

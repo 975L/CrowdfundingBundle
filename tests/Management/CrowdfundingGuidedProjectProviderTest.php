@@ -44,10 +44,10 @@ class CrowdfundingGuidedProjectProviderTest extends TestCase
         $projects = $this->createProvider()->getGuidedProjects();
 
         $this->assertSame(
-            ['crowdfunding-campaign', 'crowdfunding-publish', 'crowdfunding-media', 'crowdfunding-counterpart', 'crowdfunding-blocks', 'crowdfunding-news', 'crowdfunding-lottery', 'crowdfunding-draw-video', 'crowdfunding-trash'],
+            ['crowdfunding-campaign', 'crowdfunding-publish', 'crowdfunding-media', 'crowdfunding-counterpart', 'crowdfunding-blocks', 'crowdfunding-translate', 'crowdfunding-news', 'crowdfunding-lottery', 'crowdfunding-draw-video', 'crowdfunding-trash'],
             array_column($projects, 'slug')
         );
-        $this->assertSame([9010, 9015, 9020, 9030, 9040, 9045, 9050, 9060, 9070], array_column($projects, 'order'));
+        $this->assertSame([9010, 9015, 9020, 9030, 9040, 9042, 9045, 9050, 9060, 9070], array_column($projects, 'order'));
     }
 
     public function testEverySlugIsPrefixedWithTheBundleName(): void
@@ -107,7 +107,7 @@ class CrowdfundingGuidedProjectProviderTest extends TestCase
         $controllers = [];
         $this->createProvider($controllers)->getGuidedProjects();
 
-        $this->assertSame(array_fill(0, 9, 'CrowdfundingCrudController'), array_map(
+        $this->assertSame(array_fill(0, 10, 'CrowdfundingCrudController'), array_map(
             static fn (string $fqcn): string => basename(str_replace('\\', '/', $fqcn)),
             $controllers
         ));
@@ -126,8 +126,8 @@ class CrowdfundingGuidedProjectProviderTest extends TestCase
             }
         }
 
-        // Eight of the nine: removing a campaign is done from the listing alone, with no form to save
-        $this->assertCount(8, $saveSteps, 'Each parcours walking a form walks the user to the save button once');
+        // Nine of the ten: removing a campaign is done from the listing alone, with no form to save
+        $this->assertCount(9, $saveSteps, 'Each parcours walking a form walks the user to the save button once');
 
         foreach ($saveSteps as $step) {
             $this->assertSame('.action-saveAndReturn', $step['highlight']);
@@ -155,7 +155,8 @@ class CrowdfundingGuidedProjectProviderTest extends TestCase
                 continue;
             }
 
-            $this->assertStringContainsString(sprintf("Action::new('%s'", $action), $controller, sprintf('The screen declares no "%s" action any more', $action));
+            // Both ways of declaring one are read - Action::new() and the actions ContentLocaleScreen builds, which carry their name the very same way
+            $this->assertMatchesRegularExpression(sprintf("/(?:Action::new|->action)\\('%s'/", $action), $controller, sprintf('The screen declares no "%s" action any more', $action));
         }
     }
 
@@ -168,6 +169,8 @@ class CrowdfundingGuidedProjectProviderTest extends TestCase
         }
         // "data-ui-sort-group" is UiBundle's own, laid on the blocks field by the row_attr builder this controller calls
         $sources .= file_get_contents(\dirname(__DIR__, 2) . '/vendor/c975l/core-bundle/UiBundle/src/Service/BlockMoveRowAttrBuilder.php');
+        // "data-content-locales" is ConfigBundle's own, posted by the language tab strip the edit template includes
+        $sources .= file_get_contents(\dirname(__DIR__, 2) . '/vendor/c975l/core-bundle/ConfigBundle/templates/management/_content_locale_tabs.html.twig');
 
         $attributes = [];
         foreach ($this->highlights() as $highlight) {

@@ -11,12 +11,15 @@
 namespace c975L\CrowdfundingBundle\Tests\Management;
 
 use c975L\ConfigBundle\Service\ConfigServiceInterface;
+use c975L\ConfigBundle\Service\SiteLocales;
 use c975L\ConfigBundle\Test\ManagementTargetsTestCase;
 use c975L\CrowdfundingBundle\Entity\Crowdfunding;
 use c975L\CrowdfundingBundle\Management\CrowdfundingGuidedProjectProvider;
 use c975L\CrowdfundingBundle\Management\LinkableRouteProvider;
 use c975L\CrowdfundingBundle\Management\MenuProvider;
 use c975L\CrowdfundingBundle\Service\CrowdfundingServiceInterface;
+use c975L\CrowdfundingBundle\Service\CrowdfundingTranslatedLocales;
+use c975L\CrowdfundingBundle\Service\CrowdfundingTranslator;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 // Every CRUD controller and route this bundle's management providers name, checked against what its controllers actually declare - see ConfigBundle's ManagementTargetsTestCase
@@ -26,7 +29,7 @@ class ManagementTargetsTest extends ManagementTargetsTestCase
     {
         return [
             new MenuProvider($this->createStub(ConfigServiceInterface::class)),
-            new LinkableRouteProvider($this->crowdfundingService(), $this->createStub(TranslatorInterface::class)),
+            new LinkableRouteProvider($this->crowdfundingService(), $this->createStub(TranslatorInterface::class), new CrowdfundingTranslatedLocales(new SiteLocales(['fr'], 'fr'), $this->createStub(CrowdfundingTranslator::class))),
             // The socle's own recorder rather than a bare stub, so the controller each parcours opens on is read back and checked (see ManagementTargetsTestCase)
             new CrowdfundingGuidedProjectProvider($this->adminUrlGenerator(), $this->createStub(ConfigServiceInterface::class)),
         ];

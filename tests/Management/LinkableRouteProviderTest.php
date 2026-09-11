@@ -11,9 +11,11 @@
 namespace c975L\CrowdfundingBundle\Tests\Management;
 
 use c975L\ConfigBundle\Management\LinkableRouteProviderInterface;
+use c975L\ConfigBundle\Service\SiteLocales;
 use c975L\CrowdfundingBundle\Entity\Crowdfunding;
 use c975L\CrowdfundingBundle\Management\LinkableRouteProvider;
 use c975L\CrowdfundingBundle\Service\CrowdfundingServiceInterface;
+use c975L\CrowdfundingBundle\Service\CrowdfundingTranslatedLocales;
 use PHPUnit\Framework\TestCase;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -46,6 +48,15 @@ class LinkableRouteProviderTest extends TestCase
         $routes = $this->createProvider([$this->createCrowdfunding(7, 'sauver-les-chats', 'Sauver les chats')])->getLinkableRoutes();
 
         $this->assertSame('label.crowdfunding - Sauver les chats', $routes['crowdfunding.7']['picker_label']);
+    }
+
+    // Read in another language a menu item is written in that language's url, which only holds where the target really answers - and both of these answer in every language the site declares (see CrowdfundingTranslatedLocales)
+    public function testEachEntrySaysWhichLanguagesItAnswersIn(): void
+    {
+        $routes = $this->createProvider([$this->createCrowdfunding(7, 'sauver-les-chats', 'Sauver les chats')])->getLinkableRoutes();
+
+        $this->assertSame(['fr', 'en'], $routes['crowdfunding_index']['locales']);
+        $this->assertSame(['fr', 'en'], $routes['crowdfunding.7']['locales']);
     }
 
     // A key is what a menu item stores ("route:KEY"): a bare row id is ambiguous the moment another bundle has a row of the same number
@@ -91,6 +102,6 @@ class LinkableRouteProviderTest extends TestCase
         $translator = $this->createStub(TranslatorInterface::class);
         $translator->method('trans')->willReturnArgument(0);
 
-        return new LinkableRouteProvider($crowdfundingService, $translator);
+        return new LinkableRouteProvider($crowdfundingService, $translator, new CrowdfundingTranslatedLocales(new SiteLocales(['fr', 'en'], 'fr')));
     }
 }

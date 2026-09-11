@@ -53,6 +53,10 @@ class LotteryPrize
     #[ORM\ManyToOne]
     private ?UserInterface $user = null;
 
+    // What this row says in the language being rendered, laid over the texts below and stored nowhere on the row: unmapped on purpose, Doctrine computing its changeset from the mapped properties and never from these getters, so a screen rendered in English cannot write English over the text the row was written in (see CrowdfundingTranslator, the only thing that sets it)
+    /** @var array<string, string|null>|null */
+    private ?array $translated = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -60,7 +64,7 @@ class LotteryPrize
 
     public function getTitle(): ?string
     {
-        return $this->title;
+        return $this->translated['title'] ?? $this->title;
     }
 
     public function setTitle(string $title): self
@@ -72,7 +76,7 @@ class LotteryPrize
 
     public function getDescription(): ?string
     {
-        return $this->description;
+        return $this->translated['description'] ?? $this->description;
     }
 
     public function setDescription(?string $description): self
@@ -165,5 +169,22 @@ class LotteryPrize
         $this->user = $user;
 
         return $this;
+    }
+
+    // Lays what a language says over the texts this row was written with, for the render being built and no longer than that - only CrowdfundingTranslator calls it, and only on the front, a form screen having to go on reading the row
+    /** @param array<string, string|null> $values field => value */
+    public function setTranslated(array $values): void
+    {
+        $this->translated = $values;
+    }
+
+    // The text the row itself carries, whatever language is being rendered - what a language screen offers as the thing to translate, and what tells an untouched field from a written one (see CrowdfundingTranslator)
+    public function getUntranslated(string $field): ?string
+    {
+        return match ($field) {
+            'title' => $this->title,
+            'description' => $this->description,
+            default => null,
+        };
     }
 }

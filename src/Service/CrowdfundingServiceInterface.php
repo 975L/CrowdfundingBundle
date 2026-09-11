@@ -29,9 +29,8 @@ interface CrowdfundingServiceInterface
      */
     public function findAll();
 
-    /**
-     * @return Crowdfunding[] ordered by their admin-defined position
-     */
+    // Ordered by their admin-defined position
+    /** @return list<Crowdfunding> */
     public function findAllSorted();
 
     public function findOneById(int $id): ?Crowdfunding;

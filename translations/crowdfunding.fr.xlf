@@ -18,6 +18,10 @@
                 <source>action.restore</source>
                 <target>Restaurer</target>
             </trans-unit>
+            <trans-unit id="VOwL1H0">
+                <source>action.translate</source>
+                <target>Traduire</target>
+            </trans-unit>
             <trans-unit id="8w7xgsI">
                 <source>action.trash</source>
                 <target>Corbeille</target>
@@ -65,6 +69,10 @@
             <trans-unit id="sgyVhOY">
                 <source>description.guided_project_crowdfunding_publish</source>
                 <target>Une campagne s'écrit masquée : hors de la liste, du plan du site et du panier, sa page répondant 404. On la regarde comme le visiteur la lira, puis on retire le masque.</target>
+            </trans-unit>
+            <trans-unit id="uvTTZEI">
+                <source>description.guided_project_crowdfunding_translate</source>
+                <target>La même campagne dite dans une autre langue : ses textes seuls lui appartiennent, l'objectif, la devise et les dates étant les mêmes partout.</target>
             </trans-unit>
             <trans-unit id="_lmRooz">
                 <source>description.guided_project_crowdfunding_trash</source>
@@ -277,6 +285,38 @@
             <trans-unit id="XNWHIBI">
                 <source>description.guided_step_crowdfunding_publish_visit</source>
                 <target>Le bouton de prévisualisation a laissé place à un lien externe : la page de la campagne est désormais celle que tout le monde lit.</target>
+            </trans-unit>
+            <trans-unit id="knjiybj">
+                <source>description.guided_step_crowdfunding_translate_action</source>
+                <target>Le bouton ouvre la campagne directement dans la première langue à traduire. Il n'apparaît que si le site déclare plus d'une langue.</target>
+            </trans-unit>
+            <trans-unit id="6sdOqaV">
+                <source>description.guided_step_crowdfunding_translate_author</source>
+                <target>Le nom et le site restent les mêmes dans toutes les langues : seule la présentation se traduit.</target>
+            </trans-unit>
+            <trans-unit id="FgKT0M2">
+                <source>description.guided_step_crowdfunding_translate_counterparts</source>
+                <target>Chaque contrepartie se traduit ici, puis les actualités et les lots. Rien ne s'y ajoute ni ne s'y retire : ce serait dans toutes les langues à la fois.</target>
+            </trans-unit>
+            <trans-unit id="3hM5z33">
+                <source>description.guided_step_crowdfunding_translate_description</source>
+                <target>Le récit de la campagne. Ce qui reste entre crochets s'affiche dans la langue d'écriture.</target>
+            </trans-unit>
+            <trans-unit id="J5it9BS">
+                <source>description.guided_step_crowdfunding_translate_done</source>
+                <target>La campagne se lit dans cette langue à son adresse traduite.</target>
+            </trans-unit>
+            <trans-unit id="_vLONVV">
+                <source>description.guided_step_crowdfunding_translate_open</source>
+                <target>Une traduction part de la liste des campagnes.</target>
+            </trans-unit>
+            <trans-unit id="g87OOMd">
+                <source>description.guided_step_crowdfunding_translate_tabs</source>
+                <target>Les onglets passent d'une langue à l'autre, la première étant celle où la campagne a été écrite.</target>
+            </trans-unit>
+            <trans-unit id="9XCXN6D">
+                <source>description.guided_step_crowdfunding_translate_title</source>
+                <target>Le titre entre crochets est celui de la langue d'écriture. Tant qu'il n'est pas traduit, la campagne n'est pas signalée aux moteurs de recherche dans cette langue.</target>
             </trans-unit>
             <trans-unit id="iNzzZZT">
                 <source>description.guided_step_crowdfunding_trash_bin</source>
@@ -566,6 +606,14 @@
                 <source>label.expected_delivery</source>
                 <target>Livraison prévue</target>
             </trans-unit>
+            <trans-unit id="LHpZe.c">
+                <source>label.fieldset_this_language</source>
+                <target>Dans cette langue (%language%)</target>
+            </trans-unit>
+            <trans-unit id="p8XUdUk">
+                <source>label.fieldset_this_language_help</source>
+                <target>Ces textes sont propres à cette langue. Le reste — objectif, devise, dates, slug — est le même partout et se modifie sur l'écran de la langue d'écriture.</target>
+            </trans-unit>
             <trans-unit id="DCH0Xrv">
                 <source>label.follow_up</source>
                 <target>Nous allons y donner suite très rapidement.</target>
@@ -613,6 +661,10 @@
             <trans-unit id="TQxRx26">
                 <source>label.guided_project_crowdfunding_publish</source>
                 <target>Ouvrir la campagne au public</target>
+            </trans-unit>
+            <trans-unit id="zYvHP_e">
+                <source>label.guided_project_crowdfunding_translate</source>
+                <target>Traduire une campagne</target>
             </trans-unit>
             <trans-unit id="On0Ss.9">
                 <source>label.guided_project_crowdfunding_trash</source>
@@ -857,6 +909,42 @@
             <trans-unit id="hxq6JX7">
                 <source>label.guided_step_crowdfunding_publish_visit</source>
                 <target>Voir sur le site</target>
+            </trans-unit>
+            <trans-unit id="HaeQ8pW">
+                <source>label.guided_step_crowdfunding_translate_action</source>
+                <target>Ouvrir l'écran de langue</target>
+            </trans-unit>
+            <trans-unit id="9Wg5PhG">
+                <source>label.guided_step_crowdfunding_translate_author</source>
+                <target>Traduire la présentation de l'auteur</target>
+            </trans-unit>
+            <trans-unit id="wxoZLD7">
+                <source>label.guided_step_crowdfunding_translate_counterparts</source>
+                <target>Traduire les contreparties</target>
+            </trans-unit>
+            <trans-unit id="ayXuXdd">
+                <source>label.guided_step_crowdfunding_translate_description</source>
+                <target>Traduire la description</target>
+            </trans-unit>
+            <trans-unit id="PyrSajB">
+                <source>label.guided_step_crowdfunding_translate_done</source>
+                <target>C'est fait</target>
+            </trans-unit>
+            <trans-unit id="UkVbssN">
+                <source>label.guided_step_crowdfunding_translate_open</source>
+                <target>Vos campagnes</target>
+            </trans-unit>
+            <trans-unit id="GwgCaQY">
+                <source>label.guided_step_crowdfunding_translate_save</source>
+                <target>Enregistrer</target>
+            </trans-unit>
+            <trans-unit id=".f80QjT">
+                <source>label.guided_step_crowdfunding_translate_tabs</source>
+                <target>Choisir la langue</target>
+            </trans-unit>
+            <trans-unit id="cVnTIoX">
+                <source>label.guided_step_crowdfunding_translate_title</source>
+                <target>Traduire le titre</target>
             </trans-unit>
             <trans-unit id="i99y59p">
                 <source>label.guided_step_crowdfunding_trash_bin</source>

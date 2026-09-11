@@ -1,0 +1,315 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="en" target-language="es" datatype="plaintext" original="crowdfunding_narration.es.xlf">
+        <body>
+            <trans-unit id="kec7TEP">
+                <source>narration.crowdfunding_index</source>
+                <target>Este enlace abre la página pública de las campañas, la que ven sus visitantes.</target>
+            </trans-unit>
+            <trans-unit id="qcPEY4.">
+                <source>narration.crowdfundings</source>
+                <target>En la columna de la izquierda, abra «Financiación participativa»: todas las campañas del sitio están listadas ahí, con su objetivo, sus fechas y lo que ya han recibido.</target>
+            </trans-unit>
+            <trans-unit id="THG7mHh">
+                <source>narration.guided_step_crowdfunding_blocks_add</source>
+                <target>Al final del formulario, la sección «Bloques». Textos, imágenes, botones y tablas, los mismos que una página del sitio, y, en la categoría «Financiación participativa», tres bloques propios de esta campaña: sus imágenes en diaporama, sus contrapartidas en filas desplegables, y su lotería. Hay también un cuarto, del que habla el paso siguiente.</target>
+            </trans-unit>
+            <trans-unit id="O99Sw6N">
+                <source>narration.guided_step_crowdfunding_blocks_done</source>
+                <target>Sus bloques se muestran en la página pública, bajo la presentación y las contrapartidas.</target>
+            </trans-unit>
+            <trans-unit id="Y7Ua_lX">
+                <source>narration.guided_step_crowdfunding_blocks_edit</source>
+                <target>Abra con el lápiz la campaña que hay que completar.</target>
+            </trans-unit>
+            <trans-unit id="TBRFdVf">
+                <source>narration.guided_step_crowdfunding_blocks_listing</source>
+                <target>Un cuarto bloque lleva el nombre «Campañas». Ese no va en la ficha de una campaña sino en una página ordinaria del sitio, donde lista las campañas abiertas con su avance: una campaña abierta o cerrada desde el back-office aparece o desaparece de él sola.</target>
+            </trans-unit>
+            <trans-unit id="K.pUwda">
+                <source>narration.guided_step_crowdfunding_blocks_open</source>
+                <target>El panel le devuelve a sus campañas. Los bloques de una campaña se componen en su ficha, bajo los campos que la describen.</target>
+            </trans-unit>
+            <trans-unit id="CQxhpxA">
+                <source>narration.guided_step_crowdfunding_blocks_save</source>
+                <target>Guarde para publicar sus bloques.</target>
+            </trans-unit>
+            <trans-unit id="hgUHihv">
+                <source>narration.guided_step_crowdfunding_campaign_author</source>
+                <target>Indique el autor: quién lleva el proyecto. El nombre, la presentación y el sitio web aparecen juntos en la página, porque un contribuyente da a alguien, no a un bote.</target>
+            </trans-unit>
+            <trans-unit id="iEoj5Fw">
+                <source>narration.guided_step_crowdfunding_campaign_dates</source>
+                <target>Fije las fechas de inicio y de fin. La campaña solo acepta contribuciones entre las dos: antes, y después, sus contrapartidas ya no pueden añadirse a la cesta.</target>
+            </trans-unit>
+            <trans-unit id="fUvUmco">
+                <source>narration.guided_step_crowdfunding_campaign_description</source>
+                <target>Escriba la presentación, el texto de entrada en lo alto de la página pública. Diga en unas líneas qué quiere hacer y por qué; el detalle se compone más abajo, en bloques.</target>
+            </trans-unit>
+            <trans-unit id="km659jZ">
+                <source>narration.guided_step_crowdfunding_campaign_done</source>
+                <target>Su campaña está en línea. Es visible entre sus dos fechas, y los recorridos siguientes la completan: sus imágenes, sus contrapartidas, su lotería.</target>
+            </trans-unit>
+            <trans-unit id="_u8T5ub">
+                <source>narration.guided_step_crowdfunding_campaign_goal</source>
+                <target>Indique el importe que hay que alcanzar. Es el que el indicador de la página pública compara con la suma de las contribuciones ya recibidas.</target>
+            </trans-unit>
+            <trans-unit id="1P3j2XH">
+                <source>narration.guided_step_crowdfunding_campaign_new</source>
+                <target>Añada una campaña con el botón situado encima de la lista. El formulario que se abre lo lleva todo: la campaña, sus medios, sus contrapartidas, su lotería y sus bloques.</target>
+            </trans-unit>
+            <trans-unit id="YXMcYQ.">
+                <source>narration.guided_step_crowdfunding_campaign_open</source>
+                <target>El panel le lleva a sus campañas. Todas las del sitio están listadas aquí, la que termina más tarde en primer lugar.</target>
+            </trans-unit>
+            <trans-unit id="RZfB6Sx">
+                <source>narration.guided_step_crowdfunding_campaign_save</source>
+                <target>Guarde. La campaña existe, y vuelve a la lista.</target>
+            </trans-unit>
+            <trans-unit id="0wokC8B">
+                <source>narration.guided_step_crowdfunding_campaign_slug</source>
+                <target>La dirección de la página se rellena sola a partir del título. Una vez compartida la campaña, no la cambie: los enlaces ya difundidos dejarían de funcionar.</target>
+            </trans-unit>
+            <trans-unit id="uUvuj4C">
+                <source>narration.guided_step_crowdfunding_campaign_title</source>
+                <target>Dé su título a la campaña. Es el nombre con el que aparece en todas partes: en la lista, en su página, en la cesta y en los correos enviados a los contribuyentes.</target>
+            </trans-unit>
+            <trans-unit id="7Il9fMx">
+                <source>narration.guided_step_crowdfunding_counterpart_add</source>
+                <target>En la sección «Contrapartidas», añada una. Dele un título, un importe y una descripción: es lo que un contribuyente lee antes de elegir.</target>
+            </trans-unit>
+            <trans-unit id="s_HfNfd">
+                <source>narration.guided_step_crowdfunding_counterpart_done</source>
+                <target>Su contrapartida está en venta. Se añade a la cesta como cualquier otro artículo, y la tienda es la que cobra: este módulo nunca toca el dinero.</target>
+            </trans-unit>
+            <trans-unit id="XOei0WS">
+                <source>narration.guided_step_crowdfunding_counterpart_edit</source>
+                <target>Abra con el lápiz la campaña a la que se vincula la contrapartida.</target>
+            </trans-unit>
+            <trans-unit id="idjtIgj">
+                <source>narration.guided_step_crowdfunding_counterpart_expand</source>
+                <target>Una contrapartida añadida se pliega sobre su título: ábrala, porque el precio, la cantidad limitada y la fecha de entrega están todos dentro.</target>
+            </trans-unit>
+            <trans-unit id="AOepNij">
+                <source>narration.guided_step_crowdfunding_counterpart_open</source>
+                <target>El panel le devuelve a sus campañas. Una contrapartida pertenece a una campaña y se crea en su ficha: no hay pantalla de contrapartidas.</target>
+            </trans-unit>
+            <trans-unit id="Hwz.WYF">
+                <source>narration.guided_step_crowdfunding_counterpart_quantity</source>
+                <target>Indique la cantidad y la entrega. Una cantidad limitada retira la contrapartida de la venta una vez agotada, y la cesta rechaza pedir más de las que quedan; deje cero para no limitarla.</target>
+            </trans-unit>
+            <trans-unit id="3BidmNS">
+                <source>narration.guided_step_crowdfunding_counterpart_save</source>
+                <target>Guarde para poner la contrapartida en venta.</target>
+            </trans-unit>
+            <trans-unit id="PbGdfgv">
+                <source>narration.guided_step_crowdfunding_draw_video_done</source>
+                <target>El vídeo está en línea. Los ganadores ya han recibido su correo, enviado en el momento del sorteo; el vídeo es lo que ven todos los demás. Queda anunciarlo, a mano, en las redes.</target>
+            </trans-unit>
+            <trans-unit id="6kagHVV">
+                <source>narration.guided_step_crowdfunding_draw_video_edit</source>
+                <target>Abra con el lápiz la campaña cuya lotería acaba de sortearse.</target>
+            </trans-unit>
+            <trans-unit id="DhdQf.n">
+                <source>narration.guided_step_crowdfunding_draw_video_lottery</source>
+                <target>Baje hasta la sección «Lotería», localice la que acaba de sortear y ábrala: su campo «Vídeos» está plegado dentro.</target>
+            </trans-unit>
+            <trans-unit id="rPTNs30">
+                <source>narration.guided_step_crowdfunding_draw_video_open</source>
+                <target>El panel le devuelve a sus campañas. El vídeo del sorteo se deposita en la campaña que lleva la lotería, como todo lo demás.</target>
+            </trans-unit>
+            <trans-unit id="hz6z6mz">
+                <source>narration.guided_step_crowdfunding_draw_video_save</source>
+                <target>Guarde para publicar el vídeo.</target>
+            </trans-unit>
+            <trans-unit id="u6SKhwE">
+                <source>narration.guided_step_crowdfunding_draw_video_upload</source>
+                <target>El campo «Vídeos» de la lotería solo acepta un archivo subido. El vídeo se muestra entonces bajo los premios, en la página del sorteo, donde los contribuyentes van a buscarlo.</target>
+            </trans-unit>
+            <trans-unit id="gYNDANU">
+                <source>narration.guided_step_crowdfunding_draw_video_youtube</source>
+                <target>Si el archivo es demasiado pesado, publíquelo en YouTube y pegue su dirección en los vídeos de la campaña, sección «Medios». Es el único de los dos campos que acepta una dirección.</target>
+            </trans-unit>
+            <trans-unit id="DhIgb5x">
+                <source>narration.guided_step_crowdfunding_lottery_add</source>
+                <target>En la sección «Lotería», añada una. Marque «Activar» y fije la fecha del sorteo: el botón de sorteo queda atenuado mientras no haya pasado.</target>
+            </trans-unit>
+            <trans-unit id="69mg1rJ">
+                <source>narration.guided_step_crowdfunding_lottery_done</source>
+                <target>Su lotería está abierta. El sorteo, en cambio, no se hace aquí: se celebra en la página pública de la lotería, en la fecha fijada, y solo usted ve el botón. Fílmelo: el procedimiento «Filmar y publicar un sorteo de lotería» dice cómo, y por qué no hay segunda toma.</target>
+            </trans-unit>
+            <trans-unit id="8nQ02jp">
+                <source>narration.guided_step_crowdfunding_lottery_edit</source>
+                <target>Abra con el lápiz la campaña que llevará la lotería.</target>
+            </trans-unit>
+            <trans-unit id="NeYgYnQ">
+                <source>narration.guided_step_crowdfunding_lottery_expand</source>
+                <target>Una lotería añadida se pliega sobre su título: ábrala, porque «Activar», el identificador, la fecha del sorteo y los premios están todos dentro.</target>
+            </trans-unit>
+            <trans-unit id="yVh0c_B">
+                <source>narration.guided_step_crowdfunding_lottery_open</source>
+                <target>El panel le devuelve a sus campañas. Una lotería pertenece a una campaña: sus boletos son contribuciones, y su sorteo recompensa a quienes han dado.</target>
+            </trans-unit>
+            <trans-unit id="Oj0D1Iv">
+                <source>narration.guided_step_crowdfunding_lottery_prizes</source>
+                <target>Añada los premios, uno por rango, del primero al último. Un boleto solo gana una vez: un boleto ya salido se retira de los sorteos siguientes.</target>
+            </trans-unit>
+            <trans-unit id="8grj0tv">
+                <source>narration.guided_step_crowdfunding_lottery_save</source>
+                <target>Guarde para abrir la lotería.</target>
+            </trans-unit>
+            <trans-unit id="23CNLqW">
+                <source>narration.guided_step_crowdfunding_media_cover</source>
+                <target>El campo Portada de la campaña admite una sola imagen: la que el catálogo y las redes sociales muestran de la campaña. Se muestra entera, así que encuádrela usted mismo.</target>
+            </trans-unit>
+            <trans-unit id="l79C0HL">
+                <source>narration.guided_step_crowdfunding_media_done</source>
+                <target>La página pública muestra sus imágenes. No hay nada más que publicar: lo que está guardado está en línea.</target>
+            </trans-unit>
+            <trans-unit id="z4IqhU1">
+                <source>narration.guided_step_crowdfunding_media_edit</source>
+                <target>Abra con el lápiz la campaña que hay que ilustrar, en su fila.</target>
+            </trans-unit>
+            <trans-unit id="3jTRc.B">
+                <source>narration.guided_step_crowdfunding_media_hero</source>
+                <target>El campo Imagen de apertura admite una sola imagen: aquella con la que se abre la página de la campaña, impresa bajo su título. El catálogo y las redes sociales, en cambio, muestran la portada.</target>
+            </trans-unit>
+            <trans-unit id="rI9vIoG">
+                <source>narration.guided_step_crowdfunding_media_open</source>
+                <target>El panel le devuelve a sus campañas. Las imágenes de una campaña se depositan en su propia ficha, un formulario único donde todo lo que la compone se sostiene junto.</target>
+            </trans-unit>
+            <trans-unit id="qxil.Nu">
+                <source>narration.guided_step_crowdfunding_media_photos</source>
+                <target>En la sección «Medios», añada sus fotografías. Cada una se muestra en la página pública, en el orden en que las coloca, y la primera es la que se ve antes.</target>
+            </trans-unit>
+            <trans-unit id="yUCyA0E">
+                <source>narration.guided_step_crowdfunding_media_save</source>
+                <target>Guarde para publicar sus imágenes.</target>
+            </trans-unit>
+            <trans-unit id="3pamyEn">
+                <source>narration.guided_step_crowdfunding_media_videos</source>
+                <target>Justo debajo, los vídeos. Un vídeo de campaña acepta un archivo subido o, más sencillo, una dirección de YouTube: es la vía que hay que tomar para un archivo pesado.</target>
+            </trans-unit>
+            <trans-unit id="6R_3wuu">
+                <source>narration.guided_step_crowdfunding_news_done</source>
+                <target>La corrección se ve enseguida en la página de la campaña; para publicar una noticia nueva, es la página pública y no esta pantalla.</target>
+            </trans-unit>
+            <trans-unit id="aJCpS_8">
+                <source>narration.guided_step_crowdfunding_news_edit</source>
+                <target>Abra la campaña cuya noticia hay que retocar.</target>
+            </trans-unit>
+            <trans-unit id="2W_9U8P">
+                <source>narration.guided_step_crowdfunding_news_expand</source>
+                <target>Una noticia se pliega sobre su título: ábrala, porque el título y el texto están dentro.</target>
+            </trans-unit>
+            <trans-unit id="JYY4dKr">
+                <source>narration.guided_step_crowdfunding_news_fieldset</source>
+                <target>Todas las noticias de la campaña están ahí, la más reciente primero, y es también desde aquí donde se elimina una noticia.</target>
+            </trans-unit>
+            <trans-unit id="geV_AR0">
+                <source>narration.guided_step_crowdfunding_news_open</source>
+                <target>Las noticias pertenecen a una campaña y se retocan en su ficha: no hay pantalla de noticias.</target>
+            </trans-unit>
+            <trans-unit id="pU3fass">
+                <source>narration.guided_step_crowdfunding_news_save</source>
+                <target>Guarde.</target>
+            </trans-unit>
+            <trans-unit id="TgnbxDb">
+                <source>narration.guided_step_crowdfunding_publish_done</source>
+                <target>La campaña está abierta. El mismo interruptor la oculta de nuevo en cualquier momento, sin perder nada de lo que contiene.</target>
+            </trans-unit>
+            <trans-unit id="Rv3LM4Z">
+                <source>narration.guided_step_crowdfunding_publish_edit</source>
+                <target>Vuelva a la lista y haga clic en el lápiz de la misma fila: se abre el formulario de la campaña.</target>
+            </trans-unit>
+            <trans-unit id="AKvMdbn">
+                <source>narration.guided_step_crowdfunding_publish_hidden</source>
+                <target>Justo debajo del título se encuentra el interruptor Oculta. Apáguelo: la campaña se suma a la lista, al mapa del sitio y a la cesta, y su página responde.</target>
+            </trans-unit>
+            <trans-unit id="CV1wuoC">
+                <source>narration.guided_step_crowdfunding_publish_open</source>
+                <target>En la columna de la izquierda, abra el menú Campañas: todas las campañas del sitio están ahí, abiertas o no.</target>
+            </trans-unit>
+            <trans-unit id="i6bvPJZ">
+                <source>narration.guided_step_crowdfunding_publish_preview</source>
+                <target>En la fila de la campaña, haga clic en el botón con forma de ojo: su página se abre en una pestaña nueva, tal como la leerá el visitante, con un aviso que dice que aún no está abierta.</target>
+            </trans-unit>
+            <trans-unit id="7IWxzDn">
+                <source>narration.guided_step_crowdfunding_publish_qrcode</source>
+                <target>El código QR se dibuja a partir de la dirección pública de la campaña. Imprímalo en un cartel o un folleto, lleva directamente a ella.</target>
+            </trans-unit>
+            <trans-unit id="9oRh_Ac">
+                <source>narration.guided_step_crowdfunding_publish_reopen</source>
+                <target>El guardado le ha devuelto a la lista de campañas. Haga clic de nuevo en el lápiz de la fila: el código QR se dibuja en el formulario de la campaña, y en ningún otro sitio.</target>
+            </trans-unit>
+            <trans-unit id="vEhErv5">
+                <source>narration.guided_step_crowdfunding_publish_save</source>
+                <target>En la parte inferior del formulario, haga clic en Guardar y volver: la campaña está abierta.</target>
+            </trans-unit>
+            <trans-unit id="VxPI7Ow">
+                <source>narration.guided_step_crowdfunding_publish_visit</source>
+                <target>En la fila de la campaña, el ojo ha dado paso a un enlace externo: haga clic en él para leer la página que todo el mundo lee ya.</target>
+            </trans-unit>
+            <trans-unit id="nrNMpEj">
+                <source>narration.guided_step_crowdfunding_translate_action</source>
+                <target>Este botón abre la campaña directamente en el primer idioma por traducir, sin pasar por la pantalla de redacción. Solo está si el sitio declara más de un idioma.</target>
+            </trans-unit>
+            <trans-unit id="NI35QH7">
+                <source>narration.guided_step_crowdfunding_translate_author</source>
+                <target>La presentación del autor también se traduce. El nombre y la dirección del sitio web no cambian de un idioma a otro.</target>
+            </trans-unit>
+            <trans-unit id="7U4os_V">
+                <source>narration.guided_step_crowdfunding_translate_counterparts</source>
+                <target>Más abajo, las contrapartidas se traducen de la misma forma, y después las noticias y los premios de la lotería. Aquí no se pueden añadir ni quitar: sería quitarlos de todos los idiomas a la vez.</target>
+            </trans-unit>
+            <trans-unit id="aptxoot">
+                <source>narration.guided_step_crowdfunding_translate_description</source>
+                <target>Traduzca después el relato de la campaña. Lo que deje entre corchetes se muestra en el idioma de redacción: una campaña traducida a medias sigue siendo legible.</target>
+            </trans-unit>
+            <trans-unit id="jTpFv_a">
+                <source>narration.guided_step_crowdfunding_translate_done</source>
+                <target>Su campaña se lee ahora en este idioma, en su dirección traducida. Los demás idiomas se traducen de la misma forma, pestaña por pestaña.</target>
+            </trans-unit>
+            <trans-unit id="Yx1qGxo">
+                <source>narration.guided_step_crowdfunding_translate_open</source>
+                <target>El panel le devuelve a sus campañas: una traducción empieza precisamente en esta lista.</target>
+            </trans-unit>
+            <trans-unit id="A080Xzx">
+                <source>narration.guided_step_crowdfunding_translate_save</source>
+                <target>Guarde: la traducción se publica de inmediato, en la dirección de ese idioma. El objetivo, la moneda y las fechas siguen siendo los mismos en todas partes.</target>
+            </trans-unit>
+            <trans-unit id="UpE86.y">
+                <source>narration.guided_step_crowdfunding_translate_tabs</source>
+                <target>Las pestañas pasan de un idioma a otro. La primera es aquella en la que se escribió la campaña: es la que sirve de fuente.</target>
+            </trans-unit>
+            <trans-unit id="mZjpkA1">
+                <source>narration.guided_step_crowdfunding_translate_title</source>
+                <target>El título mostrado entre corchetes es el del idioma de redacción. Empiece por él: mientras no se traduzca, la campaña no se anuncia a los buscadores en este idioma.</target>
+            </trans-unit>
+            <trans-unit id="mbKKSXG">
+                <source>narration.guided_step_crowdfunding_trash_bin</source>
+                <target>Encima de la lista, haga clic en el botón Papelera: las campañas sacadas de la lista están ahí, y solo esas.</target>
+            </trans-unit>
+            <trans-unit id="fmAEW7n">
+                <source>narration.guided_step_crowdfunding_trash_delete</source>
+                <target>En esa fila, haga clic en el botón con forma de caja y confirme: la campaña abandona la lista para irse a la papelera, conservando todo lo que contiene.</target>
+            </trans-unit>
+            <trans-unit id="phhtfea">
+                <source>narration.guided_step_crowdfunding_trash_done</source>
+                <target>Mientras una campaña esté en la papelera, puede volver. Vaciarla es una decisión aparte, tomada fila por fila.</target>
+            </trans-unit>
+            <trans-unit id="YD41NXq">
+                <source>narration.guided_step_crowdfunding_trash_open</source>
+                <target>En la columna de la izquierda, abra el menú Campañas y localice la fila de la campaña que hay que retirar.</target>
+            </trans-unit>
+            <trans-unit id="1ooV8xW">
+                <source>narration.guided_step_crowdfunding_trash_purge</source>
+                <target>El botón rojo de al lado elimina la campaña definitivamente, con sus medios, sus contrapartidas, sus sorteos y las contribuciones recibidas. Nada la devuelve.</target>
+            </trans-unit>
+            <trans-unit id="AqjbtkM">
+                <source>narration.guided_step_crowdfunding_trash_restore</source>
+                <target>En la fila de la campaña, el botón Restaurar la devuelve con todo lo que aún contiene. Vuelve oculta.</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

@@ -11,8 +11,10 @@
 namespace c975L\CrowdfundingBundle\Tests\Controller\Management;
 
 use c975L\ConfigBundle\Entity\Redirect;
+use c975L\ConfigBundle\Management\ContentLocaleScreen;
 use c975L\ConfigBundle\Repository\RedirectRepository;
 use c975L\ConfigBundle\Service\ConfigServiceInterface;
+use c975L\ConfigBundle\Service\SiteLocales;
 use c975L\CrowdfundingBundle\Controller\Management\CrowdfundingCrudController;
 use c975L\CrowdfundingBundle\Entity\Crowdfunding;
 use c975L\CrowdfundingBundle\Entity\CrowdfundingContributor;
@@ -21,11 +23,15 @@ use c975L\CrowdfundingBundle\Entity\CrowdfundingCounterpart;
 use c975L\CrowdfundingBundle\Entity\Lottery;
 use c975L\CrowdfundingBundle\Entity\LotteryTicket;
 use c975L\CrowdfundingBundle\Repository\CrowdfundingRepository;
+use c975L\CrowdfundingBundle\Service\CrowdfundingTranslator;
 use c975L\UiBundle\Service\BlockMoveRowAttrBuilder;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\PersistentCollection;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Context\CrudContext;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
@@ -328,6 +334,49 @@ class CrowdfundingCrudControllerTest extends TestCase
         $this->createController()->updateEntity($this->createStub(EntityManagerInterface::class), $crowdfunding);
     }
 
+    // The language screen opens straight from the list, as a product's and a page's do - named "translate", the class EasyAdmin renders and the guided project points at, behind the editor's own role
+    public function testTheListOpensTheLanguageScreen(): void
+    {
+        $configService = $this->createStub(ConfigServiceInterface::class);
+        $configService->method('get')->willReturnCallback(static fn (string $key): string => 'site-role-admin' === $key ? 'ROLE_ADMIN' : 'ROLE_EDITOR');
+
+        // A real one: the action it builds is EasyAdmin's final Action, which no double can hand back
+        $contentLocaleScreen = new ContentLocaleScreen(new RequestStack(), $this->createStub(AdminUrlGeneratorInterface::class), new SiteLocales(['fr', 'en'], 'fr'));
+
+        // A real EasyAdmin runtime pre-populates the default actions, which update() and reorder() assume
+        $actions = $this->createController(configService: $configService, contentLocaleScreen: $contentLocaleScreen)->configureActions(
+            Actions::new()
+                ->add(Crud::PAGE_INDEX, Action::EDIT)
+                ->add(Crud::PAGE_INDEX, Action::DELETE)
+        )->getAsDto(Crud::PAGE_INDEX);
+
+        $this->assertNotNull($actions->getAction(Crud::PAGE_INDEX, 'translate'));
+        $this->assertSame('ROLE_EDITOR', $actions->getActionPermissions()['translate']);
+    }
+
+    // A language screen offers what a language may change and nothing else: the campaign's three texts, holding what the translator prompts, then the collections carrying texts of their own - never a goal, a date or a slug
+    public function testTheLanguageScreenOffersTheTextsAlone(): void
+    {
+        $crowdfundingTranslator = $this->createStub(CrowdfundingTranslator::class);
+        $crowdfundingTranslator->method('promptValues')->willReturn(['title' => '[Le toit]', 'description' => null, 'authorPresentation' => null]);
+
+        $fields = new \ReflectionMethod(CrowdfundingCrudController::class, 'translationFields')
+            ->invoke($this->createController(crowdfundingTranslator: $crowdfundingTranslator), new Crowdfunding(), 'en');
+
+        $byProperty = [];
+        foreach ($fields as $field) {
+            $byProperty[$field->getAsDto()->getProperty()] = $field->getAsDto();
+        }
+
+        foreach (['title', 'description', 'authorPresentation', 'counterparts', 'news', 'lotteries'] as $property) {
+            $this->assertArrayHasKey($property, $byProperty);
+        }
+        $this->assertArrayNotHasKey('amountGoal', $byProperty);
+        $this->assertArrayNotHasKey('slug', $byProperty);
+        $this->assertSame('[Le toit]', $byProperty['title']->getFormTypeOption('data'));
+        $this->assertFalse($byProperty['title']->getFormTypeOption('mapped'));
+    }
+
     private ?Request $request = null;
 
     private ?CrowdfundingRepository $crowdfundingRepositoryOfController = null;
@@ -337,6 +386,9 @@ class CrowdfundingCrudControllerTest extends TestCase
         ?Request $request = null,
         ?CrowdfundingRepository $crowdfundingRepository = null,
         string $validToken = 'expected',
+        ?ConfigServiceInterface $configService = null,
+        ?ContentLocaleScreen $contentLocaleScreen = null,
+        ?CrowdfundingTranslator $crowdfundingTranslator = null,
     ): CrowdfundingCrudController {
         $this->request = $request ?? new Request();
         // A flash goes on the session, which a bare request does not carry
@@ -345,14 +397,25 @@ class CrowdfundingCrudControllerTest extends TestCase
 
         $requestStack = new RequestStack([$this->request]);
 
+        // The collaborators a test hands over, laid over the doubles every other test is content with - read off an array rather than a "??" each, which lizard counts as two branches apiece
+        $collaborators = [
+            'redirectRepository' => $this->createStub(RedirectRepository::class),
+            'configService' => $this->createStub(ConfigServiceInterface::class),
+            'contentLocaleScreen' => $this->createStub(ContentLocaleScreen::class),
+            'crowdfundingTranslator' => $this->createStub(CrowdfundingTranslator::class),
+            ...array_filter(compact('redirectRepository', 'configService', 'contentLocaleScreen', 'crowdfundingTranslator')),
+        ];
+
         $controller = new CrowdfundingCrudController(
             $this->createStub(BlockMoveRowAttrBuilder::class),
-            $this->createStub(ConfigServiceInterface::class),
+            $collaborators['configService'],
             $this->createStub(TranslatorInterface::class),
             $this->createStub(AdminUrlGeneratorInterface::class),
             $this->createStub(CsrfTokenManagerInterface::class),
             $requestStack,
-            $redirectRepository ?? $this->createStub(RedirectRepository::class),
+            $collaborators['redirectRepository'],
+            $collaborators['contentLocaleScreen'],
+            $collaborators['crowdfundingTranslator'],
         );
         $controller->setContainer($this->container($validToken, $requestStack));
 

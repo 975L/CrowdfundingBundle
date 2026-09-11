@@ -12,6 +12,7 @@ namespace c975L\CrowdfundingBundle\Tests\Form;
 
 use c975L\CrowdfundingBundle\Entity\CrowdfundingNews;
 use c975L\CrowdfundingBundle\Form\CrowdfundingNewsType;
+use c975L\CrowdfundingBundle\Form\Util\CrowdfundingTranslationBuilder;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 // The only form of this bundle served on a public page: the campaign's author writes a follow-up from the campaign itself
@@ -48,5 +49,18 @@ class CrowdfundingNewsTypeTest extends FormFieldsTestCase
         new CrowdfundingNewsType()->configureOptions($resolver);
 
         $this->assertSame('crowdfunding', $resolver->resolve()['translation_domain']);
+    }
+
+    // A language screen offers the follow-up's two texts through the shared builder, and nothing of the form the public page serves
+    public function testALanguageScreenOffersTheTextsAlone(): void
+    {
+        $translationBuilder = $this->createMock(CrowdfundingTranslationBuilder::class);
+        $translationBuilder->expects($this->once())->method('build')->with(
+            $this->anything(),
+            'en',
+            $this->callback(static fn (array $fields): bool => ['title', 'content'] === array_keys($fields)),
+        );
+
+        $this->assertSame([], $this->buildFields(new CrowdfundingNewsType($translationBuilder), ['translation_locale' => 'en']));
     }
 }

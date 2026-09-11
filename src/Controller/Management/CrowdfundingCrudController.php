@@ -11,6 +11,7 @@
 namespace c975L\CrowdfundingBundle\Controller\Management;
 
 use c975L\ConfigBundle\Entity\Redirect;
+use c975L\ConfigBundle\Management\ContentLocaleScreen;
 use c975L\ConfigBundle\Management\EasyAdminActionHelper;
 use c975L\ConfigBundle\Repository\RedirectRepository;
 use c975L\ConfigBundle\Service\ConfigServiceInterface;
@@ -25,6 +26,7 @@ use c975L\CrowdfundingBundle\Form\LotteryType;
 use c975L\CrowdfundingBundle\Form\Type\CrowdfundingQrCodeType;
 use c975L\CrowdfundingBundle\Management\CrowdfundingBlockOwnerResolver;
 use c975L\CrowdfundingBundle\Repository\CrowdfundingRepository;
+use c975L\CrowdfundingBundle\Service\CrowdfundingTranslator;
 use c975L\UiBundle\Form\BlockType;
 use c975L\UiBundle\Service\BlockMoveRowAttrBuilder;
 use Doctrine\Common\Collections\Collection;
@@ -37,6 +39,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Config\KeyValueStore;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Contracts\Field\FieldInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
@@ -51,13 +54,16 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\MoneyField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\SlugField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGeneratorInterface;
 use Endroid\QrCode\Builder\Builder;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Intl\Locales;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -80,6 +86,8 @@ class CrowdfundingCrudController extends AbstractCrudController
         private readonly CsrfTokenManagerInterface $csrfTokenManager,
         private readonly RequestStack $requestStack,
         private readonly RedirectRepository $redirectRepository,
+        private readonly ContentLocaleScreen $contentLocaleScreen,
+        private readonly CrowdfundingTranslator $crowdfundingTranslator,
     ) {
     }
 
@@ -92,12 +100,10 @@ class CrowdfundingCrudController extends AbstractCrudController
     {
         $crowdfunding = $this->getContext()?->getEntity()->getInstance();
 
-        // Trashed campaigns are hidden by definition (see deleteEntity() and Crowdfunding::setIsDeleted()), so the column would hold "yes" for every row of that view - taken off rather than left there saying nothing
-        $hiddenField = BooleanField::new('hidden')
-            ->setLabel(t('label.hidden', [], 'crowdfunding'))
-            ->setHelp(t('text.hidden', [], 'crowdfunding'));
-        if ($this->isTrash()) {
-            $hiddenField->hideOnIndex();
+        // The very same edit screen, opened on another language: what that language says of the campaign itself. A goal, a currency, a set of dates and a slug are the same in every language and are written on the screen the campaign was written on (see ContentLocaleScreen)
+        $contentLocale = Crud::PAGE_EDIT === $pageName ? $this->contentLocale() : null;
+        if (null !== $contentLocale && $crowdfunding instanceof Crowdfunding) {
+            return $this->translationFields($crowdfunding, $contentLocale);
         }
 
         return [
@@ -105,7 +111,7 @@ class CrowdfundingCrudController extends AbstractCrudController
                 ->setFormTypeOption('disabled', 'disabled'),
             TextField::new('title')
                 ->setLabel(t('label.title', [], 'crowdfunding')),
-            $hiddenField,
+            $this->hiddenField(),
             SlugField::new('slug')
                 ->setTargetFieldName('title')
                 ->hideOnIndex(),
@@ -184,6 +190,19 @@ class CrowdfundingCrudController extends AbstractCrudController
                 ->setFormTypeOption('disabled', 'disabled')
                 ->onlyOnDetail(),
         ];
+    }
+
+    // Trashed campaigns are hidden by definition (see deleteEntity() and Crowdfunding::setIsDeleted()), so the column would hold "yes" for every row of that view - taken off rather than left there saying nothing
+    private function hiddenField(): BooleanField
+    {
+        $hiddenField = BooleanField::new('hidden')
+            ->setLabel(t('label.hidden', [], 'crowdfunding'))
+            ->setHelp(t('text.hidden', [], 'crowdfunding'));
+        if ($this->isTrash()) {
+            $hiddenField->hideOnIndex();
+        }
+
+        return $hiddenField;
     }
 
     // The QR code leading to the campaign's public page, on a fieldset of its own. Edit only: it is drawn from the campaign's saved id, which a campaign being created does not have yet
@@ -324,6 +343,7 @@ class CrowdfundingCrudController extends AbstractCrudController
             ->add(Crud::PAGE_INDEX, $this->trashAction())
             ->add(Crud::PAGE_INDEX, $viewOnSiteAction)
             ->add(Crud::PAGE_INDEX, $previewAction)
+            ->add(Crud::PAGE_INDEX, $this->translateAction())
             ->add(Crud::PAGE_INDEX, $restoreAction)
             ->add(Crud::PAGE_INDEX, $deletePermanentlyAction)
             ->add(Crud::PAGE_EDIT, $viewOnSiteAction)
@@ -361,6 +381,10 @@ class CrowdfundingCrudController extends AbstractCrudController
                 $action,
                 $this->translator->trans('action.preview', [], 'crowdfunding'),
             ))
+            ->update(Crud::PAGE_INDEX, 'translate', fn (Action $action) => EasyAdminActionHelper::toIconOnly(
+                $action,
+                $this->translator->trans('action.translate', [], 'crowdfunding'),
+            ))
             ->update(Crud::PAGE_INDEX, 'restore', fn (Action $action) => EasyAdminActionHelper::toIconOnly(
                 $action,
                 $this->translator->trans('action.restore', [], 'crowdfunding'),
@@ -369,7 +393,7 @@ class CrowdfundingCrudController extends AbstractCrudController
                 $action,
                 $this->translator->trans('action.delete_permanently', [], 'crowdfunding'),
             ))
-            ->reorder(Crud::PAGE_INDEX, [Action::EDIT, Action::DETAIL, 'viewOnSite', 'preview', 'restore', Action::DELETE, 'deletePermanently'])
+            ->reorder(Crud::PAGE_INDEX, [Action::EDIT, Action::DETAIL, 'viewOnSite', 'preview', 'translate', 'restore', Action::DELETE, 'deletePermanently'])
             ->reorder(Crud::PAGE_EDIT, ['viewOnSite', 'preview'])
         ;
 
@@ -390,6 +414,7 @@ class CrowdfundingCrudController extends AbstractCrudController
             ->setPermission(Action::DETAIL, $role)
             ->setPermission('viewOnSite', $role)
             ->setPermission('preview', $role)
+            ->setPermission('translate', $role)
             ->setPermission('trash', $role)
             ->setPermission('restore', $adminRole)
             ->setPermission('deletePermanently', $adminRole)
@@ -418,6 +443,16 @@ class CrowdfundingCrudController extends AbstractCrudController
 
         return $action
             ->createAsGlobalAction()
+            ->addCssClass('btn btn-secondary')
+        ;
+    }
+
+    // Opens the first language screen straight from the list, the way ShopBundle's products and SiteBundle's pages are translated - the tabs above a campaign already opened are the only other way in, and a translation screen nobody finds translates nothing
+    private function translateAction(): Action
+    {
+        return $this->contentLocaleScreen
+            ->action('translate', t('action.translate', [], 'crowdfunding'), 'fa fa-language', $this->crowdfundingTranslator->getTranslatableLocales())
+            ->displayIf(fn (Crowdfunding $crowdfunding): bool => !$crowdfunding->isDeleted() && $this->crowdfundingTranslator->isActive())
             ->addCssClass('btn btn-secondary')
         ;
     }
@@ -625,10 +660,102 @@ class CrowdfundingCrudController extends AbstractCrudController
             ->setEntityLabelInSingular(t('label.crowdfunding', [], 'crowdfunding'))
             ->setEntityLabelInPlural(t('label.crowdfundings', [], 'crowdfunding'))
             ->setEntityPermission($this->configService->get('site-role-editor'))
+            // Carries the language tabs above the form, and nothing at all on a site declaring a single language (see ContentLocaleScreen)
+            ->overrideTemplate('crud/edit', '@c975LCrowdfunding/management/crowdfunding_crud_edit.html.twig')
             ->setDefaultSort(['endDate' => 'DESC'])
             ->overrideTemplate('crud/index', '@c975LCrowdfunding/management/crowdfunding_crud_index.html.twig')
             // Appended rather than set alone: EasyAdmin's own theme is what every other field of the screen is drawn by
             ->addFormTheme('@c975LCrowdfunding/management/crowdfunding_crud_form_theme.html.twig')
         ;
+    }
+
+    // The language this campaign is being written in, when it is not the one the site was written in (see ContentLocaleScreen)
+    private function contentLocale(): ?string
+    {
+        return $this->contentLocaleScreen->locale($this->crowdfundingTranslator->getTranslatableLocales());
+    }
+
+    // What a language screen offers: the campaign's own texts, unmapped so nothing overwrites the text it was written in, then its tiers, follow-ups and prizes through the types they are always edited with (see CrowdfundingTranslator)
+    /** @return list<FieldInterface> */
+    private function translationFields(Crowdfunding $crowdfunding, string $locale): array
+    {
+        $values = $this->crowdfundingTranslator->promptValues($crowdfunding, $locale);
+
+        return [
+            FormField::addFieldset(t('label.fieldset_this_language', ['%language%' => Locales::getName($locale, $locale)], 'crowdfunding'))
+                ->setHelp(t('label.fieldset_this_language_help', [], 'crowdfunding')),
+            TextField::new('title')
+                ->setLabel(t('label.title', [], 'crowdfunding'))
+                ->setRequired(false)
+                ->setFormTypeOption('mapped', false)
+                ->setFormTypeOption('data', $values['title']),
+            TextareaField::new('description')
+                ->setLabel(t('label.description', [], 'crowdfunding'))
+                ->setRequired(false)
+                ->setFormTypeOption('mapped', false)
+                ->setFormTypeOption('data', $values['description'])
+                // Opt-in marker read by the block form theme, which is what puts Donovan under a plain textarea
+                ->setFormTypeOption('attr', ['data-ai-rephrase' => true]),
+            TextareaField::new('authorPresentation')
+                ->setLabel(t('label.author_presentation', [], 'crowdfunding'))
+                ->setRequired(false)
+                ->setFormTypeOption('mapped', false)
+                ->setFormTypeOption('data', $values['authorPresentation'])
+                ->setFormTypeOption('attr', ['data-ai-rephrase' => true]),
+            FormField::addFieldset(t('label.counterparts', [], 'crowdfunding')),
+            $this->translationCollection('counterparts', CrowdfundingCounterpartType::class, $locale),
+            FormField::addFieldset(t('label.news', [], 'crowdfunding')),
+            $this->translationCollection('news', CrowdfundingNewsType::class, $locale),
+            FormField::addFieldset(t('label.lottery', [], 'crowdfunding')),
+            $this->translationCollection('lotteries', LotteryType::class, $locale),
+        ];
+    }
+
+    // One of the campaign's collections on its language screen: every row it already holds, through the type it is always edited with, and neither "+" nor bin - a tier taken away there would be taken away from every language at once
+    private function translationCollection(string $property, string $entryType, string $locale): CollectionField
+    {
+        return CollectionField::new($property)
+            ->setLabel(false)
+            ->setEntryType($entryType)
+            ->allowAdd(false)
+            ->allowDelete(false)
+            ->setFormTypeOption('by_reference', false)
+            ->setFormTypeOption('entry_options.translation_locale', $locale);
+    }
+
+    // What the language tabs at the top of the edit screen need, and nothing at all where the campaign is not saved yet or the site declares a single language
+    #[\Override]
+    public function configureResponseParameters(KeyValueStore $responseParameters): KeyValueStore
+    {
+        $responseParameters = parent::configureResponseParameters($responseParameters);
+
+        $crowdfunding = $this->getContext()?->getEntity()->getInstance();
+        $id = $crowdfunding instanceof Crowdfunding ? $crowdfunding->getId() : null;
+        if (null !== $id && $this->crowdfundingTranslator->isActive()) {
+            $this->contentLocaleScreen->addParameters($responseParameters, self::class, $id, $this->crowdfundingTranslator->getTranslatableLocales(), $this->contentLocale());
+        }
+
+        return $responseParameters;
+    }
+
+    // What a language screen wrote, handed over to be stored on the flush that saves the campaign and never before it (see ContentLocaleScreen::stageOnSubmit)
+    #[\Override]
+    public function createEditFormBuilder(EntityDto $entityDto, KeyValueStore $formOptions, AdminContext $context): FormBuilderInterface
+    {
+        $formBuilder = parent::createEditFormBuilder($entityDto, $formOptions, $context);
+        $contentLocale = $this->contentLocale();
+
+        $this->contentLocaleScreen->stageOnSubmit(
+            $formBuilder,
+            $contentLocale,
+            CrowdfundingTranslator::CAMPAIGN_FIELDS,
+            function (object $entity, array $values) use ($contentLocale): void {
+                if ($entity instanceof Crowdfunding && null !== $contentLocale) {
+                    $this->crowdfundingTranslator->stage($entity, $contentLocale, $values);
+                }
+            }
+        );
+
+        return $formBuilder;
     }
 }

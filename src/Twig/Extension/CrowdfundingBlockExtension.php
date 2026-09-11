@@ -10,8 +10,10 @@
 
 namespace c975L\CrowdfundingBundle\Twig\Extension;
 
+use c975L\ConfigBundle\Service\LocalizedRouteNegotiator;
 use c975L\CrowdfundingBundle\Entity\Crowdfunding;
 use c975L\CrowdfundingBundle\Repository\CrowdfundingRepository;
+use c975L\CrowdfundingBundle\Service\CrowdfundingTranslator;
 use c975L\UiBundle\Entity\Block;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\Service\ResetInterface;
@@ -20,7 +22,7 @@ use Twig\Attribute\AsTwigFunction;
 // Resolves, at render time, the campaigns the block templates of this bundle display - a Block only ever stores how to show it (a number of columns, a threshold), never the campaign itself, so a block never goes stale against the funding. Same split as ShopBundle's ShopBlockExtension and BookBundle's BookBlockExtension
 class CrowdfundingBlockExtension implements ResetInterface
 {
-    // The two routes a campaign is served under, and the ones a block reads its campaign from - the kinds of this bundle only ever compose that page, and the preview joins the public route so a campaign is composed and read before it is opened
+    // The routes a campaign is served under, and the ones a block reads its campaign from, whichever of the pair answered (see LocalizedRouteNegotiator::bareRoute) - the kinds of this bundle only ever compose that page, and the preview joins the public route so a campaign is composed and read before it is opened
     private const array CROWDFUNDING_ROUTES = ['crowdfunding_display', 'crowdfunding_preview'];
 
     /** @var array<string, ?Crowdfunding> */
@@ -32,6 +34,8 @@ class CrowdfundingBlockExtension implements ResetInterface
     public function __construct(
         private readonly CrowdfundingRepository $crowdfundingRepository,
         private readonly RequestStack $requestStack,
+        private readonly LocalizedRouteNegotiator $negotiator,
+        private readonly CrowdfundingTranslator $crowdfundingTranslator,
     ) {
     }
 
@@ -55,7 +59,13 @@ class CrowdfundingBlockExtension implements ResetInterface
     #[AsTwigFunction('crowdfunding_block_campaigns')]
     public function getCampaigns(?int $max = null): array
     {
-        $campaigns = $this->campaigns ??= $this->crowdfundingRepository->findAllSorted();
+        // Translated on the first read and only then: the titles a card prints follow the language the page is read in, as the /crowdfunding page's do (see CrowdfundingTranslator::apply)
+        if (null === $this->campaigns) {
+            $this->campaigns = $this->crowdfundingRepository->findAllSorted();
+            $this->crowdfundingTranslator->apply($this->campaigns);
+        }
+
+        $campaigns = $this->campaigns;
 
         return null !== $max && $max > 0 ? \array_slice($campaigns, 0, $max) : $campaigns;
     }
@@ -95,7 +105,7 @@ class CrowdfundingBlockExtension implements ResetInterface
     {
         $request = $this->requestStack->getCurrentRequest();
 
-        if (null === $request || !\in_array($request->attributes->get('_route'), self::CROWDFUNDING_ROUTES, true)) {
+        if (null === $request || !\in_array($this->negotiator->bareRoute($request), self::CROWDFUNDING_ROUTES, true)) {
             return null;
         }
 

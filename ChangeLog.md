@@ -1,5 +1,40 @@
 # Changelog
 
+## v1.4.0
+
+Campaigns in every language of the site
+
+- **`/{_locale}/crowdfunding`, `/{_locale}/crowdfunding/{slug}` and `/{_locale}/crowdfunding/lottery/{identifier}`** double the three bare urls, on SiteBundle's pattern (10/09/2026)
+- The writing language keeps its bare urls byte for byte, so "/fr/crowdfunding" answers nothing on a French site (10/09/2026)
+- **Every screen answers in every language the site declares**, translated or not (10/09/2026)
+- `CrowdfundingTranslatedLocales` holds that rule, read through CoreBundle's `LocalizedRouteNegotiator` (10/09/2026)
+- **A published follow-up comes back to the url it was written from**, bare or localised (10/09/2026)
+- The language guard runs before the follow-up form is handled (10/09/2026)
+- `CrowdfundingLinkLocalizer` writes this bundle's links in the language being read, rich texts included (10/09/2026)
+- A campaign's preview and the draw endpoint keep their bare url, having no localised route (10/09/2026)
+- A menu item pointing at a campaign declares the `locales` it answers in (10/09/2026)
+- **The language menu shows on these screens**, SiteBundle's `General:Languages` falling back on the screen's own languages (10/09/2026)
+- **A campaign, a tier, a follow-up and a prize are translatable**, filed by `CrowdfundingTranslator` in `site_translation` (10/09/2026)
+- A slug, an amount, a currency, an author's name and website, a ticket number and a draw identifier are not translated (10/09/2026)
+- A tier's `expectedDelivery` is, being a sentence rather than a date (10/09/2026)
+- The translated texts are laid over a row at render time only, never on `postLoad` and never persisted (10/09/2026)
+- **The back office gains a language screen**, opened by the `?contenu=xx` tab strip and offering the campaign's own three texts (10/09/2026)
+- The tiers, the follow-ups and the prizes are offered on it too, through `CrowdfundingTranslationBuilder` (11/09/2026)
+- Neither "+" nor bin on those collections, a removal there reaching every language (11/09/2026)
+- What a language screen writes is stored on the flush saving the campaign, so a refused submission writes nothing (10/09/2026)
+- **A row taken away takes its translations with it**, through `CrowdfundingTranslationPurgeListener` (10/09/2026)
+- **The sitemap declares each page once per language**, a campaign's `alternates` naming only the languages its title is written in (10/09/2026)
+- Two block kinds declare their `translatable` texts: a counterparts rail's title, a lottery block's title and intro (10/09/2026)
+- `CatalogueCompletenessCase` checks every catalogue of a domain against the source one (10/09/2026)
+- `CrowdfundingServiceInterface::findAllSorted()` declares its `list<Crowdfunding>` return (10/09/2026)
+- **The blocks of a campaign page render on its localised url too**, the route being read bare (11/09/2026)
+- The prizes listed on a campaign page are translated, as on the draw's own page (11/09/2026)
+- The `crowdfunding_campaigns` block prints its titles in the language being read (11/09/2026)
+- **A "Translate" action opens the language screen from the campaign list** (11/09/2026)
+- **A `crowdfunding-translate` guided project walks the translation of a campaign** (11/09/2026)
+- The guided narrations ship in Spanish too (11/09/2026)
+- Requires `c975l/core-bundle` `^1.28.0` (10/09/2026)
+
 ## v1.3.1
 
 Larger type in the counterpart rows
