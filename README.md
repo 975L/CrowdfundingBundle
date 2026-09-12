@@ -107,10 +107,11 @@ c975_l_crowdfunding:
 
 ### Nothing to register by hand
 
-The bundle ships one Stimulus entrypoint, `assets/controllers.js`, which starts its own app and registers
-its controllers **lazily**: the front layout loads the barrel site-wide, and the `lottery` controller is
-only downloaded by a document actually carrying `data-controller="lottery"`. It is announced to UiBundle's
-script registry by `Service\ScriptProvider`, so as long as your layout renders
+The bundle ships one Stimulus entrypoint, `assets/controllers.js`, which joins the page's single Stimulus
+application - shared with the other c975L bundles - and registers its controllers **lazily**: the front
+layout loads the barrel site-wide, and the `lottery` controller is only downloaded by a document actually
+carrying `data-controller="lottery"`. It is announced to UiBundle's script registry by
+`Service\ScriptProvider`, so as long as your layout renders
 `{{ importmap(['app']|merge(bundle_scripts())) }}` (see [c975L/UiBundle](https://github.com/975L/UiBundle)'s
 `bundle_scripts()`) there is no `assets/bootstrap.js` to edit.
 

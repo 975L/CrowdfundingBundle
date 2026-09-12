@@ -62,7 +62,6 @@ class CrowdfundingStatusProvider implements StatusProviderInterface
             return null;
         }
 
-        // Built on its own line rather than chained off the "new": PDepend, which phpmd runs on, stops parsing a file at that token and then analyses nothing in it at all
         $date = new \DateTime((string) $oldest);
 
         return $date->format('Y-m-d');

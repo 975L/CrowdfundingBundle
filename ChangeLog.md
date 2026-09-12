@@ -1,5 +1,16 @@
 # Changelog
 
+## v1.4.2
+
+phpmd leaves the quality gate, phpcs taking the half it can hold
+
+- `controllers.js` joins the page's one Stimulus application instead of starting its own (12/09/2026)
+- A Live Component no longer answers once per barrel the page loads (12/09/2026)
+- phpmd leaves the quality gate, `composer mess` and `phpmd.xml.dist` dropped (12/09/2026)
+- `Generic.PHP.ForbiddenFunctions` and `Squiz.PHP.Eval` take over the debug calls it reported (12/09/2026)
+- `Generic.PHP.DiscourageGoto` and `Squiz.PHP.NonExecutableCode` cover its goto and dead-code rules (12/09/2026)
+- phpmd drops out of `bin/ci.sh`, the CI workflow, `.gitignore` and `.gitattributes` (12/09/2026)
+
 ## v1.4.1
 
 Deprecations reported by PHPStan and the test suite

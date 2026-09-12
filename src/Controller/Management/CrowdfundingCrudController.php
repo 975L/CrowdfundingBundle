@@ -573,7 +573,7 @@ class CrowdfundingCrudController extends AbstractCrudController
             throw $this->createNotFoundException();
         }
 
-        // Built off the site's own address rather than the request, the back office being reached on a host of its own on some installs, and in two statements rather than chained off the "new" like writeGoneRedirect() below: PDepend cannot parse PHP 8.4's parentheses-free call and drops the whole file
+        // Built off the site's own address rather than the request, the back office being reached on a host of its own on some installs
         $builder = new Builder();
         $result = $builder->build(
             data: rtrim((string) $this->configService->get('site-url'), '/') . self::CROWDFUNDING_PATH . $crowdfunding->getSlug(),
@@ -645,7 +645,6 @@ class CrowdfundingCrudController extends AbstractCrudController
         }
 
         if (null === $this->redirectRepository->findOneByFromPath($fromPath)) {
-            // In two statements rather than chained off the "new": PDepend cannot parse PHP 8.4's parentheses-free call and gives up on the whole file, which takes this controller out of phpmd's reach
             $redirect = new Redirect();
             $redirect->setFromPath($fromPath)->setGone(true);
             $entityManager->persist($redirect);
