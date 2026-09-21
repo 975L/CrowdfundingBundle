@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.4.3
+
+The counterparts no longer draw a basket bar of their own
+
+- The `Counterparts` block and the `Crowdfunding:CounterParts` component no longer emit `Basket:Navbar`, UiBundle's layout placing it once on every page (21/09/2026)
+- Requires `c975l/core-bundle` `^1.31.0`, the first layout placing it (21/09/2026)
+
 ## v1.4.2
 
 phpmd leaves the quality gate, phpcs taking the half it can hold
