@@ -1,8 +1,6 @@
-{% extends '@EasyAdmin/crud/edit.html.twig' %}
+{% extends '@EasyAdmin/crud/new.html.twig' %}
 
 {% block main %}
-    {{ include('@c975LConfig/management/_content_locale_tabs.html.twig') }}
-
     {{ parent() }}
 
     {{ include('@c975LCrowdfunding/management/_suggestions.html.twig') }}

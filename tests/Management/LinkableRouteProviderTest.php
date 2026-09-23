@@ -14,6 +14,7 @@ use c975L\ConfigBundle\Management\LinkableRouteProviderInterface;
 use c975L\ConfigBundle\Service\SiteLocales;
 use c975L\CrowdfundingBundle\Entity\Crowdfunding;
 use c975L\CrowdfundingBundle\Management\LinkableRouteProvider;
+use c975L\CrowdfundingBundle\Service\CrowdfundingBlockCacheInvalidator;
 use c975L\CrowdfundingBundle\Service\CrowdfundingServiceInterface;
 use c975L\CrowdfundingBundle\Service\CrowdfundingTranslatedLocales;
 use PHPUnit\Framework\TestCase;
@@ -91,6 +92,12 @@ class LinkableRouteProviderTest extends TestCase
         new \ReflectionProperty(Crowdfunding::class, 'slug')->setValue($crowdfunding, $slug);
 
         return $crowdfunding;
+    }
+
+    // The cached entries stand for campaign rows: a campaign saved empties them with the rest of that tag
+    public function testTheEntriesAreCachedUnderTheCampaignTag(): void
+    {
+        $this->assertSame([CrowdfundingBlockCacheInvalidator::CACHE_TAG_CROWDFUNDING], $this->createProvider()->getLinkableRouteCacheTags());
     }
 
     /** @param list<Crowdfunding> $crowdfundings */

@@ -381,6 +381,19 @@ class CrowdfundingCrudControllerTest extends TestCase
 
     private ?CrowdfundingRepository $crowdfundingRepositoryOfController = null;
 
+    // The screens are drawn by the bundle's own templates: losing one of these overrides costs the language tabs or the suggested names, with nothing else failing
+    public function testTheThreeScreensAreDrawnByTheBundlesTemplates(): void
+    {
+        $configService = $this->createStub(ConfigServiceInterface::class);
+        $configService->method('get')->willReturn('ROLE_EDITOR');
+
+        $templates = $this->createController(configService: $configService)->configureCrud(Crud::new())->getAsDto()->getOverriddenTemplates();
+
+        $this->assertSame('@c975LCrowdfunding/management/crowdfunding_crud_new.html.twig', $templates['crud/new'] ?? null);
+        $this->assertSame('@c975LCrowdfunding/management/crowdfunding_crud_edit.html.twig', $templates['crud/edit'] ?? null);
+        $this->assertSame('@c975LCrowdfunding/management/crowdfunding_crud_index.html.twig', $templates['crud/index'] ?? null);
+    }
+
     private function createController(
         ?RedirectRepository $redirectRepository = null,
         ?Request $request = null,

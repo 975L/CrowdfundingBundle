@@ -1,5 +1,18 @@
 # Changelog
 
+## v1.5.0
+
+Campaigns go out on the networks, counterparts named from the screen
+
+- The title of a counterpart, its price and the title of a lottery prize point at a `datalist` the edit and creation screens draw (`_suggestions.html.twig`) (23/09/2026)
+- Ten tier names, a ladder of seven amounts in euros and five prize names, translated in every language of the bundle, the fields staying free text (23/09/2026)
+- `crud/new` is overridden, the suggestions the edit screen draws being offered on the creation screen too (23/09/2026)
+- The route provider declares `crowdfunding_campaign` (ConfigBundle's `LinkableRouteCacheTagsInterface`) (23/09/2026)
+- The registry keeps its entries in the cache, a menu item pointing at a campaign being cached too (23/09/2026)
+- Running campaigns are offered to SocialBundle's publication, with a reminder every 30 days (23/09/2026)
+- Their news of the last 30 days are offered too, most recent first, on the campaign's own page (23/09/2026)
+- Requires `c975l/core-bundle` `^1.33.0` (23/09/2026)
+
 ## v1.4.3
 
 The counterparts no longer draw a basket bar of their own

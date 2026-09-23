@@ -1,0 +1,30 @@
+{# What the title and the price of a counterpart, and the title of a lottery prize, offer as you type - a datalist proposes and never constrains, any other name going in just the same. Drawn once per screen, the ids being what the form types point their "list" attribute at. The keys are written out one by one rather than looped over: a key built by concatenation is named nowhere, and the catalog it comes from is checked by TranslationDomainTest #}
+
+<datalist id="crowdfunding-counterpart-titles">
+    <option value="{{ 'label.counterpart_name_scout'|trans({}, 'crowdfunding') }}"></option>
+    <option value="{{ 'label.counterpart_name_apprentice'|trans({}, 'crowdfunding') }}"></option>
+    <option value="{{ 'label.counterpart_name_builder'|trans({}, 'crowdfunding') }}"></option>
+    <option value="{{ 'label.counterpart_name_pioneer'|trans({}, 'crowdfunding') }}"></option>
+    <option value="{{ 'label.counterpart_name_alchemist'|trans({}, 'crowdfunding') }}"></option>
+    <option value="{{ 'label.counterpart_name_visionary'|trans({}, 'crowdfunding') }}"></option>
+    <option value="{{ 'label.counterpart_name_maestro'|trans({}, 'crowdfunding') }}"></option>
+    <option value="{{ 'label.counterpart_name_enchanter'|trans({}, 'crowdfunding') }}"></option>
+    <option value="{{ 'label.counterpart_name_oracle'|trans({}, 'crowdfunding') }}"></option>
+    <option value="{{ 'label.counterpart_name_ambassador'|trans({}, 'crowdfunding') }}"></option>
+</datalist>
+
+{# A ladder rather than a scale, in euros as the field is typed in - the column itself holds cents #}
+<datalist id="crowdfunding-counterpart-prices">
+    {% for price in [5, 10, 20, 50, 75, 100, 200] %}
+        <option value="{{ price }}"></option>
+    {% endfor %}
+</datalist>
+
+{# Five names for the five ranks a prize is given #}
+<datalist id="crowdfunding-prize-titles">
+    <option value="{{ 'label.prize_name_diamond'|trans({}, 'crowdfunding') }}"></option>
+    <option value="{{ 'label.prize_name_platinum'|trans({}, 'crowdfunding') }}"></option>
+    <option value="{{ 'label.prize_name_emerald'|trans({}, 'crowdfunding') }}"></option>
+    <option value="{{ 'label.prize_name_ruby'|trans({}, 'crowdfunding') }}"></option>
+    <option value="{{ 'label.prize_name_crystal'|trans({}, 'crowdfunding') }}"></option>
+</datalist>

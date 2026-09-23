@@ -148,7 +148,7 @@
             </trans-unit>
             <trans-unit id="J25OJ4u">
                 <source>description.guided_step_crowdfunding_counterpart_expand</source>
-                <target>Una contrapartida añadida se pliega sobre su título. Ábrala: el precio, la cantidad limitada y la fecha de entrega están todos dentro.</target>
+                <target>Una contrapartida añadida se pliega sobre su título. Ábrala: el precio, la cantidad limitada y la fecha de entrega están todos dentro. El título y el precio proponen valores habituales desde la primera pulsación: solo son sugerencias, nada le obliga a seguirlas.</target>
             </trans-unit>
             <trans-unit id="qWM59CT">
                 <source>description.guided_step_crowdfunding_counterpart_open</source>
@@ -204,7 +204,7 @@
             </trans-unit>
             <trans-unit id="yv7V5uv">
                 <source>description.guided_step_crowdfunding_lottery_prizes</source>
-                <target>Un premio por rango, del primero al último. Un boleto solo gana una vez: un boleto ya salido se retira de los sorteos siguientes.</target>
+                <target>Un premio por rango, del primero al último. Un boleto solo gana una vez: un boleto ya salido se retira de los sorteos siguientes. El título del premio también propone algunos nombres al escribir, que puede reemplazar libremente.</target>
             </trans-unit>
             <trans-unit id="AcMOgkG">
                 <source>description.guided_step_crowdfunding_media_cover</source>
@@ -537,6 +537,46 @@
             <trans-unit id="C5TwOKs">
                 <source>label.contributors</source>
                 <target>Contribuidores</target>
+            </trans-unit>
+            <trans-unit id="gKeV_mF">
+                <source>label.counterpart_name_alchemist</source>
+                <target>Alquimista</target>
+            </trans-unit>
+            <trans-unit id="1xGGDMu">
+                <source>label.counterpart_name_ambassador</source>
+                <target>Embajador</target>
+            </trans-unit>
+            <trans-unit id="sd_ttCF">
+                <source>label.counterpart_name_apprentice</source>
+                <target>Aprendiz</target>
+            </trans-unit>
+            <trans-unit id="3UiIg.m">
+                <source>label.counterpart_name_builder</source>
+                <target>Constructor</target>
+            </trans-unit>
+            <trans-unit id="PtGgzc.">
+                <source>label.counterpart_name_enchanter</source>
+                <target>Encantador</target>
+            </trans-unit>
+            <trans-unit id="nPIznWz">
+                <source>label.counterpart_name_maestro</source>
+                <target>Maestro</target>
+            </trans-unit>
+            <trans-unit id="1Bl7ZRv">
+                <source>label.counterpart_name_oracle</source>
+                <target>Oráculo</target>
+            </trans-unit>
+            <trans-unit id="QbVyfpW">
+                <source>label.counterpart_name_pioneer</source>
+                <target>Pionero</target>
+            </trans-unit>
+            <trans-unit id="tm7x5A6">
+                <source>label.counterpart_name_scout</source>
+                <target>Explorador</target>
+            </trans-unit>
+            <trans-unit id="6VEAuWL">
+                <source>label.counterpart_name_visionary</source>
+                <target>Visionario</target>
             </trans-unit>
             <trans-unit id="wW2Rykr">
                 <source>label.counterparts</source>
@@ -1093,6 +1133,26 @@
             <trans-unit id="xOZNrCi">
                 <source>label.price</source>
                 <target>Precio</target>
+            </trans-unit>
+            <trans-unit id="f9Zrtfc">
+                <source>label.prize_name_crystal</source>
+                <target>Cristal</target>
+            </trans-unit>
+            <trans-unit id="u9IB2UX">
+                <source>label.prize_name_diamond</source>
+                <target>Diamante</target>
+            </trans-unit>
+            <trans-unit id="3mgQJly">
+                <source>label.prize_name_emerald</source>
+                <target>Esmeralda</target>
+            </trans-unit>
+            <trans-unit id="f71KHwG">
+                <source>label.prize_name_platinum</source>
+                <target>Platino</target>
+            </trans-unit>
+            <trans-unit id="NAruLQv">
+                <source>label.prize_name_ruby</source>
+                <target>Rubí</target>
             </trans-unit>
             <trans-unit id="OLEiQQo">
                 <source>label.prize_rank</source>

@@ -45,9 +45,13 @@ class CrowdfundingCounterpartType extends AbstractType
         }
 
         $builder
+            // The suggested names are drawn by the edit screen (see _suggestions.html.twig): a datalist proposes, the field stays free text
             ->add('title', TextType::class, [
                 'label' => 'label.title',
                 'required' => true,
+                'attr' => [
+                    'list' => 'crowdfunding-counterpart-titles',
+                ],
             ])
             ->add('slug', TextType::class, [
                 'required' => false,
@@ -88,10 +92,14 @@ class CrowdfundingCounterpartType extends AbstractType
                 'label' => 'label.requires_shipping',
                 'required' => false,
             ])
+            // The ladder is suggested in euros, the field dividing the cents the column holds
             ->add('price', MoneyType::class, [
                 'required' => true,
                 'label' => 'label.price',
                 'divisor' => 100,
+                'attr' => [
+                    'list' => 'crowdfunding-counterpart-prices',
+                ],
             ])
             ->add('currency', TextType::class, [
                 'required' => true,

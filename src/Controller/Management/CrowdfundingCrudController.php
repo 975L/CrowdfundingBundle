@@ -663,6 +663,8 @@ class CrowdfundingCrudController extends AbstractCrudController
             ->overrideTemplate('crud/edit', '@c975LCrowdfunding/management/crowdfunding_crud_edit.html.twig')
             ->setDefaultSort(['endDate' => 'DESC'])
             ->overrideTemplate('crud/index', '@c975LCrowdfunding/management/crowdfunding_crud_index.html.twig')
+            // Carries the suggested names and prices the counterpart and prize fields point at, the collections being editable on the creation screen too
+            ->overrideTemplate('crud/new', '@c975LCrowdfunding/management/crowdfunding_crud_new.html.twig')
             // Appended rather than set alone: EasyAdmin's own theme is what every other field of the screen is drawn by
             ->addFormTheme('@c975LCrowdfunding/management/crowdfunding_crud_form_theme.html.twig')
         ;

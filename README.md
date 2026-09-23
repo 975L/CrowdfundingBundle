@@ -24,7 +24,7 @@ Add CrowdfundingBundle on top of the shared [UiBundle](https://github.com/975L/U
 ## Contents
 
 - **Setup** — [requirements](#requirements) · [installation](#installation) · [assets](#install-assets) · [config values](#load-configuration-values) · [routes](#enable-routes)
-- **Using it** — [sitemap](#sitemap) · [linking a campaign](#linking-a-campaign-from-a-menu) · [composing a campaign page](#composing-a-campaign-page) · [a campaign in every language](#a-campaign-in-every-language) · [status report](#status-report) · [emails](#emails) · [backup](#backup) · [translations](#translations) · [what it does not contribute](#what-this-bundle-deliberately-does-not-contribute) · [AI agent skills](#ai-agent-skills) · [data compatibility with ShopBundle](#data-compatibility-with-existing-shopbundle-installations)
+- **Using it** — [sitemap](#sitemap) · [linking a campaign](#linking-a-campaign-from-a-menu) · [composing a campaign page](#composing-a-campaign-page) · [a campaign in every language](#a-campaign-in-every-language) · [posting a campaign](#posting-a-campaign-and-its-news) · [status report](#status-report) · [emails](#emails) · [backup](#backup) · [translations](#translations) · [what it does not contribute](#what-this-bundle-deliberately-does-not-contribute) · [AI agent skills](#ai-agent-skills) · [data compatibility with ShopBundle](#data-compatibility-with-existing-shopbundle-installations)
 
 ## Features
 
@@ -37,6 +37,8 @@ Add CrowdfundingBundle on top of the shared [UiBundle](https://github.com/975L/U
 - Every public screen answering in every language the site declares, and a campaign, its tiers, its news and its
   prizes translated from a language screen — see [a campaign in every language](#a-campaign-in-every-language)
 - Sitemap generation (index and campaign pages), via ConfigBundle's `SitemapProviderInterface`
+- Running campaigns and their news offered to SocialBundle's publication, via UiBundle's
+  `SocialContentSourceInterface` — see [posting a campaign](#posting-a-campaign-and-its-news)
 - Its own `crowdfunding` translation catalogue, in English, French and Spanish
 - Stylesheet and Stimulus barrel contributed to UiBundle's registries — nothing to register by hand
 - Campaign pages composed in the back office with UiBundle's block kinds (`HasBlocksInterface`), plus
@@ -164,6 +166,25 @@ php bin/console c975l:health-check:run --kind=files-crowdfunding
 ```
 
 A counterpart and a lottery have no back-office screen of their own — they are edited as collections of the campaign — so their rows link back to that campaign.
+
+---
+
+## Posting a campaign and its news
+
+Two sources hand SocialBundle's scheduled publication what there is to post, both picked up automatically and
+both silent on a site without SocialBundle, which simply never asks. What went out where is SocialBundle's to
+record.
+
+`Service\CrowdfundingSocialContentSource` (source type `crowdfunding`) offers the campaigns open today, in the
+order the site lists them: a campaign is offered once its `beginDate` has come and until its `endDate` has
+passed, one left without dates never being offered. Each post carries the campaign's cover — its hero
+otherwise — its description as plain text and its author, and links to the campaign's own page. A campaign is
+offered again after 30 days: a running campaign lives on reminders.
+
+`Service\CrowdfundingNewsSocialContentSource` (source type `crowdfunding_news`) offers the news of those same
+campaigns, most recent first, for the 30 days following their publication date. A news has no page, image nor
+visibility of its own: it borrows its campaign's and links to itself on that page (`#news-12`). It is never
+offered twice — a news told once is told.
 
 ---
 
@@ -312,6 +333,28 @@ Its button points at `#counterparts`, which both the `crowdfunding_counterparts`
 section carry, so it lands wherever the tiers were put.
 
 ---
+
+## Naming a counterpart and a prize
+
+Naming ten tiers on a blank form is the part an editor stalls on, so the screen offers names rather than
+asking for them. `templates/management/_suggestions.html.twig`, included by the edit and the creation
+screens, draws three `datalist`s the form types point their `list` attribute at:
+
+| List | What it offers | Pointed at by |
+| --- | --- | --- |
+| `crowdfunding-counterpart-titles` | ten tier names, from *Scout* to *Ambassador* | `CrowdfundingCounterpartType::$title` |
+| `crowdfunding-counterpart-prices` | a ladder of seven amounts — 5, 10, 20, 50, 75, 100, 200 — in euros, as the field is typed in | `CrowdfundingCounterpartType::$price` |
+| `crowdfunding-prize-titles` | five names, one per rank a prize is given | `LotteryPrizeType::$title` |
+
+A `datalist` proposes and never constrains: the fields stay free text, and any other name goes in just the
+same. The names are translation keys like any other text of the bundle (`label.counterpart_name_*`,
+`label.prize_name_*`), so a site adding a language translates them with the rest. They are written out one
+by one in the template rather than looped over from a list of suffixes — a key built by concatenation is
+named nowhere, and `TranslationDomainTest` would read it as dead weight in the catalogs.
+
+The language screens offer nothing of the sort: a tier's price, its quantity and its number of tickets are
+set once, in the language the campaign was written in, and a translated title is a translation rather than
+a pick from a list.
 
 ## Opening, previewing and deleting a campaign
 

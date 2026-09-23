@@ -33,9 +33,13 @@ class LotteryPrizeType extends AbstractType
         }
 
         $builder
+            // The suggested names are drawn by the edit screen (see _suggestions.html.twig): a datalist proposes, the field stays free text
             ->add('title', TextType::class, [
                 'label' => 'label.title',
                 'required' => true,
+                'attr' => [
+                    'list' => 'crowdfunding-prize-titles',
+                ],
             ])
             ->add('description', TextareaType::class, [
                 'label' => 'label.description',

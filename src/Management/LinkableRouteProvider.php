@@ -10,13 +10,15 @@
 
 namespace c975L\CrowdfundingBundle\Management;
 
+use c975L\ConfigBundle\Management\LinkableRouteCacheTagsInterface;
 use c975L\ConfigBundle\Management\LinkableRouteProviderInterface;
+use c975L\CrowdfundingBundle\Service\CrowdfundingBlockCacheInvalidator;
 use c975L\CrowdfundingBundle\Service\CrowdfundingServiceInterface;
 use c975L\CrowdfundingBundle\Service\CrowdfundingTranslatedLocales;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 // What a SiteBundle menu item can point at without the site owning a Page for it: the campaign index, and each running campaign by name
-class LinkableRouteProvider implements LinkableRouteProviderInterface
+class LinkableRouteProvider implements LinkableRouteProviderInterface, LinkableRouteCacheTagsInterface
 {
     public function __construct(
         private readonly CrowdfundingServiceInterface $crowdfundingService,
@@ -56,5 +58,11 @@ class LinkableRouteProvider implements LinkableRouteProviderInterface
         }
 
         return $routes;
+    }
+
+    // The entries stand for rows of this bundle, emptied with them by a campaign saved (see CrowdfundingCacheInvalidationListener)
+    public function getLinkableRouteCacheTags(): array
+    {
+        return [CrowdfundingBlockCacheInvalidator::CACHE_TAG_CROWDFUNDING];
     }
 }

@@ -35,6 +35,14 @@ class LotteryPrizeTypeTest extends FormFieldsTestCase
         $this->assertFalse($fields['description']['options']['required']);
     }
 
+    // The five names are suggested and never imposed: the datalist the edit screen draws is pointed at, the field itself staying free
+    public function testTheTitleOffersItsSuggestions(): void
+    {
+        $fields = $this->buildFields(new LotteryPrizeType());
+
+        $this->assertSame('crowdfunding-prize-titles', $fields['title']['options']['attr']['list']);
+    }
+
     // A language screen offers the prize's two texts through the shared builder, and never its rank, the same in every language
     public function testALanguageScreenOffersTheTextsAlone(): void
     {

@@ -70,6 +70,15 @@ class CrowdfundingCounterpartTypeTest extends FormFieldsTestCase
         $this->assertFalse($fields['media']['options']['label']);
     }
 
+    // The names and the price ladder are suggested and never imposed: the datalist the edit screen draws is pointed at, the field itself staying free
+    public function testTheTitleAndThePriceOfferTheirSuggestions(): void
+    {
+        $fields = $this->buildFields(new CrowdfundingCounterpartType());
+
+        $this->assertSame('crowdfunding-counterpart-titles', $fields['title']['options']['attr']['list']);
+        $this->assertSame('crowdfunding-counterpart-prices', $fields['price']['options']['attr']['list']);
+    }
+
     // A language screen offers the tier's three texts through the shared builder, and none of what a language may not change - a price, a quantity, a number of tickets
     public function testALanguageScreenOffersTheTextsAlone(): void
     {
