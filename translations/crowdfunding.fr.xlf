@@ -1182,6 +1182,66 @@
                 <source>label.requires_shipping</source>
                 <target>Nécessite une expédition</target>
             </trans-unit>
+            <trans-unit id="BisWpdc">
+                <source>label.sample_contributor_message_1</source>
+                <target>Hâte de mettre les mains dans la terre !</target>
+            </trans-unit>
+            <trans-unit id="uMyQwAe">
+                <source>label.sample_contributor_message_2</source>
+                <target>Longue vie à l'atelier.</target>
+            </trans-unit>
+            <trans-unit id="sB4EBWh">
+                <source>label.sample_contributor_message_3</source>
+                <target>Pour les ateliers du samedi, que mes enfants adorent.</target>
+            </trans-unit>
+            <trans-unit id="T4J8VVm">
+                <source>label.sample_counterpart_bowl_description</source>
+                <target>Un bol tourné et émaillé à la main, cuit dans le nouveau four et envoyé chez vous.</target>
+            </trans-unit>
+            <trans-unit id="sKHCEwG">
+                <source>label.sample_counterpart_bowl_title</source>
+                <target>Un bol émaillé</target>
+            </trans-unit>
+            <trans-unit id="RYUBv5M">
+                <source>label.sample_counterpart_day_description</source>
+                <target>Une journée au tour avec nous, de la terre à l'émail, et les pièces que vous aurez faites.</target>
+            </trans-unit>
+            <trans-unit id="EUTlK3z">
+                <source>label.sample_counterpart_day_title</source>
+                <target>Une journée à l'atelier</target>
+            </trans-unit>
+            <trans-unit id="oK7ZflP">
+                <source>label.sample_counterpart_thanks_description</source>
+                <target>Votre nom sur le mur de l'atelier et des nouvelles du four à chaque cuisson.</target>
+            </trans-unit>
+            <trans-unit id="vMmVF9E">
+                <source>label.sample_counterpart_thanks_title</source>
+                <target>Merci !</target>
+            </trans-unit>
+            <trans-unit id="zc41ew0">
+                <source>label.sample_crowdfunding_author</source>
+                <target>Deux potiers installés depuis dix ans dans une ancienne grange, qui tournent des pièces utilitaires et transmettent le métier.</target>
+            </trans-unit>
+            <trans-unit id="cCVfEh6">
+                <source>label.sample_crowdfunding_description</source>
+                <target>Notre vieux four a cuit ses dernières pièces. Aidez-nous à en installer un neuf, plus grand et plus sobre, pour continuer à tourner, émailler et accueillir les ateliers du samedi.</target>
+            </trans-unit>
+            <trans-unit id="W3GGNVn">
+                <source>label.sample_crowdfunding_title</source>
+                <target>Un four neuf pour l'atelier de céramique</target>
+            </trans-unit>
+            <trans-unit id="GZpo4Hi">
+                <source>label.sample_crowdfunding_use_for</source>
+                <target>Le four électrique de 120 litres, son raccordement par un électricien et les étagères réfractaires qui vont dedans.</target>
+            </trans-unit>
+            <trans-unit id="svywq0f">
+                <source>label.sample_news_content</source>
+                <target>Grâce à vous, nous avons pu passer commande : le four sera livré au printemps. Merci à toutes et à tous !</target>
+            </trans-unit>
+            <trans-unit id="FtHh_84">
+                <source>label.sample_news_title</source>
+                <target>Le four est commandé</target>
+            </trans-unit>
             <trans-unit id="LqQIe5o">
                 <source>label.section_background</source>
                 <target>Fond de la section</target>

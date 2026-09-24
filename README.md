@@ -40,6 +40,7 @@ Add CrowdfundingBundle on top of the shared [UiBundle](https://github.com/975L/U
 - Running campaigns and their news offered to SocialBundle's publication, via UiBundle's
   `SocialContentSourceInterface` — see [posting a campaign](#posting-a-campaign-and-its-news)
 - Its own `crowdfunding` translation catalogue, in English, French and Spanish
+- A demo dataset (UiBundle's `DemoFixtureProviderInterface`): an open campaign with its pictures, three tiers, a news and eight contributors — pictures keyed `crowdfunding/<slug>` by the site, the generic placeholder pool otherwise
 - Stylesheet and Stimulus barrel contributed to UiBundle's registries — nothing to register by hand
 - Campaign pages composed in the back office with UiBundle's block kinds (`HasBlocksInterface`), plus
   three kinds of its own, and a fourth listing the campaigns on any page of the site — see

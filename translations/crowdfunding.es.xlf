@@ -1182,6 +1182,66 @@
                 <source>label.requires_shipping</source>
                 <target>Requiere envío</target>
             </trans-unit>
+            <trans-unit id="BisWpdc">
+                <source>label.sample_contributor_message_1</source>
+                <target>¡Qué ganas de meter las manos en el barro!</target>
+            </trans-unit>
+            <trans-unit id="uMyQwAe">
+                <source>label.sample_contributor_message_2</source>
+                <target>Larga vida al taller.</target>
+            </trans-unit>
+            <trans-unit id="sB4EBWh">
+                <source>label.sample_contributor_message_3</source>
+                <target>Para los talleres del sábado, que a mis hijos les encantan.</target>
+            </trans-unit>
+            <trans-unit id="T4J8VVm">
+                <source>label.sample_counterpart_bowl_description</source>
+                <target>Un cuenco torneado y esmaltado a mano, cocido en el nuevo horno y enviado a su casa.</target>
+            </trans-unit>
+            <trans-unit id="sKHCEwG">
+                <source>label.sample_counterpart_bowl_title</source>
+                <target>Un cuenco esmaltado</target>
+            </trans-unit>
+            <trans-unit id="RYUBv5M">
+                <source>label.sample_counterpart_day_description</source>
+                <target>Un día en el torno con nosotros, del barro al esmalte, y las piezas que habrá hecho.</target>
+            </trans-unit>
+            <trans-unit id="EUTlK3z">
+                <source>label.sample_counterpart_day_title</source>
+                <target>Un día en el taller</target>
+            </trans-unit>
+            <trans-unit id="oK7ZflP">
+                <source>label.sample_counterpart_thanks_description</source>
+                <target>Su nombre en la pared del taller y noticias del horno en cada cocción.</target>
+            </trans-unit>
+            <trans-unit id="vMmVF9E">
+                <source>label.sample_counterpart_thanks_title</source>
+                <target>¡Gracias!</target>
+            </trans-unit>
+            <trans-unit id="zc41ew0">
+                <source>label.sample_crowdfunding_author</source>
+                <target>Dos alfareros instalados desde hace diez años en un antiguo granero, que tornean piezas utilitarias y transmiten el oficio.</target>
+            </trans-unit>
+            <trans-unit id="cCVfEh6">
+                <source>label.sample_crowdfunding_description</source>
+                <target>Nuestro viejo horno ha cocido sus últimas piezas. Ayúdenos a instalar uno nuevo, más grande y más sobrio, para seguir torneando, esmaltando y acogiendo los talleres del sábado.</target>
+            </trans-unit>
+            <trans-unit id="W3GGNVn">
+                <source>label.sample_crowdfunding_title</source>
+                <target>Un horno nuevo para el taller de cerámica</target>
+            </trans-unit>
+            <trans-unit id="GZpo4Hi">
+                <source>label.sample_crowdfunding_use_for</source>
+                <target>El horno eléctrico de 120 litros, su conexión por un electricista y los estantes refractarios que van dentro.</target>
+            </trans-unit>
+            <trans-unit id="svywq0f">
+                <source>label.sample_news_content</source>
+                <target>Gracias a ustedes, hemos hecho el pedido: el horno llegará en primavera. ¡Gracias a todos!</target>
+            </trans-unit>
+            <trans-unit id="FtHh_84">
+                <source>label.sample_news_title</source>
+                <target>El horno está pedido</target>
+            </trans-unit>
             <trans-unit id="LqQIe5o">
                 <source>label.section_background</source>
                 <target>Fondo de la sección</target>

@@ -1182,6 +1182,66 @@
                 <source>label.requires_shipping</source>
                 <target>Requires shipping</target>
             </trans-unit>
+            <trans-unit id="BisWpdc">
+                <source>label.sample_contributor_message_1</source>
+                <target>Can't wait to get my hands in the clay!</target>
+            </trans-unit>
+            <trans-unit id="uMyQwAe">
+                <source>label.sample_contributor_message_2</source>
+                <target>Long live the workshop.</target>
+            </trans-unit>
+            <trans-unit id="sB4EBWh">
+                <source>label.sample_contributor_message_3</source>
+                <target>For the Saturday workshops, which my children love.</target>
+            </trans-unit>
+            <trans-unit id="T4J8VVm">
+                <source>label.sample_counterpart_bowl_description</source>
+                <target>A bowl thrown and glazed by hand, fired in the new kiln and posted to you.</target>
+            </trans-unit>
+            <trans-unit id="sKHCEwG">
+                <source>label.sample_counterpart_bowl_title</source>
+                <target>A glazed bowl</target>
+            </trans-unit>
+            <trans-unit id="RYUBv5M">
+                <source>label.sample_counterpart_day_description</source>
+                <target>A day at the wheel with us, from clay to glaze, and the pieces you will have made.</target>
+            </trans-unit>
+            <trans-unit id="EUTlK3z">
+                <source>label.sample_counterpart_day_title</source>
+                <target>A day at the workshop</target>
+            </trans-unit>
+            <trans-unit id="oK7ZflP">
+                <source>label.sample_counterpart_thanks_description</source>
+                <target>Your name on the workshop wall and news of the kiln at every firing.</target>
+            </trans-unit>
+            <trans-unit id="vMmVF9E">
+                <source>label.sample_counterpart_thanks_title</source>
+                <target>Thank you!</target>
+            </trans-unit>
+            <trans-unit id="zc41ew0">
+                <source>label.sample_crowdfunding_author</source>
+                <target>Two potters settled for ten years in an old barn, throwing everyday pieces and passing the craft on.</target>
+            </trans-unit>
+            <trans-unit id="cCVfEh6">
+                <source>label.sample_crowdfunding_description</source>
+                <target>Our old kiln has fired its last pieces. Help us install a new one, larger and more frugal, so we can keep throwing, glazing and hosting the Saturday workshops.</target>
+            </trans-unit>
+            <trans-unit id="W3GGNVn">
+                <source>label.sample_crowdfunding_title</source>
+                <target>A new kiln for the pottery workshop</target>
+            </trans-unit>
+            <trans-unit id="GZpo4Hi">
+                <source>label.sample_crowdfunding_use_for</source>
+                <target>The 120-litre electric kiln, its connection by an electrician and the refractory shelves that go inside it.</target>
+            </trans-unit>
+            <trans-unit id="svywq0f">
+                <source>label.sample_news_content</source>
+                <target>Thanks to you, we have placed the order: the kiln will be delivered in the spring. Thank you all!</target>
+            </trans-unit>
+            <trans-unit id="FtHh_84">
+                <source>label.sample_news_title</source>
+                <target>The kiln is ordered</target>
+            </trans-unit>
             <trans-unit id="LqQIe5o">
                 <source>label.section_background</source>
                 <target>Section background</target>

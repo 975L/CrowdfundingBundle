@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.6.0
+
+A demo site runs a campaign
+
+- `CrowdfundingDemoFixtureProvider` seeds a demo site with an open campaign, its pictures, three tiers and a news (24/09/2026)
+- Eight demo contributors, the amount reached and the tiers sold summed from them (24/09/2026)
+- Demo texts in the `crowdfunding` catalogue, translated on the second pass (24/09/2026)
+
 ## v1.5.0
 
 Campaigns go out on the networks, counterparts named from the screen
