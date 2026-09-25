@@ -16,6 +16,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CrowdfundingCounterpartRepository::class)]
 #[ORM\Table(name: 'crowdfunding_counterpart')]
@@ -31,13 +32,17 @@ class CrowdfundingCounterpart implements \Stringable
     #[ORM\Column]
     private ?int $id = null;
 
+    // Required on the entity and not only on the form: a row added to the campaign reaches the server without the browser's own check, and the slug is written off this title when it is saved (see CrowdfundingCounterpartListener)
     #[ORM\Column(length: 50)]
+    #[Assert\NotBlank]
     private ?string $title = null;
 
     #[ORM\Column(length: 50)]
     private ?string $slug = null;
 
+    // NotNull and not NotBlank: a counterpart offered for nothing is a thank-you, not an error
     #[ORM\Column]
+    #[Assert\NotNull]
     private ?int $price = null;
 
     #[ORM\Column(nullable: true, type: 'smallint')]
@@ -46,7 +51,9 @@ class CrowdfundingCounterpart implements \Stringable
     #[ORM\Column(nullable: true, type: 'smallint')]
     private ?int $orderedQuantity = null;
 
+    // Same NOT NULL column as the title, which a form submitted without it answers with a 500 rather than with a field to fill
     #[ORM\Column(type: Types::TEXT)]
+    #[Assert\NotBlank]
     private ?string $description = null;
 
     #[ORM\Column(length: 100, nullable: true)]

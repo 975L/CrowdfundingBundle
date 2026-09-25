@@ -22,6 +22,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CrowdfundingRepository::class)]
 #[ORM\Table(name: 'crowdfunding_crowdfunding')]
@@ -101,6 +102,7 @@ class Crowdfunding implements HasBlocksInterface, TrashableInterface, \Stringabl
     // "orphanRemoval" like the collections around it - a counterpart being the one of them a contributor points at, CrowdfundingCrudController::updateEntity() refuses beforehand to remove one that was already subscribed, which the database would otherwise answer with a foreign key error
     #[ORM\OneToMany(targetEntity: CrowdfundingCounterpart::class, mappedBy: 'crowdfunding', cascade: ['persist', 'remove'], orphanRemoval: true)]
     #[ORM\OrderBy(['price' => \SortDirection::Ascending, 'id' => \SortDirection::Ascending])]
+    #[Assert\Valid]
     private Collection $counterparts;
 
     // "orphanRemoval" like $medias, and for the same file left behind

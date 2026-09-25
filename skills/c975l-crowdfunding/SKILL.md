@@ -50,6 +50,8 @@ What this bundle owns is what happens on either side of that payment, in `Servic
 | `orderedQuantity` | what has been taken, bumped at `onBasketPaid()` and never typed by an admin |
 | `lotteryTickets` | how many lottery tickets one unit earns, held between 0 and 10 |
 
+**Its title, price and description are validated on the entity, not only on the form.** `Crowdfunding::$counterparts` carries `Assert\Valid`, so a collection row submitted empty is refused with a field to fill instead of a database error; the price is `NotNull`, not `NotBlank`, a free counterpart being a thank-you.
+
 **The basket keeps a copy, never a reference.** `toBasketData()` freezes the counterpart's title, price and picture the day it is added: a counterpart edited afterwards must not change what the visitor is buying.
 
 **Names and prices are suggested, never imposed.** `templates/management/_suggestions.html.twig`, included by `crud/edit` and `crud/new`, draws three `datalist`s the form types point at through their `list` attribute: `crowdfunding-counterpart-titles` (ten names, `label.counterpart_name_*`), `crowdfunding-counterpart-prices` (5 to 200, in euros — the column holds cents and `MoneyType` divides by 100) and `crowdfunding-prize-titles` (five names, `label.prize_name_*`). The keys are written out one by one in the template: built by concatenation, `TranslationDomainTest` would read them as unused. The language screens carry none of it, `CrowdfundingTranslationBuilder` rebuilding the fields without their attributes.

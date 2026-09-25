@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.6.4
+
+A counterpart row left empty is refused instead of failing the save
+
+- A counterpart's title, price and description are required on the entity (25/09/2026)
+- A campaign validates each of its counterparts (25/09/2026)
+
 ## v1.6.3
 
 A counterpart saved with no lottery ticket chosen no longer fails
