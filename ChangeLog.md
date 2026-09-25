@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.6.2
+
+CI moves to setup-python v6
+
+- CI moves to `actions/setup-python@v6` (25/09/2026)
+- The Rector config comment no longer points at a scaffold the bundle does not ship (25/09/2026)
+
 ## v1.6.1
 
 A media row saved with no file no longer fails the save
