@@ -144,7 +144,7 @@
             </trans-unit>
             <trans-unit id="NeYgYnQ">
                 <source>narration.guided_step_crowdfunding_lottery_expand</source>
-                <target>A lottery once added folds onto its title: open it, because "Enable", the identifier, the draw's date and the prizes are all inside.</target>
+                <target>A lottery just added shows open; once saved, it folds onto its title, and a click opens it again. "Enable", the identifier, the draw's date and the prizes are all inside.</target>
             </trans-unit>
             <trans-unit id="yVh0c_B">
                 <source>narration.guided_step_crowdfunding_lottery_open</source>

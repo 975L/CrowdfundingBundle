@@ -3,5 +3,5 @@
     {% set crowdfunding = form.parent.vars.data %}
     <legend class="col-form-label">{{ 'label.qrcode'|trans({}, 'crowdfunding') }}</legend>
     <p class="text-muted">{{ 'text.qrcode'|trans({}, 'crowdfunding') }}</p>
-    <img src="{{ ea_url().setAction('qrcode').setEntityId(crowdfunding.id) }}" alt="{{ 'label.qrcode'|trans({}, 'crowdfunding') }}">
+    <img src="{{ ea_url().setAction('qrcode').setEntityId(crowdfunding.id).set('v', crowdfunding.slug) }}" alt="{{ 'label.qrcode'|trans({}, 'crowdfunding') }}">
 {% endblock %}

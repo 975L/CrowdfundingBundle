@@ -196,7 +196,7 @@
             </trans-unit>
             <trans-unit id="kTuxs8s">
                 <source>description.guided_step_crowdfunding_lottery_expand</source>
-                <target>Una lotería añadida se pliega sobre su título. Ábrala: «Activar», el identificador, la fecha del sorteo y los premios están todos dentro.</target>
+                <target>Una lotería recién añadida se muestra abierta; una vez guardada, se pliega sobre su título, que un clic vuelve a abrir. «Activar», el identificador, la fecha del sorteo y los premios están todos dentro.</target>
             </trans-unit>
             <trans-unit id="sWi8KFW">
                 <source>description.guided_step_crowdfunding_lottery_open</source>
@@ -844,7 +844,7 @@
             </trans-unit>
             <trans-unit id="nGl.xzQ">
                 <source>label.guided_step_crowdfunding_lottery_expand</source>
-                <target>Desplegar la lotería</target>
+                <target>Lo que contiene la lotería</target>
             </trans-unit>
             <trans-unit id="6WPGw5q">
                 <source>label.guided_step_crowdfunding_lottery_open</source>
@@ -1241,6 +1241,14 @@
             <trans-unit id="FtHh_84">
                 <source>label.sample_news_title</source>
                 <target>El horno está pedido</target>
+            </trans-unit>
+            <trans-unit id="ZMs9.pW">
+                <source>label.sample_prize_description</source>
+                <target>Sorteada entre los contribuyentes al cierre de la campaña: una fuente modelada y esmaltada en el taller.</target>
+            </trans-unit>
+            <trans-unit id="eJLUpBO">
+                <source>label.sample_prize_title</source>
+                <target>Una gran fuente firmada</target>
             </trans-unit>
             <trans-unit id="LqQIe5o">
                 <source>label.section_background</source>

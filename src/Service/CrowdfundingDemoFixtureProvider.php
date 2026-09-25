@@ -16,6 +16,8 @@ use c975L\CrowdfundingBundle\Entity\CrowdfundingCounterpart;
 use c975L\CrowdfundingBundle\Entity\CrowdfundingCounterpartMedia;
 use c975L\CrowdfundingBundle\Entity\CrowdfundingMedia;
 use c975L\CrowdfundingBundle\Entity\CrowdfundingNews;
+use c975L\CrowdfundingBundle\Entity\Lottery;
+use c975L\CrowdfundingBundle\Entity\LotteryPrize;
 use c975L\UiBundle\Contract\DemoFixtureLinkerInterface;
 use c975L\UiBundle\Contract\DemoFixtureProviderInterface;
 use c975L\UiBundle\Registry\PlaceholderMediaRegistry;
@@ -97,6 +99,8 @@ class CrowdfundingDemoFixtureProvider implements DemoFixtureLinkerInterface, Dem
         $this->stage($news, CrowdfundingTranslator::OWNER_NEWS, ['title' => 'news_title'], ['content' => 'news_content']);
         $crowdfunding->addNews($news);
 
+        $crowdfunding->addLottery($this->lottery($creation));
+
         $contributors = [];
         $achieved = 0;
         foreach (self::CONTRIBUTORS as [$name, $email, $message, $slug, $quantity, $days]) {
@@ -174,6 +178,24 @@ class CrowdfundingDemoFixtureProvider implements DemoFixtureLinkerInterface, Dem
         }
 
         return $crowdfunding;
+    }
+
+    // One lottery, drawn when the campaign closes, with a single prize: without it the lottery screens open on nothing, and the "crowdfunding-draw-video" guided project had no lottery to attach its video to
+    private function lottery(\DateTime $creation): Lottery
+    {
+        $prize = new LotteryPrize()
+            ->setTitle($this->text('prize_title'))
+            ->setDescription($this->text('prize_description'))
+            ->setRank(1)
+            ->setCreation($creation)
+            ->setModification($creation);
+        $this->stage($prize, CrowdfundingTranslator::OWNER_PRIZE, ['title' => 'prize_title', 'description' => 'prize_description'], []);
+
+        return new Lottery()
+            ->setDrawDate(new \DateTime(self::END))
+            ->addPrize($prize)
+            ->setCreation($creation)
+            ->setModification($creation);
     }
 
     private function counterpart(string $slug, string $title, string $description, int $price, int $limited, bool $shipped, \DateTime $creation): CrowdfundingCounterpart
@@ -256,6 +278,8 @@ class CrowdfundingDemoFixtureProvider implements DemoFixtureLinkerInterface, Dem
             'counterpart_day_title' => $this->translator->trans('label.sample_counterpart_day_title', [], 'crowdfunding'),
             'counterpart_thanks_description' => $this->translator->trans('label.sample_counterpart_thanks_description', [], 'crowdfunding'),
             'counterpart_thanks_title' => $this->translator->trans('label.sample_counterpart_thanks_title', [], 'crowdfunding'),
+            'prize_description' => $this->translator->trans('label.sample_prize_description', [], 'crowdfunding'),
+            'prize_title' => $this->translator->trans('label.sample_prize_title', [], 'crowdfunding'),
             'crowdfunding_author' => $this->translator->trans('label.sample_crowdfunding_author', [], 'crowdfunding'),
             'crowdfunding_description' => $this->translator->trans('label.sample_crowdfunding_description', [], 'crowdfunding'),
             'crowdfunding_title' => $this->translator->trans('label.sample_crowdfunding_title', [], 'crowdfunding'),

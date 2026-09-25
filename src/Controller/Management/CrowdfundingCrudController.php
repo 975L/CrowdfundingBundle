@@ -29,7 +29,9 @@ use c975L\CrowdfundingBundle\Management\CrowdfundingBlockOwnerResolver;
 use c975L\CrowdfundingBundle\Repository\CrowdfundingRepository;
 use c975L\CrowdfundingBundle\Service\CrowdfundingTranslator;
 use c975L\UiBundle\Form\BlockType;
+use c975L\UiBundle\Model\QrCodeOptions;
 use c975L\UiBundle\Service\BlockMoveRowAttrBuilder;
+use c975L\UiBundle\Service\QrCodeGenerator;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\PersistentCollection;
@@ -59,7 +61,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGeneratorInterface;
-use Endroid\QrCode\Builder\Builder;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -593,7 +594,7 @@ class CrowdfundingCrudController extends AbstractCrudController
 
     // Draws on the fly the QR code leading to the campaign's public page, printed on the edit screen (see management/crowdfunding_crud_form_theme.html.twig)
     #[AdminRoute('/{entityId}/qrcode')]
-    public function qrcode(AdminContext $context): Response
+    public function qrcode(AdminContext $context, QrCodeGenerator $qrCodeGenerator): Response
     {
         $this->denyAccessUnlessGranted($this->configService->get('site-role-editor'));
 
@@ -605,14 +606,12 @@ class CrowdfundingCrudController extends AbstractCrudController
         }
 
         // Built off the site's own address rather than the request, the back office being reached on a host of its own on some installs
-        $builder = new Builder();
-        $result = $builder->build(
-            data: rtrim((string) $this->configService->get('site-url'), '/') . self::CROWDFUNDING_PATH . $crowdfunding->getSlug(),
-            size: 250,
-            margin: 10,
+        $image = $qrCodeGenerator->generate(
+            rtrim((string) $this->configService->get('site-url'), '/') . self::CROWDFUNDING_PATH . $crowdfunding->getSlug(),
+            new QrCodeOptions(size: 250, margin: 10),
         );
 
-        return new Response($result->getString(), Response::HTTP_OK, ['Content-Type' => $result->getMimeType()]);
+        return $qrCodeGenerator->response($image, $context->getRequest());
     }
 
     // Takes a campaign back out of the recycle bin, untouched - it comes back hidden, to be read once before it is opened again

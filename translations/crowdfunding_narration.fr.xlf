@@ -144,7 +144,7 @@
             </trans-unit>
             <trans-unit id="NeYgYnQ">
                 <source>narration.guided_step_crowdfunding_lottery_expand</source>
-                <target>Une loterie ajoutée se replie sur son titre : ouvrez-la, car « Activer », l'identifiant, la date du tirage et les lots sont tous à l'intérieur.</target>
+                <target>Une loterie qui vient d'être ajoutée s'affiche ouverte ; une fois enregistrée, elle se replie sur son titre, et un clic la rouvre. « Activer », l'identifiant, la date du tirage et les lots sont tous à l'intérieur.</target>
             </trans-unit>
             <trans-unit id="yVh0c_B">
                 <source>narration.guided_step_crowdfunding_lottery_open</source>

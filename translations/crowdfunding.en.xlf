@@ -196,7 +196,7 @@
             </trans-unit>
             <trans-unit id="kTuxs8s">
                 <source>description.guided_step_crowdfunding_lottery_expand</source>
-                <target>A lottery once added folds onto its title. Open it: "Enable", the identifier, the draw's date and the prizes are all inside.</target>
+                <target>A lottery just added shows open; once saved, it folds onto its title, which a click opens again. "Enable", the identifier, the draw's date and the prizes are all inside.</target>
             </trans-unit>
             <trans-unit id="sWi8KFW">
                 <source>description.guided_step_crowdfunding_lottery_open</source>
@@ -844,7 +844,7 @@
             </trans-unit>
             <trans-unit id="nGl.xzQ">
                 <source>label.guided_step_crowdfunding_lottery_expand</source>
-                <target>Unfold the lottery</target>
+                <target>What the lottery holds</target>
             </trans-unit>
             <trans-unit id="6WPGw5q">
                 <source>label.guided_step_crowdfunding_lottery_open</source>
@@ -1241,6 +1241,14 @@
             <trans-unit id="FtHh_84">
                 <source>label.sample_news_title</source>
                 <target>The kiln is ordered</target>
+            </trans-unit>
+            <trans-unit id="ZMs9.pW">
+                <source>label.sample_prize_description</source>
+                <target>Drawn among the contributors when the campaign closes: a serving dish thrown and glazed in the workshop.</target>
+            </trans-unit>
+            <trans-unit id="eJLUpBO">
+                <source>label.sample_prize_title</source>
+                <target>A signed serving dish</target>
             </trans-unit>
             <trans-unit id="LqQIe5o">
                 <source>label.section_background</source>

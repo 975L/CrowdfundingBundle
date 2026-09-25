@@ -61,6 +61,16 @@ class CrowdfundingDemoFixtureProviderTest extends TestCase
         $this->assertSame(300000, $crowdfunding->getAmountGoal());
     }
 
+    // One lottery riding the campaign's cascade, not drawn yet and with a single prize, so the lottery screens and the draw video's guided project have something to open
+    public function testTheCampaignRunsOneLotteryWithOnePrize(): void
+    {
+        $lotteries = $this->fixtures()[0]->getLotteries();
+
+        $this->assertCount(1, $lotteries);
+        $this->assertCount(1, $lotteries->first()->getPrizes());
+        $this->assertSame('fr:label.sample_prize_title', $lotteries->first()->getPrizes()->first()->getTitle());
+    }
+
     // What the campaign has reached and what each tier has sold answer for the contributions, the way a paid basket bumps both
     public function testTheAmountReachedAndTheTiersSoldAnswerForTheContributions(): void
     {

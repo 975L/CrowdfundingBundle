@@ -196,7 +196,7 @@
             </trans-unit>
             <trans-unit id="kTuxs8s">
                 <source>description.guided_step_crowdfunding_lottery_expand</source>
-                <target>Une loterie ajoutée se replie sur son titre. Ouvrez-la : « Activer », l'identifiant, la date du tirage et les lots sont tous à l'intérieur.</target>
+                <target>Une loterie qui vient d'être ajoutée s'affiche ouverte ; enregistrée, elle se replie sur son titre, qu'un clic rouvre. « Activer », l'identifiant, la date du tirage et les lots sont tous à l'intérieur.</target>
             </trans-unit>
             <trans-unit id="sWi8KFW">
                 <source>description.guided_step_crowdfunding_lottery_open</source>
@@ -844,7 +844,7 @@
             </trans-unit>
             <trans-unit id="nGl.xzQ">
                 <source>label.guided_step_crowdfunding_lottery_expand</source>
-                <target>Déplier la loterie</target>
+                <target>Ce que contient la loterie</target>
             </trans-unit>
             <trans-unit id="6WPGw5q">
                 <source>label.guided_step_crowdfunding_lottery_open</source>
@@ -1241,6 +1241,14 @@
             <trans-unit id="FtHh_84">
                 <source>label.sample_news_title</source>
                 <target>Le four est commandé</target>
+            </trans-unit>
+            <trans-unit id="ZMs9.pW">
+                <source>label.sample_prize_description</source>
+                <target>Tiré au sort parmi les contributeurs à la clôture de la campagne : un plat de service façonné et émaillé à l’atelier.</target>
+            </trans-unit>
+            <trans-unit id="eJLUpBO">
+                <source>label.sample_prize_title</source>
+                <target>Un grand plat signé</target>
             </trans-unit>
             <trans-unit id="LqQIe5o">
                 <source>label.section_background</source>

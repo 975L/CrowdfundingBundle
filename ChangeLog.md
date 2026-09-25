@@ -1,5 +1,17 @@
 # Changelog
 
+## v1.6.5
+
+QR codes move to UiBundle and the demo campaign runs a lottery
+
+- The README opens on its bundle page, tutorials, block kinds and live demo with its back-office (25/09/2026)
+- The license badge links to `main`, the branch `master` became (25/09/2026)
+- QR codes are drawn by UiBundle's `QrCodeGenerator`, cached, and no longer require `endroid/qr-code` directly (25/09/2026)
+- The QR code's URL carries the campaign's slug, so a changed slug is not served from the browser cache (25/09/2026)
+- The demo campaign runs a lottery with one prize (25/09/2026)
+- The lottery guided project highlights the prizes of the open lottery, not the first one found (25/09/2026)
+- Rector turns Symfony, Doctrine and Sensio annotations into attributes (25/09/2026)
+
 ## v1.6.4
 
 A counterpart row left empty is refused instead of failing the save

@@ -242,7 +242,7 @@ class CrowdfundingGuidedProjectProviderTest extends TestCase
                 $highlight = $step['highlight'] ?? '';
 
                 foreach (['[data-lottery-' => '[data-crowdfunding-lotteries]', '[data-counterpart-' => '[data-crowdfunding-counterparts]'] as $prefix => $collection) {
-                    if (str_starts_with($highlight, $prefix)) {
+                    if (str_contains($highlight, $prefix)) {
                         $this->assertSame(
                             $collection . ' .accordion-button',
                             $previous,

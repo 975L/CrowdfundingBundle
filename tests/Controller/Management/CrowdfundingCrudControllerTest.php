@@ -28,6 +28,7 @@ use c975L\CrowdfundingBundle\Entity\LotteryTicket;
 use c975L\CrowdfundingBundle\Repository\CrowdfundingRepository;
 use c975L\CrowdfundingBundle\Service\CrowdfundingTranslator;
 use c975L\UiBundle\Service\BlockMoveRowAttrBuilder;
+use c975L\UiBundle\Service\QrCodeGenerator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
@@ -41,6 +42,8 @@ use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGeneratorInterface;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
+use Symfony\Component\Cache\Adapter\ArrayAdapter;
+use Symfony\Component\Cache\Adapter\TagAwareAdapter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
@@ -267,13 +270,13 @@ class CrowdfundingCrudControllerTest extends TestCase
     {
         $this->expectException(NotFoundHttpException::class);
 
-        $this->createController()->qrcode($this->adminContext(null));
+        $this->createController()->qrcode($this->adminContext(null), new QrCodeGenerator(new TagAwareAdapter(new ArrayAdapter())));
     }
 
     // The code itself is drawn off the site's own address, not off the request's host
     public function testTheQrCodeIsDrawnForACampaignThatIsThere(): void
     {
-        $response = $this->createController()->qrcode($this->adminContext(new Crowdfunding()->setSlug('sauver-les-chats')));
+        $response = $this->createController()->qrcode($this->adminContext(new Crowdfunding()->setSlug('sauver-les-chats')), new QrCodeGenerator(new TagAwareAdapter(new ArrayAdapter())));
 
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
         $this->assertStringStartsWith('image/', (string) $response->headers->get('Content-Type'));

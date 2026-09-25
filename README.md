@@ -2,10 +2,12 @@
 
 Symfony bundle for crowdfunding campaigns on the c975L core — counterparts, contributors, news and media, plus an optional lottery tied to a campaign. Checkout is delegated to [c975L/PaymentBundle](https://github.com/975L/PaymentBundle).
 
-[![GitHub](https://img.shields.io/github/license/975L/CrowdfundingBundle)](https://github.com/975L/CrowdfundingBundle/blob/master/LICENSE)
+[![GitHub](https://img.shields.io/github/license/975L/CrowdfundingBundle)](https://github.com/975L/CrowdfundingBundle/blob/main/LICENSE)
 [![Packagist Version](https://img.shields.io/packagist/v/c975l/crowdfunding-bundle)](https://packagist.org/packages/c975l/crowdfunding-bundle)
 [![PHP Version](https://img.shields.io/packagist/php-v/c975l/crowdfunding-bundle)](https://packagist.org/packages/c975l/crowdfunding-bundle)
 [![Codacy Grade](https://app.codacy.com/project/badge/Grade/f668a77371744512a084e627fcb751bd)](https://app.codacy.com/gh/975L/CrowdfundingBundle/dashboard)
+
+**[Bundle page](https://bundles.975l.com/en/pages/crowdfunding-bundle) · [Tutorials](https://bundles.975l.com/en/tutoriels/crowdfunding-bundle) · [Block kinds](https://bundles.975l.com/en/pages/blocks/Crowdfunding) · [Live demo](https://bundles.975l.com/demo/) · [Demo back-office](https://bundles.975l.com/demo/login)**
 
 > **BUNDLE UNDER DEVELOPMENT — USE AT YOUR OWN RISK**
 

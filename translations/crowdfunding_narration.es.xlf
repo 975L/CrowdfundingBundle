@@ -144,7 +144,7 @@
             </trans-unit>
             <trans-unit id="NeYgYnQ">
                 <source>narration.guided_step_crowdfunding_lottery_expand</source>
-                <target>Una lotería añadida se pliega sobre su título: ábrala, porque «Activar», el identificador, la fecha del sorteo y los premios están todos dentro.</target>
+                <target>Una lotería recién añadida se muestra abierta; una vez guardada, se pliega sobre su título, y un clic la vuelve a abrir. «Activar», el identificador, la fecha del sorteo y los premios están todos dentro.</target>
             </trans-unit>
             <trans-unit id="yVh0c_B">
                 <source>narration.guided_step_crowdfunding_lottery_open</source>

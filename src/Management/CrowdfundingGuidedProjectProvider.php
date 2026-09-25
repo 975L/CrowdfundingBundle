@@ -501,7 +501,7 @@ class CrowdfundingGuidedProjectProvider implements GuidedProjectProviderInterfac
                     'narration' => 'narration.guided_step_crowdfunding_lottery_add',
                     'highlight' => '[data-crowdfunding-lotteries]',
                 ],
-                // EasyAdmin renders every entry of a collection as a Bootstrap accordion item, folded onto its title (see its crud/form_theme.html.twig): the fields nested in it are in the page but invisible, so the parcours has the user open the entry before pointing inside it
+                // EasyAdmin renders every saved entry of a collection as a Bootstrap accordion item folded onto its title, and a newly added one open (see its field-collection.js): the step says both, the lottery the reader just added being the open one
                 [
                     'label' => 'label.guided_step_crowdfunding_lottery_expand',
                     'description' => 'description.guided_step_crowdfunding_lottery_expand',
@@ -512,7 +512,7 @@ class CrowdfundingGuidedProjectProvider implements GuidedProjectProviderInterfac
                     'label' => 'label.guided_step_crowdfunding_lottery_prizes',
                     'description' => 'description.guided_step_crowdfunding_lottery_prizes',
                     'narration' => 'narration.guided_step_crowdfunding_lottery_prizes',
-                    'highlight' => '[data-lottery-prizes]',
+                    'highlight' => '[data-crowdfunding-lotteries] .accordion-collapse.show [data-lottery-prizes]',
                 ],
                 [
                     'label' => 'label.guided_step_crowdfunding_lottery_save',
