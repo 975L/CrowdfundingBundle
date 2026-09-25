@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.6.3
+
+A counterpart saved with no lottery ticket chosen no longer fails
+
+- A counterpart left on the lottery tickets placeholder is saved with no ticket instead of failing (25/09/2026)
+
 ## v1.6.2
 
 CI moves to setup-python v6

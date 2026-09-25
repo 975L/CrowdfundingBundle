@@ -70,6 +70,8 @@ class CrowdfundingCounterpartType extends AbstractType
             ->add('lotteryTickets', ChoiceType::class, [
                 'label' => 'label.lottery_tickets',
                 'required' => false,
+                // The placeholder left chosen means no ticket: submitted as null, it would reach setLotteryTickets(int) and fail the whole save
+                'empty_data' => '0',
                 'choices' => [
                     '0 ticket' => 0,
                     '1 ticket' => 1,

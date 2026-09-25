@@ -53,6 +53,14 @@ class CrowdfundingCounterpartTypeTest extends FormFieldsTestCase
         $this->assertSame(range(0, 10), array_values($fields['lotteryTickets']['options']['choices']));
     }
 
+    // A new counterpart saved with the placeholder still chosen is worth no ticket, rather than a null the int setter refuses
+    public function testNoTicketChosenMeansNone(): void
+    {
+        $fields = $this->buildFields(new CrowdfundingCounterpartType());
+
+        $this->assertSame('0', $fields['lotteryTickets']['options']['empty_data']);
+    }
+
     // The currency is filled in rather than asked for: a campaign whose counterparts each carried their own would price a basket in two currencies
     public function testTheCurrencyDefaultsToEuros(): void
     {
