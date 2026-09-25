@@ -27,12 +27,12 @@ class LotteryPrizeTypeTest extends FormFieldsTestCase
     }
 
     // The prize's own description is what the winner's email prints
-    public function testAPrizeCarriesATitleAndAnOptionalDescription(): void
+    public function testAPrizeCarriesATitleAndADescription(): void
     {
         $fields = $this->buildFields(new LotteryPrizeType());
 
         $this->assertTrue($fields['title']['options']['required']);
-        $this->assertFalse($fields['description']['options']['required']);
+        $this->assertTrue($fields['description']['options']['required']);
     }
 
     // The five names are suggested and never imposed: the datalist the edit screen draws is pointed at, the field itself staying free

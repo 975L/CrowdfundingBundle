@@ -16,6 +16,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: LotteryRepository::class)]
 #[ORM\Table(name: 'crowdfunding_lottery')]
@@ -41,6 +42,7 @@ class Lottery
 
     #[ORM\OneToMany(targetEntity: LotteryPrize::class, mappedBy: 'lottery', cascade: ['persist', 'remove'])]
     #[ORM\OrderBy(['rank' => \SortDirection::Ascending, 'id' => \SortDirection::Ascending])]
+    #[Assert\Valid]
     private Collection $prizes;
 
     #[ORM\OneToMany(targetEntity: LotteryTicket::class, mappedBy: 'lottery', cascade: ['persist', 'remove'])]

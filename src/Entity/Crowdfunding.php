@@ -111,6 +111,7 @@ class Crowdfunding implements HasBlocksInterface, TrashableInterface, \Stringabl
 
     // "orphanRemoval" like the collections above - a lottery cascades to its own prizes, tickets and videos, so nothing of it is left pointing at a row that is gone
     #[ORM\OneToMany(targetEntity: Lottery::class, mappedBy: 'crowdfunding', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[Assert\Valid]
     private Collection $lotteries;
 
     // A campaign is written before it is opened: hidden, it stays out of the listing, out of the sitemap and out of every basket, its page answering 404 in the meantime - an editor reads it through the preview action. The column defaults to false so campaigns already online stay online the day it is created, the property to true so a campaign written from now on starts hidden

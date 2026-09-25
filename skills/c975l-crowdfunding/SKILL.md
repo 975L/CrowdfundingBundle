@@ -60,6 +60,8 @@ What this bundle owns is what happens on either side of that payment, in `Servic
 
 A `Lottery` hangs from a campaign, is reached at `/crowdfunding/lottery/{identifier}`, and holds up to five `LotteryPrize` rows ranked 1 to 5. `Listener\LotteryListener` draws its public identifier on the first save — `XXX-9999-9999`, from an alphabet without the vowels that read alike.
 
+**A prize's title and description are `NotBlank` on the entity.** `Crowdfunding::$lotteries` and `Lottery::$prizes` carry `Assert\Valid`, so a prize row submitted empty is refused with a field to fill instead of a database error.
+
 `drawDate` is a naive `DATETIME` — the wall time typed in the back office, in no timezone of its own — while the pages print it through `|date(fmt, app.session.get('user_timezone', 'Europe/Paris'))`, which converts it **from PHP's own default timezone**. The two only agree while PHP runs in the timezone the campaign was typed in: a `date.timezone` left on UTC shifts every draw date by the offset, and shifts nothing in the database. Read a wrong hour on the page as a `date.timezone` to check before touching a row.
 
 Tickets are never bought: `Service\LotteryService::generateTicketsForContributor()` writes one per unit taken, times what the counterpart entitles to, once for each lottery the campaign runs. `generateTicketNumber()` retries a taken number up to twenty times rather than looping on a table whose numbers are all used.

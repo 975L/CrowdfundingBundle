@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.6.6
+
+A prize row left empty is refused instead of failing the save
+
+- Made a lottery prize's title and description required on the entity and in its form (25/09/2026)
+- Cascaded validation from a campaign to its lotteries and their prizes (25/09/2026)
+- Documented prize validation in the agent skill (25/09/2026)
+
 ## v1.6.5
 
 QR codes move to UiBundle and the demo campaign runs a lottery
