@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.6.1
+
+A media row saved with no file no longer fails the save
+
+- Media, video, counterpart and lottery rows left without a file are dropped on save instead of refused by the database (25/09/2026)
+
 ## v1.6.0
 
 A demo site runs a campaign

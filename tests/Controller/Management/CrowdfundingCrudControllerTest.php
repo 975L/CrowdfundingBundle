@@ -20,6 +20,9 @@ use c975L\CrowdfundingBundle\Entity\Crowdfunding;
 use c975L\CrowdfundingBundle\Entity\CrowdfundingContributor;
 use c975L\CrowdfundingBundle\Entity\CrowdfundingContributorCounterpart;
 use c975L\CrowdfundingBundle\Entity\CrowdfundingCounterpart;
+use c975L\CrowdfundingBundle\Entity\CrowdfundingCounterpartMedia;
+use c975L\CrowdfundingBundle\Entity\CrowdfundingMedia;
+use c975L\CrowdfundingBundle\Entity\CrowdfundingVideo;
 use c975L\CrowdfundingBundle\Entity\Lottery;
 use c975L\CrowdfundingBundle\Entity\LotteryTicket;
 use c975L\CrowdfundingBundle\Repository\CrowdfundingRepository;
@@ -52,6 +55,25 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 // Guards what the back-office delete actually does to a campaign, and what a campaign removed for good leaves behind at its old url
 class CrowdfundingCrudControllerTest extends TestCase
 {
+    // A media row added and saved with no file chosen is dropped rather than refused by the database, a media holding a file is kept
+    public function testMediasSavedWithoutAFileAreDropped(): void
+    {
+        $kept = new CrowdfundingMedia()->setName('photo.webp');
+        $counterpart = new CrowdfundingCounterpart()->setMedia(new CrowdfundingCounterpartMedia());
+        $crowdfunding = new Crowdfunding()
+            ->addSlide($kept)
+            ->addSlide(new CrowdfundingMedia())
+            ->addVideo(new CrowdfundingVideo())
+            ->addCounterpart($counterpart)
+        ;
+
+        new \ReflectionMethod(CrowdfundingCrudController::class, 'dropEmptyMedias')->invoke($this->createController(), $crowdfunding);
+
+        $this->assertSame([$kept], array_values($crowdfunding->getMedias()->toArray()));
+        $this->assertCount(0, $crowdfunding->getVideos());
+        $this->assertNull($counterpart->getMedia());
+    }
+
     // Deleting only moves the campaign to the recycle bin: its rows, its medias and its files all stay where they are until the second, deliberate deletion
     public function testDeletingACampaignOnlyMovesItToTheRecycleBin(): void
     {

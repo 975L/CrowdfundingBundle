@@ -18,6 +18,7 @@ use c975L\ConfigBundle\Service\ConfigServiceInterface;
 use c975L\CrowdfundingBundle\Entity\Crowdfunding;
 use c975L\CrowdfundingBundle\Entity\CrowdfundingCounterpart;
 use c975L\CrowdfundingBundle\Entity\Lottery;
+use c975L\CrowdfundingBundle\Entity\Media;
 use c975L\CrowdfundingBundle\Form\CrowdfundingCounterpartType;
 use c975L\CrowdfundingBundle\Form\CrowdfundingMediaType;
 use c975L\CrowdfundingBundle\Form\CrowdfundingNewsType;
@@ -502,9 +503,39 @@ class CrowdfundingCrudController extends AbstractCrudController
         if ($entityInstance instanceof Crowdfunding) {
             $this->keepSubscribedCounterparts($entityInstance);
             $this->keepDrawnLotteries($entityInstance);
+            $this->dropEmptyMedias($entityInstance);
         }
 
         parent::updateEntity($entityManager, $entityInstance);
+    }
+
+    #[\Override]
+    public function persistEntity(EntityManagerInterface $entityManager, mixed $entityInstance): void
+    {
+        if ($entityInstance instanceof Crowdfunding) {
+            $this->dropEmptyMedias($entityInstance);
+        }
+
+        parent::persistEntity($entityManager, $entityInstance);
+    }
+
+    // A media row added on the form and saved with no file chosen is no media: its timestamp is only set by an upload, so the database would refuse the whole save over it rather than ignore one empty row
+    private function dropEmptyMedias(Crowdfunding $crowdfunding): void
+    {
+        $isEmpty = static fn (?Media $media): bool => null !== $media && null === $media->getFile() && null === $media->getName();
+
+        array_map($crowdfunding->removeMedia(...), array_filter($crowdfunding->getMedias()->toArray(), $isEmpty));
+        array_map($crowdfunding->removeVideo(...), array_filter($crowdfunding->getVideos()->toArray(), $isEmpty));
+
+        foreach ($crowdfunding->getCounterparts() as $counterpart) {
+            if ($isEmpty($counterpart->getMedia())) {
+                $counterpart->setMedia(null);
+            }
+        }
+
+        foreach ($crowdfunding->getLotteries() as $lottery) {
+            array_map($lottery->removeVideo(...), array_filter($lottery->getVideos()->toArray(), $isEmpty));
+        }
     }
 
     // The rows of crowdfunding_contributor_counterpart pointing at a tier would have the database refuse the whole flush with a foreign key error, rather than a sentence the editor can act on
