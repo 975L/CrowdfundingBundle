@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.6.7
+
+A campaign card's title no longer skips a heading level
+
+- Added a `level` prop to the `Crowdfunding:Crowdfunding` card (27/09/2026)
+- The campaigns block draws its card titles as `<h2>` when it has no head (27/09/2026)
+- The `/crowdfunding` page draws its card titles as `<h2>` (27/09/2026)
+
 ## v1.6.6
 
 A prize row left empty is refused instead of failing the save

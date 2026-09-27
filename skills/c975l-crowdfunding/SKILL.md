@@ -98,6 +98,8 @@ Where the campaign stands is worked out once by `crowdfunding_funding_state()` (
 
 Being a section of a page and not a slot of a campaign, it declares **no `contexts`** — offered everywhere, where the three above name `crowdfunding` — and it is the only kind here carrying a head of its own: anchor, eyebrow, title, paragraph, link and colored flat (UiBundle's `HasAnchorFieldTrait` and `HasBackgroundFieldTrait`), so the section and its cards are one row in the back office instead of a `text_section` that has to be moved, hidden and translated beside it. Its only other field is a maximum, empty meaning every visible campaign.
 
+The card's title rank is its `level` prop (`h2`, `h3` or `h4`, anything else falling back to `h3`): the block hands it `h3` under its own head and `h2` when it draws none, and `/crowdfunding` hands it `h2`, so no heading level is skipped.
+
 The rows are read live by `crowdfunding_block_campaigns()`, which runs the very query the `/crowdfunding` page runs (`CrowdfundingRepository::findAllSorted()`) and reads nothing off the route — unlike `crowdfunding_block_campaign()`, whose null answer off a campaign page is what makes the three kinds above render nothing there. So a campaign opened, closed or reordered in the back office shows up without anyone touching the page. Declared `cacheable: false` for the reason the tiers are: each card counts the days left against today.
 
 The template loops the cards itself rather than embedding `components/Crowdfunding/Crowdfundings.html.twig`: that one is the whole content of the `/crowdfunding` page, writing its own `<section id="crowdfundings">` and mounting its own editing pencil, both of which UiBundle's Blocks wrapper already draws around a block.

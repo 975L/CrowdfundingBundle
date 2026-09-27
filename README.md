@@ -298,6 +298,7 @@ is an administrator's alone.
 campaign's own — the section a site opens its home page with, say. It lists the campaigns a visitor may
 read, each on the card the `/crowdfunding` page already shows (`Crowdfunding:Crowdfunding`): the cover,
 the dates, the gauge, the amount achieved against the goal and where the campaign stands.
+The cards' titles are `<h3>` under the section's own title or eyebrow, `<h2>` when it has neither.
 
 | Kind | Shows | Form | Template |
 | --- | --- | --- | --- |

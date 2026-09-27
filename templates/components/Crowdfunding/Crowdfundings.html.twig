@@ -5,7 +5,8 @@
         {# The ecosystem's own row of cards (UiBundle sass/_cards.scss): it already stretches the cards to a common height and spaces them by the site's --cards-gap, which the listing used to restate for itself #}
         <div class="cards crowdfundings"{% if canEdit %} data-controller="blockEditOverlay" data-edit-label="{{ 'label.edit'|trans({}, 'ui') }}"{% endif %}>
             {% for crowdfunding in crowdfundings %}
-                <twig:c975LCrowdfunding:Crowdfunding:Crowdfunding crowdfunding="{{ crowdfunding }}"/>
+                {# No heading between the layout's <h1> and the cards, so their titles are the page's <h2> #}
+                <twig:c975LCrowdfunding:Crowdfunding:Crowdfunding crowdfunding="{{ crowdfunding }}" level="h2"/>
             {% endfor %}
         </div>
     {% else %}

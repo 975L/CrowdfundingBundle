@@ -1,9 +1,11 @@
-{# <twig:c975LCrowdfunding:Crowdfunding:Crowdfunding crowdfunding="{{ crowdfunding }}" [class=""]/> #}
+{# <twig:c975LCrowdfunding:Crowdfunding:Crowdfunding crowdfunding="{{ crowdfunding }}" [class=""] [level="h3"]/> #}
 {# A campaign as the listing shows it, read through crowdfunding_funding_state() so a card and the page it leads to never say two different things, drawn as a UiBundle card rather than a box of its own - and the domain is named again on every key written between its tags, a slot being compiled as an embedded template "trans_default_domain" does not reach (see tests/TranslationDomainTest.php) #}
 {% trans_default_domain 'crowdfunding' %}
 
 {% set state = crowdfunding_funding_state(crowdfunding) %}
 {% set url = localized_path('crowdfunding_display', {'slug': crowdfunding.slug}) %}
+{# The title's rank, set by the listing holding the card: <h3> under a titled section, <h2> straight under the page's <h1>. Matched, not interpolated: it writes a tag name #}
+{% set level = level|default('') in ['h2', 'h3', 'h4'] ? level : 'h3' %}
 
 {# The campaign's cover, the image standing for it wherever it is named but not opened. The opening image takes over for a campaign written before the two were told apart, which holds none - and the placeholder for one holding neither, not for one whose image is filed under another use. Passed as the plain path, Image:Link resolving it through asset() itself #}
 {% set imageSrc = crowdfunding.covers|first ?: crowdfunding.heroes|first ?: "bundles/c975lcrowdfunding/images/no-product-image.webp" %}
@@ -22,7 +24,7 @@
 
 <twig:c975LUi:Card:Card
     tag="article"
-    level="h3"
+    level="{{ level }}"
     id="crowdfunding-{{ crowdfunding.id }}"
     class="crowdfunding-card {{ class|default('') }}"
     title="{{ crowdfunding.title }}"

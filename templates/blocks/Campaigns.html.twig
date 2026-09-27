@@ -7,6 +7,8 @@
     {% set hasLink = linkLabel|default('') and linkUrl|default('') %}
     {# A headingless <section> is invalid HTML, hence the <div> fallback #}
     {% set tag = (eyebrow|default('') or title|default('')) ? 'section' : 'div' %}
+    {# The cards' titles rank under the head this section draws, or straight under the page's <h1> when it draws none - the same rule as UiBundle's Collection block #}
+    {% set level = (title|default('') or eyebrow|default('')) ? 'h3' : 'h2' %}
     {# ".block-section" is how a satellite bundle joins the page's vertical rhythm without UiBundle having to name this kind (see its sass/_page-sections.scss) #}
     <{{ tag }} class="block-section crowdfunding-listing{{ flat }}" id="{{ anchor_id }}">
         <div class="section-wrap">
@@ -26,7 +28,7 @@
             {# The ecosystem's own row of cards (UiBundle sass/_cards.scss): it stretches the cards to a common height and spaces them by the site's --cards-gap #}
             <div class="cards crowdfundings">
                 {% for crowdfunding in campaigns %}
-                    <twig:c975LCrowdfunding:Crowdfunding:Crowdfunding crowdfunding="{{ crowdfunding }}"/>
+                    <twig:c975LCrowdfunding:Crowdfunding:Crowdfunding crowdfunding="{{ crowdfunding }}" level="{{ level }}"/>
                 {% endfor %}
             </div>
         </div>
