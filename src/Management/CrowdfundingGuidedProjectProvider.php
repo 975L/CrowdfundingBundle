@@ -13,10 +13,11 @@ namespace c975L\CrowdfundingBundle\Management;
 use c975L\ConfigBundle\Management\GuidedProjectProviderInterface;
 use c975L\ConfigBundle\Service\ConfigServiceInterface;
 use c975L\CrowdfundingBundle\Controller\Management\CrowdfundingCrudController;
+use c975L\PaymentBundle\Controller\Management\BasketCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGeneratorInterface;
 
-// This bundle's guided projects, running the 9000 block GuidedProjectProviderInterface reserves them - the same docblock stating every other bundle's, so a range is read there rather than recopied here. They follow the order a campaign is actually lived: the campaign itself, then the opening of it to the public, then what illustrates it, then what is offered in return, then the rest of its page, then the same campaign in another language, then its chronicle, then the lottery and the video of its draw, and last the two gestures that remove it. Every one of them opens on the same screen, this bundle holding a single CRUD: a campaign carries its media, its counterparts, its news, its lottery and its blocks on its own edit form, so what tells the parcours apart is the fieldset they walk to, not the screen they open
+// This bundle's guided projects, running the 9000 block GuidedProjectProviderInterface reserves them - the same docblock stating every other bundle's, so a range is read there rather than recopied here. They follow the order a campaign is actually lived: the campaign itself, then the opening of it to the public, then what illustrates it, then what is offered in return, then the rest of its page, then the same campaign in another language, then its chronicle, then the lottery and the video of its draw, then the counterparts posted to the contributors, and last the two gestures that remove it. All but one open on the same screen, this bundle holding a single CRUD: a campaign carries its media, its counterparts, its news, its lottery and its blocks on its own edit form, so what tells the parcours apart is the fieldset they walk to, not the screen they open. The exception is the posting of the counterparts, which happens on PaymentBundle's orders, the contributions being baskets
 class CrowdfundingGuidedProjectProvider implements GuidedProjectProviderInterface
 {
     public function __construct(
@@ -37,6 +38,7 @@ class CrowdfundingGuidedProjectProvider implements GuidedProjectProviderInterfac
             $this->newsProject(),
             $this->lotteryProject(),
             $this->drawVideoProject(),
+            $this->counterpartsShippingProject(),
             $this->trashProject(),
         ];
     }
@@ -580,6 +582,55 @@ class CrowdfundingGuidedProjectProvider implements GuidedProjectProviderInterfac
                     'label' => 'label.guided_step_crowdfunding_draw_video_done',
                     'description' => 'description.guided_step_crowdfunding_draw_video_done',
                     'narration' => 'narration.guided_step_crowdfunding_draw_video_done',
+                ],
+            ],
+        ];
+    }
+
+    // The counterparts owed once the campaign is over, posted from PaymentBundle's orders screen rather than from this bundle's: a contribution is a basket, and the button marking its counterparts sent sits on that basket's row
+    private function counterpartsShippingProject(): array
+    {
+        return [
+            'slug' => 'crowdfunding-counterparts-shipping',
+            'label' => 'label.guided_project_crowdfunding_counterparts_shipping',
+            'description' => 'description.guided_project_crowdfunding_counterparts_shipping',
+            'translation_domain' => 'crowdfunding',
+            'order' => 9065,
+            // The orders screen and the route marking a parcel sent both sit behind "site-role-admin" (see PaymentBundle's BasketCrudController and BasketController::itemsShipped())
+            'role' => $this->adminRoleNeeded(),
+            'steps' => [
+                [
+                    'label' => 'label.guided_step_crowdfunding_counterparts_shipping_open',
+                    'description' => 'description.guided_step_crowdfunding_counterparts_shipping_open',
+                    'narration' => 'narration.guided_step_crowdfunding_counterparts_shipping_open',
+                    'url' => $this->adminUrlGenerator
+                        ->unsetAll()
+                        ->setController(BasketCrudController::class)
+                        ->setAction(Action::INDEX)
+                        ->generateUrl(),
+                ],
+                [
+                    'label' => 'label.guided_step_crowdfunding_counterparts_shipping_filter',
+                    'description' => 'description.guided_step_crowdfunding_counterparts_shipping_filter',
+                    'narration' => 'narration.guided_step_crowdfunding_counterparts_shipping_filter',
+                    'highlight' => '.action-filterPaid',
+                ],
+                [
+                    'label' => 'label.guided_step_crowdfunding_counterparts_shipping_labels',
+                    'description' => 'description.guided_step_crowdfunding_counterparts_shipping_labels',
+                    'narration' => 'narration.guided_step_crowdfunding_counterparts_shipping_labels',
+                    'highlight' => '.action-shippingLabels',
+                ],
+                [
+                    'label' => 'label.guided_step_crowdfunding_counterparts_shipping_send',
+                    'description' => 'description.guided_step_crowdfunding_counterparts_shipping_send',
+                    'narration' => 'narration.guided_step_crowdfunding_counterparts_shipping_send',
+                    'highlight' => '.action-sendCounterparts',
+                ],
+                [
+                    'label' => 'label.guided_step_crowdfunding_counterparts_shipping_done',
+                    'description' => 'description.guided_step_crowdfunding_counterparts_shipping_done',
+                    'narration' => 'narration.guided_step_crowdfunding_counterparts_shipping_done',
                 ],
             ],
         ];

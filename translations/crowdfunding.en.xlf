@@ -50,6 +50,10 @@
                 <source>description.guided_project_crowdfunding_counterpart</source>
                 <target>What a contributor gets in return for their gift, with its amount and, where there is one, the number of copies available.</target>
             </trans-unit>
+            <trans-unit id="fZI4Y5X">
+                <source>description.guided_project_crowdfunding_counterparts_shipping</source>
+                <target>Post the counterparts owed to the contributors, then mark them sent so each one is told</target>
+            </trans-unit>
             <trans-unit id=".E7he3K">
                 <source>description.guided_project_crowdfunding_draw_video</source>
                 <target>Once the draw has been filmed, the video goes on the lottery or, if the file is too heavy, on the campaign with a YouTube address.</target>
@@ -157,6 +161,26 @@
             <trans-unit id="_0dRlZp">
                 <source>description.guided_step_crowdfunding_counterpart_quantity</source>
                 <target>A limited quantity takes the counterpart off sale once it runs out, and the basket refuses to order more than what is left. Leave zero not to limit it.</target>
+            </trans-unit>
+            <trans-unit id="i7ZTeEy">
+                <source>description.guided_step_crowdfunding_counterparts_shipping_done</source>
+                <target>A marked contribution leaves the orders awaiting shipping. An order also carrying shop products is only closed once those are sent in turn, by the button beside it.</target>
+            </trans-unit>
+            <trans-unit id="GfSdpun">
+                <source>description.guided_step_crowdfunding_counterparts_shipping_filter</source>
+                <target>Only a paid contribution owes a counterpart; this filter leaves out open baskets and orders never settled.</target>
+            </trans-unit>
+            <trans-unit id="zWDTKXW">
+                <source>description.guided_step_crowdfunding_counterparts_shipping_labels</source>
+                <target>A sheet opened in another tab, for everything still to post: the counterparts sit there beside the shop's products.</target>
+            </trans-unit>
+            <trans-unit id="Xod9Z.C">
+                <source>description.guided_step_crowdfunding_counterparts_shipping_open</source>
+                <target>A contribution is an order like any other: its counterparts are sent from the baskets screen, not from the campaigns one.</target>
+            </trans-unit>
+            <trans-unit id="xXlZzJx">
+                <source>description.guided_step_crowdfunding_counterparts_shipping_send</source>
+                <target>On the row of the contribution you have just packed. The button only shows on a paid order whose counterparts are to be posted and not yet marked; the click records the posting and tells the contributor by e-mail.</target>
             </trans-unit>
             <trans-unit id="pBi5ebg">
                 <source>description.guided_step_crowdfunding_draw_video_done</source>
@@ -682,6 +706,10 @@
                 <source>label.guided_project_crowdfunding_counterpart</source>
                 <target>Offer a counterpart</target>
             </trans-unit>
+            <trans-unit id="TmOoaSD">
+                <source>label.guided_project_crowdfunding_counterparts_shipping</source>
+                <target>Send the counterparts</target>
+            </trans-unit>
             <trans-unit id="GztwfM0">
                 <source>label.guided_project_crowdfunding_draw_video</source>
                 <target>Publish the draw's video</target>
@@ -801,6 +829,26 @@
             <trans-unit id="GsHraQp">
                 <source>label.guided_step_crowdfunding_counterpart_save</source>
                 <target>Save</target>
+            </trans-unit>
+            <trans-unit id="hgQyHDg">
+                <source>label.guided_step_crowdfunding_counterparts_shipping_done</source>
+                <target>The posting is done</target>
+            </trans-unit>
+            <trans-unit id="xNp120N">
+                <source>label.guided_step_crowdfunding_counterparts_shipping_filter</source>
+                <target>Show the paid orders</target>
+            </trans-unit>
+            <trans-unit id="S5p7EeZ">
+                <source>label.guided_step_crowdfunding_counterparts_shipping_labels</source>
+                <target>Print the labels</target>
+            </trans-unit>
+            <trans-unit id="loSS9MS">
+                <source>label.guided_step_crowdfunding_counterparts_shipping_open</source>
+                <target>Open the baskets</target>
+            </trans-unit>
+            <trans-unit id="TFA1vFY">
+                <source>label.guided_step_crowdfunding_counterparts_shipping_send</source>
+                <target>Mark the counterparts sent</target>
             </trans-unit>
             <trans-unit id="DXu9CXs">
                 <source>label.guided_step_crowdfunding_draw_video_done</source>

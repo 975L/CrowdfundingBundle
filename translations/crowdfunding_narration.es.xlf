@@ -102,6 +102,26 @@
                 <source>narration.guided_step_crowdfunding_counterpart_save</source>
                 <target>Guarde para poner la contrapartida en venta.</target>
             </trans-unit>
+            <trans-unit id="x.7Tu5U">
+                <source>narration.guided_step_crowdfunding_counterparts_shipping_done</source>
+                <target>El envío está hecho. Una contribución marcada sale de los pedidos pendientes de envío; un pedido que lleva también productos de la tienda solo se cierra cuando estos se envían a su vez, con el botón de al lado.</target>
+            </trans-unit>
+            <trans-unit id="Fl1FqOl">
+                <source>narration.guided_step_crowdfunding_counterparts_shipping_filter</source>
+                <target>Muestre los pedidos pagados: solo una contribución pagada debe una contrapartida, y este filtro descarta las cestas en curso y los pedidos nunca pagados.</target>
+            </trans-unit>
+            <trans-unit id="pqaUASV">
+                <source>narration.guided_step_crowdfunding_counterparts_shipping_labels</source>
+                <target>Imprima las etiquetas: se abre una plancha en otra pestaña para todo lo que queda por enviar, las contrapartidas junto a los productos de la tienda.</target>
+            </trans-unit>
+            <trans-unit id="kYOe6Qd">
+                <source>narration.guided_step_crowdfunding_counterparts_shipping_open</source>
+                <target>El panel le lleva a las cestas. Una contribución es un pedido como cualquier otro: sus contrapartidas se envían desde esta pantalla, no desde la de campañas.</target>
+            </trans-unit>
+            <trans-unit id="oxdgTS1">
+                <source>narration.guided_step_crowdfunding_counterparts_shipping_send</source>
+                <target>Marque las contrapartidas como enviadas, en la línea de la contribución que acaba de embalar. El botón solo aparece en un pedido pagado cuyas contrapartidas deben enviarse y aún no están marcadas; el clic registra el envío y avisa al contribuyente por correo.</target>
+            </trans-unit>
             <trans-unit id="PbGdfgv">
                 <source>narration.guided_step_crowdfunding_draw_video_done</source>
                 <target>El vídeo está en línea. Los ganadores ya han recibido su correo, enviado en el momento del sorteo; el vídeo es lo que ven todos los demás. Queda anunciarlo, a mano, en las redes.</target>

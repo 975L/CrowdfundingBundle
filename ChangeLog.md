@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.6.8
+
+A guided project walks the posting of the counterparts
+
+- Added the `crowdfunding-counterparts-shipping` guided project on PaymentBundle's orders screen (02/10/2026)
+- Documented the new guided project in the README and the agent skill (02/10/2026)
+
 ## v1.6.7
 
 A campaign card's title no longer skips a heading level

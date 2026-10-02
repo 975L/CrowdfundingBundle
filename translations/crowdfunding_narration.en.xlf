@@ -102,6 +102,26 @@
                 <source>narration.guided_step_crowdfunding_counterpart_save</source>
                 <target>Save to put the counterpart on sale.</target>
             </trans-unit>
+            <trans-unit id="x.7Tu5U">
+                <source>narration.guided_step_crowdfunding_counterparts_shipping_done</source>
+                <target>The posting is done. A marked contribution leaves the orders awaiting shipping; an order also carrying shop products is only closed once those are sent in turn, by the button beside it.</target>
+            </trans-unit>
+            <trans-unit id="Fl1FqOl">
+                <source>narration.guided_step_crowdfunding_counterparts_shipping_filter</source>
+                <target>Show the paid orders: only a paid contribution owes a counterpart, and this filter leaves out open baskets and orders never settled.</target>
+            </trans-unit>
+            <trans-unit id="pqaUASV">
+                <source>narration.guided_step_crowdfunding_counterparts_shipping_labels</source>
+                <target>Print the labels: a sheet opens in another tab for everything still to post, the counterparts beside the shop's products.</target>
+            </trans-unit>
+            <trans-unit id="kYOe6Qd">
+                <source>narration.guided_step_crowdfunding_counterparts_shipping_open</source>
+                <target>The panel takes you to the baskets. A contribution is an order like any other: its counterparts are sent from this screen, not from the campaigns one.</target>
+            </trans-unit>
+            <trans-unit id="oxdgTS1">
+                <source>narration.guided_step_crowdfunding_counterparts_shipping_send</source>
+                <target>Mark the counterparts sent, on the row of the contribution you have just packed. The button only shows on a paid order whose counterparts are to be posted and not yet marked; the click records the posting and tells the contributor by e-mail.</target>
+            </trans-unit>
             <trans-unit id="PbGdfgv">
                 <source>narration.guided_step_crowdfunding_draw_video_done</source>
                 <target>The video is online. The winners have already had their email, sent at the moment of the draw; the video is what everybody else sees. It remains to be announced, by hand, on social networks.</target>

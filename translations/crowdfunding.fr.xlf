@@ -50,6 +50,10 @@
                 <source>description.guided_project_crowdfunding_counterpart</source>
                 <target>Ce qu'un contributeur reçoit en échange de son don, avec son montant et, s'il y a lieu, le nombre d'exemplaires disponibles.</target>
             </trans-unit>
+            <trans-unit id="fZI4Y5X">
+                <source>description.guided_project_crowdfunding_counterparts_shipping</source>
+                <target>Poster les contreparties dues aux contributeurs, puis les marquer envoyées pour que chacun en soit prévenu</target>
+            </trans-unit>
             <trans-unit id=".E7he3K">
                 <source>description.guided_project_crowdfunding_draw_video</source>
                 <target>Une fois le tirage filmé, la vidéo se dépose sur la loterie ou, si le fichier est trop lourd, sur la campagne avec une adresse YouTube.</target>
@@ -157,6 +161,26 @@
             <trans-unit id="_0dRlZp">
                 <source>description.guided_step_crowdfunding_counterpart_quantity</source>
                 <target>Une quantité limitée retire la contrepartie de la vente une fois épuisée, et le panier refuse d'en commander plus qu'il n'en reste. Laissez zéro pour ne pas limiter.</target>
+            </trans-unit>
+            <trans-unit id="i7ZTeEy">
+                <source>description.guided_step_crowdfunding_counterparts_shipping_done</source>
+                <target>Une contribution marquée quitte les commandes en attente d'expédition. Une commande portant aussi des produits de la boutique n'est close qu'une fois ceux-ci envoyés à leur tour, par le bouton voisin.</target>
+            </trans-unit>
+            <trans-unit id="GfSdpun">
+                <source>description.guided_step_crowdfunding_counterparts_shipping_filter</source>
+                <target>Seule une contribution payée doit une contrepartie ; ce filtre écarte les paniers en cours et les commandes jamais réglées.</target>
+            </trans-unit>
+            <trans-unit id="zWDTKXW">
+                <source>description.guided_step_crowdfunding_counterparts_shipping_labels</source>
+                <target>Une planche ouverte dans un autre onglet, pour tout ce qui reste à poster : les contreparties y figurent aux côtés des produits de la boutique.</target>
+            </trans-unit>
+            <trans-unit id="Xod9Z.C">
+                <source>description.guided_step_crowdfunding_counterparts_shipping_open</source>
+                <target>Une contribution est une commande comme une autre : ses contreparties s'envoient depuis l'écran des paniers, pas depuis celui des campagnes.</target>
+            </trans-unit>
+            <trans-unit id="xXlZzJx">
+                <source>description.guided_step_crowdfunding_counterparts_shipping_send</source>
+                <target>Sur la ligne de la contribution que vous venez d'emballer. Le bouton ne s'affiche que sur une commande payée dont les contreparties sont à poster et pas encore marquées ; le clic enregistre l'envoi et prévient le contributeur par e-mail.</target>
             </trans-unit>
             <trans-unit id="pBi5ebg">
                 <source>description.guided_step_crowdfunding_draw_video_done</source>
@@ -682,6 +706,10 @@
                 <source>label.guided_project_crowdfunding_counterpart</source>
                 <target>Proposer une contrepartie</target>
             </trans-unit>
+            <trans-unit id="TmOoaSD">
+                <source>label.guided_project_crowdfunding_counterparts_shipping</source>
+                <target>Envoyer les contreparties</target>
+            </trans-unit>
             <trans-unit id="GztwfM0">
                 <source>label.guided_project_crowdfunding_draw_video</source>
                 <target>Publier la vidéo du tirage</target>
@@ -801,6 +829,26 @@
             <trans-unit id="GsHraQp">
                 <source>label.guided_step_crowdfunding_counterpart_save</source>
                 <target>Enregistrer</target>
+            </trans-unit>
+            <trans-unit id="hgQyHDg">
+                <source>label.guided_step_crowdfunding_counterparts_shipping_done</source>
+                <target>L'envoi est fait</target>
+            </trans-unit>
+            <trans-unit id="xNp120N">
+                <source>label.guided_step_crowdfunding_counterparts_shipping_filter</source>
+                <target>Afficher les commandes payées</target>
+            </trans-unit>
+            <trans-unit id="S5p7EeZ">
+                <source>label.guided_step_crowdfunding_counterparts_shipping_labels</source>
+                <target>Imprimer les étiquettes</target>
+            </trans-unit>
+            <trans-unit id="loSS9MS">
+                <source>label.guided_step_crowdfunding_counterparts_shipping_open</source>
+                <target>Ouvrir les paniers</target>
+            </trans-unit>
+            <trans-unit id="TFA1vFY">
+                <source>label.guided_step_crowdfunding_counterparts_shipping_send</source>
+                <target>Marquer les contreparties envoyées</target>
             </trans-unit>
             <trans-unit id="DXu9CXs">
                 <source>label.guided_step_crowdfunding_draw_video_done</source>

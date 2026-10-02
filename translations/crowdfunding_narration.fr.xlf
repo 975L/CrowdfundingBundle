@@ -102,6 +102,26 @@
                 <source>narration.guided_step_crowdfunding_counterpart_save</source>
                 <target>Enregistrez pour mettre la contrepartie en vente.</target>
             </trans-unit>
+            <trans-unit id="x.7Tu5U">
+                <source>narration.guided_step_crowdfunding_counterparts_shipping_done</source>
+                <target>L'envoi est fait. Une contribution marquée quitte les commandes en attente d'expédition ; une commande portant aussi des produits de la boutique n'est close qu'une fois ceux-ci envoyés à leur tour, par le bouton voisin.</target>
+            </trans-unit>
+            <trans-unit id="Fl1FqOl">
+                <source>narration.guided_step_crowdfunding_counterparts_shipping_filter</source>
+                <target>Affichez les commandes payées : seule une contribution payée doit une contrepartie, et ce filtre écarte les paniers en cours et les commandes jamais réglées.</target>
+            </trans-unit>
+            <trans-unit id="pqaUASV">
+                <source>narration.guided_step_crowdfunding_counterparts_shipping_labels</source>
+                <target>Imprimez les étiquettes : une planche s'ouvre dans un autre onglet pour tout ce qui reste à poster, les contreparties aux côtés des produits de la boutique.</target>
+            </trans-unit>
+            <trans-unit id="kYOe6Qd">
+                <source>narration.guided_step_crowdfunding_counterparts_shipping_open</source>
+                <target>Le panneau vous emmène sur les paniers. Une contribution est une commande comme une autre : ses contreparties s'envoient depuis cet écran, pas depuis celui des campagnes.</target>
+            </trans-unit>
+            <trans-unit id="oxdgTS1">
+                <source>narration.guided_step_crowdfunding_counterparts_shipping_send</source>
+                <target>Marquez les contreparties envoyées, sur la ligne de la contribution que vous venez d'emballer. Le bouton ne s'affiche que sur une commande payée dont les contreparties sont à poster et pas encore marquées ; le clic enregistre l'envoi et prévient le contributeur par e-mail.</target>
+            </trans-unit>
             <trans-unit id="PbGdfgv">
                 <source>narration.guided_step_crowdfunding_draw_video_done</source>
                 <target>La vidéo est en ligne. Les gagnants ont déjà reçu leur email, envoyé au moment du tirage ; la vidéo est ce que voient tous les autres. Reste à l'annoncer, à la main, sur les réseaux.</target>

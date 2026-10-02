@@ -481,12 +481,14 @@ office say.
 
 ## Guided projects and the procedures
 
-The bundle contributes ten guided projects, in the 9000 block `GuidedProjectProviderInterface` reserves it:
+The bundle contributes eleven guided projects, in the 9000 block `GuidedProjectProviderInterface` reserves it:
 creating a campaign, opening it to the public, illustrating it, offering a counterpart, composing the rest of
 its page in blocks, translating it, correcting a news entry, opening a lottery, publishing the video of its
-draw, and the two gestures that remove a campaign. All ten open on the same screen — this bundle holds a single CRUD, a
-campaign carrying its media, its counterparts, its news, its lottery and its blocks on its own form — so what
-tells them apart is the fieldset they walk to.
+draw, posting the counterparts to the contributors, and the two gestures that remove a campaign. All but one open
+on the same screen — this bundle holds a single CRUD, a campaign carrying its media, its counterparts, its news,
+its lottery and its blocks on its own form — so what tells them apart is the fieldset they walk to. The posting
+of the counterparts, `crowdfunding-counterparts-shipping`, walks PaymentBundle's orders screen instead, a
+contribution being a basket, and is offered to `site-role-admin` only.
 
 The draw itself is not one of them, and cannot be. The guided panel only lives in the back office, while a
 draw happens on the lottery's **public** page, where the drum and the buttons are rendered for

@@ -44,10 +44,10 @@ class CrowdfundingGuidedProjectProviderTest extends TestCase
         $projects = $this->createProvider()->getGuidedProjects();
 
         $this->assertSame(
-            ['crowdfunding-campaign', 'crowdfunding-publish', 'crowdfunding-media', 'crowdfunding-counterpart', 'crowdfunding-blocks', 'crowdfunding-translate', 'crowdfunding-news', 'crowdfunding-lottery', 'crowdfunding-draw-video', 'crowdfunding-trash'],
+            ['crowdfunding-campaign', 'crowdfunding-publish', 'crowdfunding-media', 'crowdfunding-counterpart', 'crowdfunding-blocks', 'crowdfunding-translate', 'crowdfunding-news', 'crowdfunding-lottery', 'crowdfunding-draw-video', 'crowdfunding-counterparts-shipping', 'crowdfunding-trash'],
             array_column($projects, 'slug')
         );
-        $this->assertSame([9010, 9015, 9020, 9030, 9040, 9042, 9045, 9050, 9060, 9070], array_column($projects, 'order'));
+        $this->assertSame([9010, 9015, 9020, 9030, 9040, 9042, 9045, 9050, 9060, 9065, 9070], array_column($projects, 'order'));
     }
 
     public function testEverySlugIsPrefixedWithTheBundleName(): void
@@ -65,11 +65,11 @@ class CrowdfundingGuidedProjectProviderTest extends TestCase
         }
     }
 
-    // A parcours offered below the bar of the screens it walks ends on a 403: the CRUD sits behind the editor's role (see CrowdfundingCrudController::configureActions), and only the recycle bin's own two actions are stricter
+    // A parcours offered below the bar of the screens it walks ends on a 403: the CRUD sits behind the editor's role (see CrowdfundingCrudController::configureActions), and only the recycle bin's own two actions and PaymentBundle's orders screen are stricter
     public function testEveryProjectCarriesTheRoleOfTheScreensItWalks(): void
     {
         foreach ($this->createProvider()->getGuidedProjects() as $project) {
-            $expected = 'crowdfunding-trash' === $project['slug'] ? 'ROLE_ADMIN' : 'ROLE_EDITOR';
+            $expected = \in_array($project['slug'], ['crowdfunding-trash', 'crowdfunding-counterparts-shipping'], true) ? 'ROLE_ADMIN' : 'ROLE_EDITOR';
 
             $this->assertSame($expected, $project['role'], sprintf('Project "%s" is offered behind the wrong bar', $project['slug']));
         }
@@ -101,13 +101,13 @@ class CrowdfundingGuidedProjectProviderTest extends TestCase
         }
     }
 
-    // This bundle contributes a single CRUD, a campaign carrying its media, its counterparts, its lottery and its blocks on its own form: every parcours opens there and is told apart by the fieldset it walks to
+    // This bundle contributes a single CRUD, a campaign carrying its media, its counterparts, its lottery and its blocks on its own form: every parcours opens there and is told apart by the fieldset it walks to - but for the posting of the counterparts, done on PaymentBundle's orders, a contribution being a basket
     public function testEveryProjectOpensOnTheCampaignsScreen(): void
     {
         $controllers = [];
         $this->createProvider($controllers)->getGuidedProjects();
 
-        $this->assertSame(array_fill(0, 10, 'CrowdfundingCrudController'), array_map(
+        $this->assertSame([...array_fill(0, 9, 'CrowdfundingCrudController'), 'BasketCrudController', 'CrowdfundingCrudController'], array_map(
             static fn (string $fqcn): string => basename(str_replace('\\', '/', $fqcn)),
             $controllers
         ));
@@ -137,7 +137,9 @@ class CrowdfundingGuidedProjectProviderTest extends TestCase
     // An action of this CRUD is highlighted by the "action-<name>" class EasyAdmin builds from its own name: renamed in configureActions() or taken off it, the step goes on showing its panel and outlines nothing
     public function testEveryActionHighlightedIsStillDeclared(): void
     {
-        $controller = (string) file_get_contents(\dirname(__DIR__, 2) . '/src/Controller/Management/CrowdfundingCrudController.php');
+        // PaymentBundle's orders screen read beside this bundle's own, the counterparts being posted from there
+        $controller = (string) file_get_contents(\dirname(__DIR__, 2) . '/src/Controller/Management/CrowdfundingCrudController.php')
+            . (string) file_get_contents(\dirname(__DIR__, 2) . '/vendor/c975l/payment-bundle/src/Controller/Management/BasketCrudController.php');
         // EasyAdmin's own, named by a constant rather than declared here
         $builtIn = ['new', 'edit', 'delete', 'saveAndReturn'];
 
