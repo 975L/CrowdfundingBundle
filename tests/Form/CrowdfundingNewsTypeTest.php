@@ -34,6 +34,14 @@ class CrowdfundingNewsTypeTest extends FormFieldsTestCase
         $this->assertSame('crowdfunding', $fields['content']['options']['translation_domain']);
     }
 
+    // The content is a plain textarea, so it opts in to the rephrase tool the form theme draws under it
+    public function testTheContentOffersTheRephraseTool(): void
+    {
+        $fields = $this->buildFields(new CrowdfundingNewsType());
+
+        $this->assertTrue($fields['content']['options']['attr']['data-ai-rephrase']);
+    }
+
     public function testItIsBoundToTheNewsEntity(): void
     {
         $resolver = new OptionsResolver();

@@ -43,6 +43,15 @@ class LotteryPrizeTypeTest extends FormFieldsTestCase
         $this->assertSame('crowdfunding-prize-titles', $fields['title']['options']['attr']['list']);
     }
 
+    // The description is a plain textarea, so it opts in to the rephrase tool the form theme draws under it
+    public function testTheDescriptionOffersTheRephraseTool(): void
+    {
+        $fields = $this->buildFields(new LotteryPrizeType());
+
+        $this->assertTrue($fields['description']['options']['attr']['data-ai-rephrase']);
+        $this->assertSame(3, $fields['description']['options']['attr']['rows']);
+    }
+
     // A language screen offers the prize's two texts through the shared builder, and never its rank, the same in every language
     public function testALanguageScreenOffersTheTextsAlone(): void
     {

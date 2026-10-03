@@ -63,8 +63,10 @@ class CrowdfundingCounterpartType extends AbstractType
             ->add('description', TextareaType::class, [
                 'label' => 'label.description',
                 'required' => false,
+                // Opt-in marker read by the block form theme, which is what puts Donovan under a plain textarea
                 'attr' => [
                     'rows' => 3,
+                    'data-ai-rephrase' => true,
                 ],
             ])
             ->add('lotteryTickets', ChoiceType::class, [

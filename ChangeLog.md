@@ -1,5 +1,14 @@
 # Changelog
 
+## v1.6.9
+
+Donovan rephrases the remaining plain textareas of a campaign
+
+- Marked a counterpart's description for AI rephrasing (03/10/2026)
+- Marked a lottery prize's description for AI rephrasing (03/10/2026)
+- Marked a news content for AI rephrasing (03/10/2026)
+- Marked the lottery block's intro for AI rephrasing (03/10/2026)
+
 ## v1.6.8
 
 A guided project walks the posting of the counterparts

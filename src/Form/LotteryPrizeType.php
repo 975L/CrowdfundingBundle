@@ -44,7 +44,8 @@ class LotteryPrizeType extends AbstractType
             ->add('description', TextareaType::class, [
                 'label' => 'label.description',
                 'required' => true,
-                'attr' => ['rows' => 3],
+                // Opt-in marker read by the block form theme, which is what puts Donovan under a plain textarea
+                'attr' => ['rows' => 3, 'data-ai-rephrase' => true],
             ])
             ->add('rank', ChoiceType::class, [
                 'label' => 'label.prize_rank',

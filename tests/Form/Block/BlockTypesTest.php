@@ -69,6 +69,15 @@ class BlockTypesTest extends FormFieldsTestCase
         $this->assertSame(['title', 'intro', 'showTicketsCount'], $fields);
     }
 
+    // The intro is a plain textarea, so it opts in to the rephrase tool the block form theme draws under it
+    public function testTheLotteryIntroOffersTheRephraseTool(): void
+    {
+        $fields = $this->buildFields(new LotteryBlockType());
+
+        $this->assertTrue($fields['intro']['options']['attr']['data-ai-rephrase']);
+        $this->assertSame(3, $fields['intro']['options']['attr']['rows']);
+    }
+
     // The medias are the campaign's own: an editor laying them out again would have to upload them twice
     public function testTheSliderBlockHoldsNoMedia(): void
     {

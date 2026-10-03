@@ -87,6 +87,15 @@ class CrowdfundingCounterpartTypeTest extends FormFieldsTestCase
         $this->assertSame('crowdfunding-counterpart-prices', $fields['price']['options']['attr']['list']);
     }
 
+    // The description is a plain textarea, so it opts in to the rephrase tool the form theme draws under it
+    public function testTheDescriptionOffersTheRephraseTool(): void
+    {
+        $fields = $this->buildFields(new CrowdfundingCounterpartType());
+
+        $this->assertTrue($fields['description']['options']['attr']['data-ai-rephrase']);
+        $this->assertSame(3, $fields['description']['options']['attr']['rows']);
+    }
+
     // A language screen offers the tier's three texts through the shared builder, and none of what a language may not change - a price, a quantity, a number of tickets
     public function testALanguageScreenOffersTheTextsAlone(): void
     {

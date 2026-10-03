@@ -30,7 +30,8 @@ class LotteryBlockType extends AbstractType
             ->add('intro', TextareaType::class, [
                 'label' => 'label.block_intro',
                 'required' => false,
-                'attr' => ['rows' => 3],
+                // Opt-in marker read by the block form theme, which is what puts Donovan under a plain textarea
+                'attr' => ['rows' => 3, 'data-ai-rephrase' => true],
             ])
             ->add('showTicketsCount', CheckboxType::class, [
                 'label' => 'label.block_show_tickets_count',

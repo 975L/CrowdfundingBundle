@@ -39,6 +39,8 @@ class CrowdfundingNewsType extends AbstractType
             ->add('content', TextareaType::class, [
                 'label' => 'label.content',
                 'translation_domain' => 'crowdfunding',
+                // Opt-in marker read by the block form theme, which is what puts Donovan under a plain textarea
+                'attr' => ['data-ai-rephrase' => true],
             ])
         ;
     }
