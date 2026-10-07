@@ -1410,6 +1410,10 @@
                 <source>text.lottery_ticket_winner</source>
                 <target>You entered a crowdfunding lottery and won!</target>
             </trans-unit>
+            <trans-unit id="4wLfKIy">
+                <source>text.meta_crowdfundings</source>
+                <target>The crowdfunding campaigns of %site%: discover each project and its rewards, and back it online.</target>
+            </trans-unit>
             <trans-unit id="KpQXqZC">
                 <source>text.qrcode</source>
                 <target>To print on a poster or a flyer: it leads to the public page of the campaign.</target>

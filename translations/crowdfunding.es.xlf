@@ -1410,6 +1410,10 @@
                 <source>text.lottery_ticket_winner</source>
                 <target>Participó en una lotería vinculada a una financiación colectiva y ¡ganó!</target>
             </trans-unit>
+            <trans-unit id="4wLfKIy">
+                <source>text.meta_crowdfundings</source>
+                <target>Las campañas de financiación participativa de %site%: descubra cada proyecto y sus recompensas, y apóyelo en línea.</target>
+            </trans-unit>
             <trans-unit id="KpQXqZC">
                 <source>text.qrcode</source>
                 <target>Para imprimir en un cartel o un folleto: lleva a la página pública de la campaña.</target>

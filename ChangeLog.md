@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.6.10
+
+Crowdfunding listing described in a full sentence
+
+- Listing's meta description read from the URL metadata, falling back on a sentence naming the site (07/10/2026)
+- Added the `text.meta_crowdfundings` translation (07/10/2026)
+
 ## v1.6.9
 
 Donovan rephrases the remaining plain textareas of a campaign

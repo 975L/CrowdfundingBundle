@@ -1410,6 +1410,10 @@
                 <source>text.lottery_ticket_winner</source>
                 <target>Vous avez participé à une loterie liée à un financement participatif et vous avez gagné !</target>
             </trans-unit>
+            <trans-unit id="4wLfKIy">
+                <source>text.meta_crowdfundings</source>
+                <target>Les financements participatifs de %site% : découvrez chaque projet, ses contreparties, et soutenez-le en ligne.</target>
+            </trans-unit>
             <trans-unit id="KpQXqZC">
                 <source>text.qrcode</source>
                 <target>À imprimer sur une affiche ou un flyer : il mène à la page publique de la campagne.</target>

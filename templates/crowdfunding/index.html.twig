@@ -3,7 +3,7 @@
 
 {# Defines specific variables #}
 {% set title = 'label.crowdfundings'|trans %}
-{% set summarySocialNetwork = 'text.crowdfundings'|trans %}
+{% set summarySocialNetwork = url_metadata_summary('text.meta_crowdfundings'|trans({'%site%': config('site-name')})) %}
 
 {% block content %}
     <twig:c975LPayment:Basket:TestMode/>
