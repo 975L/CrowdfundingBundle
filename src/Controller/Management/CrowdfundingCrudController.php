@@ -751,7 +751,9 @@ class CrowdfundingCrudController extends AbstractCrudController
             ->allowAdd(false)
             ->allowDelete(false)
             ->setFormTypeOption('by_reference', false)
-            ->setFormTypeOption('entry_options.translation_locale', $locale);
+            ->setFormTypeOption('entry_options.translation_locale', $locale)
+            // The marker the guided steps point at, the collection's own id being dropped by EasyAdmin when it holds no row
+            ->setFormTypeOption('row_attr', ['data-crowdfunding-' . $property => '1']);
     }
 
     // What the language tabs at the top of the edit screen need, and nothing at all where the campaign is not saved yet or the site declares a single language

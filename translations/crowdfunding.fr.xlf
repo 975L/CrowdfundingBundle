@@ -106,6 +106,10 @@
                 <source>description.guided_step_crowdfunding_campaign_author</source>
                 <target>Qui porte le projet. Le nom, la présentation et le site apparaissent ensemble sur la page : un contributeur donne à quelqu'un, pas à une cagnotte.</target>
             </trans-unit>
+            <trans-unit id="Hgr3gSY">
+                <source>description.guided_step_crowdfunding_campaign_currency</source>
+                <target>Le code à trois lettres de la monnaie de la campagne (EUR). Le champ est obligatoire : sans lui, l'enregistrement est refusé.</target>
+            </trans-unit>
             <trans-unit id="8pFJAvy">
                 <source>description.guided_step_crowdfunding_campaign_dates</source>
                 <target>La campagne n'accepte de contribution qu'entre ces deux dates. Avant, et après, les contreparties ne peuvent plus être ajoutées au panier.</target>
@@ -313,6 +317,10 @@
             <trans-unit id="knjiybj">
                 <source>description.guided_step_crowdfunding_translate_action</source>
                 <target>Le bouton ouvre la campagne directement dans la première langue à traduire. Il n'apparaît que si le site déclare plus d'une langue.</target>
+            </trans-unit>
+            <trans-unit id="CQUjcHf">
+                <source>description.guided_step_crowdfunding_translate_assistant</source>
+                <target>Sous le récit, ce bouton demande à l'assistant de traduire le texte dans cette langue. Relisez sa proposition avant d'enregistrer. Le bouton n'apparaît que si l'assistant est configuré.</target>
             </trans-unit>
             <trans-unit id="6sdOqaV">
                 <source>description.guided_step_crowdfunding_translate_author</source>
@@ -766,6 +774,10 @@
                 <source>label.guided_step_crowdfunding_campaign_author</source>
                 <target>L'auteur</target>
             </trans-unit>
+            <trans-unit id="Jb6pXC_">
+                <source>label.guided_step_crowdfunding_campaign_currency</source>
+                <target>La devise</target>
+            </trans-unit>
             <trans-unit id="cp.9zIz">
                 <source>label.guided_step_crowdfunding_campaign_dates</source>
                 <target>Les dates</target>
@@ -1001,6 +1013,10 @@
             <trans-unit id="HaeQ8pW">
                 <source>label.guided_step_crowdfunding_translate_action</source>
                 <target>Ouvrir l'écran de langue</target>
+            </trans-unit>
+            <trans-unit id="qqCJgKY">
+                <source>label.guided_step_crowdfunding_translate_assistant</source>
+                <target>Faire traduire par l'assistant</target>
             </trans-unit>
             <trans-unit id="9Wg5PhG">
                 <source>label.guided_step_crowdfunding_translate_author</source>

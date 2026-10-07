@@ -38,6 +38,10 @@
                 <source>narration.guided_step_crowdfunding_campaign_author</source>
                 <target>Renseignez l'auteur : qui porte le projet. Le nom, la présentation et le site apparaissent ensemble sur la page, car un contributeur donne à quelqu'un, pas à une cagnotte.</target>
             </trans-unit>
+            <trans-unit id="g.PXy2_">
+                <source>narration.guided_step_crowdfunding_campaign_currency</source>
+                <target>Indiquez la devise en trois lettres, EUR pour l'euro : sans elle, la campagne ne s'enregistre pas.</target>
+            </trans-unit>
             <trans-unit id="iEoj5Fw">
                 <source>narration.guided_step_crowdfunding_campaign_dates</source>
                 <target>Fixez les dates de début et de fin. La campagne n'accepte de contribution qu'entre les deux : avant, et après, ses contreparties ne peuvent plus être ajoutées au panier.</target>
@@ -273,6 +277,10 @@
             <trans-unit id="nrNMpEj">
                 <source>narration.guided_step_crowdfunding_translate_action</source>
                 <target>Ce bouton ouvre la campagne directement dans la première langue à traduire, sans passer par l'écran d'écriture. Il n'est là que si le site déclare plus d'une langue.</target>
+            </trans-unit>
+            <trans-unit id=".DyJaZ5">
+                <source>narration.guided_step_crowdfunding_translate_assistant</source>
+                <target>Sous le récit, demandez à l'assistant de le traduire, puis relisez avant d'enregistrer.</target>
             </trans-unit>
             <trans-unit id="NI35QH7">
                 <source>narration.guided_step_crowdfunding_translate_author</source>

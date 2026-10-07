@@ -106,6 +106,10 @@
                 <source>description.guided_step_crowdfunding_campaign_author</source>
                 <target>Quién lleva el proyecto. El nombre, la presentación y el sitio web aparecen juntos en la página: un contribuyente da a alguien, no a un bote.</target>
             </trans-unit>
+            <trans-unit id="Hgr3gSY">
+                <source>description.guided_step_crowdfunding_campaign_currency</source>
+                <target>El código de tres letras de la moneda de la campaña (EUR). El campo es obligatorio: sin él, no se puede guardar.</target>
+            </trans-unit>
             <trans-unit id="8pFJAvy">
                 <source>description.guided_step_crowdfunding_campaign_dates</source>
                 <target>La campaña solo acepta contribuciones entre estas dos fechas. Antes, y después, las contrapartidas ya no pueden añadirse a la cesta.</target>
@@ -313,6 +317,10 @@
             <trans-unit id="knjiybj">
                 <source>description.guided_step_crowdfunding_translate_action</source>
                 <target>El botón abre la campaña directamente en el primer idioma por traducir. Solo aparece si el sitio declara más de un idioma.</target>
+            </trans-unit>
+            <trans-unit id="CQUjcHf">
+                <source>description.guided_step_crowdfunding_translate_assistant</source>
+                <target>Bajo el relato, este botón pide al asistente que traduzca el texto a este idioma. Revise su propuesta antes de guardar. El botón solo aparece si el asistente está configurado.</target>
             </trans-unit>
             <trans-unit id="6sdOqaV">
                 <source>description.guided_step_crowdfunding_translate_author</source>
@@ -766,6 +774,10 @@
                 <source>label.guided_step_crowdfunding_campaign_author</source>
                 <target>El autor</target>
             </trans-unit>
+            <trans-unit id="Jb6pXC_">
+                <source>label.guided_step_crowdfunding_campaign_currency</source>
+                <target>La moneda</target>
+            </trans-unit>
             <trans-unit id="cp.9zIz">
                 <source>label.guided_step_crowdfunding_campaign_dates</source>
                 <target>Las fechas</target>
@@ -1001,6 +1013,10 @@
             <trans-unit id="HaeQ8pW">
                 <source>label.guided_step_crowdfunding_translate_action</source>
                 <target>Abrir la pantalla de idioma</target>
+            </trans-unit>
+            <trans-unit id="qqCJgKY">
+                <source>label.guided_step_crowdfunding_translate_assistant</source>
+                <target>Pedir la traducción al asistente</target>
             </trans-unit>
             <trans-unit id="9Wg5PhG">
                 <source>label.guided_step_crowdfunding_translate_author</source>

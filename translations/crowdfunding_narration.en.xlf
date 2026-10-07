@@ -38,6 +38,10 @@
                 <source>narration.guided_step_crowdfunding_campaign_author</source>
                 <target>Fill in the author: who carries the project. The name, the presentation and the website appear together on the page, because a contributor gives to somebody, not to a pot.</target>
             </trans-unit>
+            <trans-unit id="g.PXy2_">
+                <source>narration.guided_step_crowdfunding_campaign_currency</source>
+                <target>Enter the currency as three letters, EUR for the euro: without it, the campaign won't save.</target>
+            </trans-unit>
             <trans-unit id="iEoj5Fw">
                 <source>narration.guided_step_crowdfunding_campaign_dates</source>
                 <target>Set the beginning and end dates. The campaign only takes contributions between the two: before, and after, its counterparts can no longer be added to the basket.</target>
@@ -273,6 +277,10 @@
             <trans-unit id="nrNMpEj">
                 <source>narration.guided_step_crowdfunding_translate_action</source>
                 <target>This button opens the campaign straight into the first language to translate, without going through the writing screen. It is only there where the site declares more than one language.</target>
+            </trans-unit>
+            <trans-unit id=".DyJaZ5">
+                <source>narration.guided_step_crowdfunding_translate_assistant</source>
+                <target>Under the story, ask the assistant to translate it, then read it over before saving.</target>
             </trans-unit>
             <trans-unit id="NI35QH7">
                 <source>narration.guided_step_crowdfunding_translate_author</source>

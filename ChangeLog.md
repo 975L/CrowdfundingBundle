@@ -1,5 +1,20 @@
 # Changelog
 
+## v1.6.12
+
+PaymentBundle told whether a running campaign posts a counterpart
+
+- Implemented `ShippingBasketItemProviderInterface` in `CrowdfundingBasketItemProvider` (07/10/2026)
+- Added `CrowdfundingCounterpartRepository::hasShippedCounterpart()` (07/10/2026)
+- Read a basket line without shipping flag as digital (07/10/2026)
+- Required `c975l/payment-bundle` ^6.18 (07/10/2026)
+- Added a currency step to the campaign guided project (07/10/2026)
+- Added an assistant step to the translation guided project (07/10/2026)
+- Pointed the quantity and lottery video steps at the open entry (07/10/2026)
+- Marked the language screen's collections with `data-crowdfunding-*` attributes (07/10/2026)
+- Fixed the menu description comment (07/10/2026)
+- Added tests for `shipsParcels()` and `hasShippedCounterpart()` (07/10/2026)
+
 ## v1.6.11
 
 Campaign titles kept within what a search engine shows

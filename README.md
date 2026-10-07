@@ -32,7 +32,7 @@ Add CrowdfundingBundle on top of the shared [UiBundle](https://github.com/975L/U
 
 - Crowdfunding campaigns with counterparts, contributors, news, videos
 - Lottery tied to a crowdfunding campaign (prizes, tickets, winner draw)
-- Plugs into PaymentBundle's Basket/checkout engine via `BasketItemProviderInterface`
+- Plugs into PaymentBundle's Basket/checkout engine via `BasketItemProviderInterface`, and tells it via `ShippingBasketItemProviderInterface` whether a running campaign offers a posted counterpart
 - EasyAdmin CRUD for crowdfunding, from which counterparts, medias, videos and the lottery are all edited
 - A campaign hidden until it is opened, previewed from the back office, and deleted in two steps through a
   recycle bin — see [opening, previewing and deleting a campaign](#opening-previewing-and-deleting-a-campaign)

@@ -13,14 +13,16 @@ namespace c975L\CrowdfundingBundle\Service;
 use c975L\CrowdfundingBundle\Entity\CrowdfundingContributor;
 use c975L\CrowdfundingBundle\Entity\CrowdfundingContributorCounterpart;
 use c975L\CrowdfundingBundle\Message\LotteryTicketsMessage;
+use c975L\CrowdfundingBundle\Repository\CrowdfundingCounterpartRepository;
 use c975L\PaymentBundle\Contract\BasketItemProviderInterface;
+use c975L\PaymentBundle\Contract\ShippingBasketItemProviderInterface;
 use c975L\PaymentBundle\Entity\Basket;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 // Plugs counterparts into PaymentBundle's checkout, and owns the crowdfunding-specific parts of that flow
-class CrowdfundingBasketItemProvider implements BasketItemProviderInterface
+class CrowdfundingBasketItemProvider implements BasketItemProviderInterface, ShippingBasketItemProviderInterface
 {
     public function __construct(
         private readonly CrowdfundingCounterpartServiceInterface $crowdfundingCounterpartService,
@@ -28,6 +30,7 @@ class CrowdfundingBasketItemProvider implements BasketItemProviderInterface
         private readonly MessageBusInterface $messageBus,
         private readonly TranslatorInterface $translator,
         private readonly LotteryServiceInterface $lotteryService,
+        private readonly CrowdfundingCounterpartRepository $crowdfundingCounterpartRepository,
     ) {
     }
 
@@ -101,9 +104,15 @@ class CrowdfundingBasketItemProvider implements BasketItemProviderInterface
 
     public function getContentFlags(array $itemData): int
     {
-        return ($itemData['item']['requiresShipping'] ?? true)
+        return ($itemData['item']['requiresShipping'] ?? false)
             ? Basket::CONTENT_FLAG_CF_SHIPPING
             : Basket::CONTENT_FLAG_CF_DIGITAL;
+    }
+
+    // Whether a running campaign offers a counterpart that is posted, so a site with only digital counterparts is not told to fill a delivery grid - see ShippingBasketItemProviderInterface
+    public function shipsParcels(): bool
+    {
+        return $this->crowdfundingCounterpartRepository->hasShippedCounterpart();
     }
 
     // The only check standing between filling a basket and paying for it: a basket sits for days, and in between a campaign ends, a counterpart runs out or is withdrawn

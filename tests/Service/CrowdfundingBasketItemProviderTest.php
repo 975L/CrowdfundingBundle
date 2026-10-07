@@ -14,10 +14,12 @@ use c975L\CrowdfundingBundle\Entity\Crowdfunding;
 use c975L\CrowdfundingBundle\Entity\CrowdfundingContributor;
 use c975L\CrowdfundingBundle\Entity\CrowdfundingCounterpart;
 use c975L\CrowdfundingBundle\Message\LotteryTicketsMessage;
+use c975L\CrowdfundingBundle\Repository\CrowdfundingCounterpartRepository;
 use c975L\CrowdfundingBundle\Service\CrowdfundingBasketItemProvider;
 use c975L\CrowdfundingBundle\Service\CrowdfundingCounterpartServiceInterface;
 use c975L\CrowdfundingBundle\Service\LotteryServiceInterface;
 use c975L\PaymentBundle\Contract\BasketItemProviderInterface;
+use c975L\PaymentBundle\Contract\ShippingBasketItemProviderInterface;
 use c975L\PaymentBundle\Entity\Basket;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
@@ -36,6 +38,21 @@ class CrowdfundingBasketItemProviderTest extends TestCase
     public function testItImplementsThePaymentContract(): void
     {
         $this->assertInstanceOf(BasketItemProviderInterface::class, $this->createProvider());
+    }
+
+    // A running campaign offering a posted counterpart keeps PaymentBundle warning about an empty delivery grid
+    public function testItDeclaresParcelsToShipWhenACounterpartIsPosted(): void
+    {
+        $provider = $this->createProvider(hasShippedCounterpart: true);
+
+        $this->assertInstanceOf(ShippingBasketItemProviderInterface::class, $provider);
+        $this->assertTrue($provider->shipsParcels());
+    }
+
+    // A site whose counterparts are all digital is not told to fill a delivery grid
+    public function testItDeclaresNoParcelWhenEveryCounterpartIsDigital(): void
+    {
+        $this->assertFalse($this->createProvider(hasShippedCounterpart: false)->shipsParcels());
     }
 
     // The basket stores the line's id as a string, and the counterparts are keyed on an int
@@ -209,10 +226,10 @@ class CrowdfundingBasketItemProviderTest extends TestCase
         $this->assertSame(Basket::CONTENT_FLAG_CF_DIGITAL, $provider->getContentFlags(['item' => ['requiresShipping' => false]]));
     }
 
-    // A basket filled before the column existed carries no flag at all, and asking for the address is the safe side of the mistake
-    public function testGetContentFlagsAsksForAnAddressWhenTheLineSaysNothing(): void
+    // A line carrying no flag reads as the entity's default: a counterpart is not posted unless flagged so
+    public function testGetContentFlagsFollowsTheEntityDefaultWhenTheLineSaysNothing(): void
     {
-        $this->assertSame(Basket::CONTENT_FLAG_CF_SHIPPING, $this->createProvider()->getContentFlags(['item' => []]));
+        $this->assertSame(Basket::CONTENT_FLAG_CF_DIGITAL, $this->createProvider()->getContentFlags(['item' => []]));
     }
 
     // Handed to PaymentBundle, which keeps it on the basket: the payment provider confirms on a request of its own, carrying no session of this contributor
@@ -379,9 +396,13 @@ class CrowdfundingBasketItemProviderTest extends TestCase
         ?EntityManagerInterface $entityManager = null,
         ?MessageBusInterface $messageBus = null,
         ?LotteryServiceInterface $lotteryService = null,
+        bool $hasShippedCounterpart = false,
     ): CrowdfundingBasketItemProvider {
         $translator = $this->createStub(TranslatorInterface::class);
         $translator->method('trans')->willReturnArgument(0);
+
+        $counterpartRepository = $this->createStub(CrowdfundingCounterpartRepository::class);
+        $counterpartRepository->method('hasShippedCounterpart')->willReturn($hasShippedCounterpart);
 
         $bus = $messageBus ?? $this->createStub(MessageBusInterface::class);
         if (null === $messageBus) {
@@ -394,6 +415,7 @@ class CrowdfundingBasketItemProviderTest extends TestCase
             $bus,
             $translator,
             $lotteryService ?? $this->createStub(LotteryServiceInterface::class),
+            $counterpartRepository,
         );
     }
 }

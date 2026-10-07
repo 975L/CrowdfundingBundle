@@ -23,4 +23,20 @@ class CrowdfundingCounterpartRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, CrowdfundingCounterpart::class);
     }
+
+    // Whether a visible campaign not over yet offers a counterpart that is posted, one row read at most
+    public function hasShippedCounterpart(): bool
+    {
+        return [] !== $this->createQueryBuilder('c')
+            ->select('c.id')
+            ->innerJoin('c.crowdfunding', 'cf')
+            ->andWhere('c.requiresShipping = true')
+            ->andWhere('cf.hidden = false')
+            ->andWhere('cf.isDeleted = false')
+            ->andWhere('cf.endDate IS NULL OR cf.endDate >= :today')
+            ->setParameter('today', new \DateTime('today'))
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getScalarResult();
+    }
 }

@@ -85,6 +85,12 @@ class CrowdfundingGuidedProjectProvider implements GuidedProjectProviderInterfac
                     'highlight' => '#Crowdfunding_amountGoal',
                 ],
                 [
+                    'label' => 'label.guided_step_crowdfunding_campaign_currency',
+                    'description' => 'description.guided_step_crowdfunding_campaign_currency',
+                    'narration' => 'narration.guided_step_crowdfunding_campaign_currency',
+                    'highlight' => '#Crowdfunding_currency',
+                ],
+                [
                     'label' => 'label.guided_step_crowdfunding_campaign_dates',
                     'description' => 'description.guided_step_crowdfunding_campaign_dates',
                     'narration' => 'narration.guided_step_crowdfunding_campaign_dates',
@@ -289,7 +295,7 @@ class CrowdfundingGuidedProjectProvider implements GuidedProjectProviderInterfac
                     'label' => 'label.guided_step_crowdfunding_counterpart_quantity',
                     'description' => 'description.guided_step_crowdfunding_counterpart_quantity',
                     'narration' => 'narration.guided_step_crowdfunding_counterpart_quantity',
-                    'highlight' => '[data-counterpart-quantity]',
+                    'highlight' => '[data-crowdfunding-counterparts] .accordion-collapse.show [data-counterpart-quantity]',
                 ],
                 [
                     'label' => 'label.guided_step_crowdfunding_counterpart_save',
@@ -398,6 +404,13 @@ class CrowdfundingGuidedProjectProvider implements GuidedProjectProviderInterfac
                     'narration' => 'narration.guided_step_crowdfunding_translate_description',
                     'highlight' => '#Crowdfunding_description',
                 ],
+                // The first assistant button on the screen is the story's, the title being a plain text field; drawn only once the assistant is set up, the step then costing only its highlight
+                [
+                    'label' => 'label.guided_step_crowdfunding_translate_assistant',
+                    'description' => 'description.guided_step_crowdfunding_translate_assistant',
+                    'narration' => 'narration.guided_step_crowdfunding_translate_assistant',
+                    'highlight' => '.ai-rephrase__button',
+                ],
                 [
                     'label' => 'label.guided_step_crowdfunding_translate_author',
                     'description' => 'description.guided_step_crowdfunding_translate_author',
@@ -408,7 +421,7 @@ class CrowdfundingGuidedProjectProvider implements GuidedProjectProviderInterfac
                     'label' => 'label.guided_step_crowdfunding_translate_counterparts',
                     'description' => 'description.guided_step_crowdfunding_translate_counterparts',
                     'narration' => 'narration.guided_step_crowdfunding_translate_counterparts',
-                    'highlight' => '#Crowdfunding_counterparts',
+                    'highlight' => '[data-crowdfunding-counterparts]',
                 ],
                 [
                     'label' => 'label.guided_step_crowdfunding_translate_save',
@@ -564,7 +577,7 @@ class CrowdfundingGuidedProjectProvider implements GuidedProjectProviderInterfac
                     'label' => 'label.guided_step_crowdfunding_draw_video_upload',
                     'description' => 'description.guided_step_crowdfunding_draw_video_upload',
                     'narration' => 'narration.guided_step_crowdfunding_draw_video_upload',
-                    'highlight' => '[data-lottery-videos]',
+                    'highlight' => '[data-crowdfunding-lotteries] .accordion-collapse.show [data-lottery-videos]',
                 ],
                 // The way out for a file too heavy to upload: only a campaign's video carries an address, a lottery's taking a file and nothing else (see CrowdfundingVideo::$youtubeUrl, which LotteryVideo has no equivalent of)
                 [
