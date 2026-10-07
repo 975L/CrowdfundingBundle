@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.6.11
+
+Campaign titles kept within what a search engine shows
+
+- A campaign's title drops its label when the whole would exceed 65 characters (07/10/2026)
+- Added `DisplayTitleLengthTest` (07/10/2026)
+
 ## v1.6.10
 
 Crowdfunding listing described in a full sentence

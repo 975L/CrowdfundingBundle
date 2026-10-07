@@ -2,7 +2,9 @@
 {% trans_default_domain 'crowdfunding' %}
 
 {# Defines specific variables #}
-{% set title = 'label.crowdfunding'|trans ~ ' : "' ~ crowdfunding.title ~ '"' %}
+{# The label leads the title only while the whole stays within what a search engine shows (ConfigBundle's ContentQualityAnalyzer::TITLE_MAX_LENGTH, 65): past that the campaign's own name is the one kept #}
+{% set labelledTitle = 'label.crowdfunding'|trans ~ ' : "' ~ crowdfunding.title ~ '"' %}
+{% set title = labelledTitle|length <= 65 ? labelledTitle : crowdfunding.title %}
 {# What a shared link is drawn with: the campaign's cover, the opening image for one written before the two were told apart, and nothing for a campaign holding neither #}
 {% set ogMedia = crowdfunding.covers|first ?: crowdfunding.heroes|first %}
 {% if ogMedia %}
