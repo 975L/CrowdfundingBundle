@@ -38,13 +38,13 @@
                 <source>narration.guided_step_crowdfunding_campaign_author</source>
                 <target>Fill in the author: who carries the project. The name, the presentation and the website appear together on the page, because a contributor gives to somebody, not to a pot.</target>
             </trans-unit>
+            <trans-unit id="dlUNlQr">
+                <source>narration.guided_step_crowdfunding_campaign_begin_date</source>
+                <target>Set the beginning date. Before it, the campaign takes no contribution: its counterparts cannot be added to the basket yet.</target>
+            </trans-unit>
             <trans-unit id="g.PXy2_">
                 <source>narration.guided_step_crowdfunding_campaign_currency</source>
                 <target>Enter the currency as three letters, EUR for the euro: without it, the campaign won't save.</target>
-            </trans-unit>
-            <trans-unit id="iEoj5Fw">
-                <source>narration.guided_step_crowdfunding_campaign_dates</source>
-                <target>Set the beginning and end dates. The campaign only takes contributions between the two: before, and after, its counterparts can no longer be added to the basket.</target>
             </trans-unit>
             <trans-unit id="fUvUmco">
                 <source>narration.guided_step_crowdfunding_campaign_description</source>
@@ -53,6 +53,10 @@
             <trans-unit id="km659jZ">
                 <source>narration.guided_step_crowdfunding_campaign_done</source>
                 <target>Your campaign is online. It is visible between its two dates, and the parcours that follow fill it in: its pictures, its counterparts, its lottery.</target>
+            </trans-unit>
+            <trans-unit id="oO7k3cD">
+                <source>narration.guided_step_crowdfunding_campaign_end_date</source>
+                <target>Then the end date. Past that day, the campaign takes no more contributions: its counterparts can no longer be added to the basket.</target>
             </trans-unit>
             <trans-unit id="_u8T5ub">
                 <source>narration.guided_step_crowdfunding_campaign_goal</source>
@@ -100,11 +104,15 @@
             </trans-unit>
             <trans-unit id="Hwz.WYF">
                 <source>narration.guided_step_crowdfunding_counterpart_quantity</source>
-                <target>Fill in the quantity and the delivery. A limited quantity takes the counterpart off sale once it runs out, and the basket refuses to order more than what is left; leave zero not to limit it.</target>
+                <target>Fill in the quantity. A limited quantity takes the counterpart off sale once it runs out, and the basket refuses to order more than what is left; leave zero not to limit it.</target>
             </trans-unit>
             <trans-unit id="3BidmNS">
                 <source>narration.guided_step_crowdfunding_counterpart_save</source>
                 <target>Save to put the counterpart on sale.</target>
+            </trans-unit>
+            <trans-unit id="xyK0Jcu">
+                <source>narration.guided_step_crowdfunding_counterpart_shipping</source>
+                <target>Tick the box if the counterpart is an item to post: its order will join the ones shipped from the baskets screen; without it, the counterpart is digital. And fill in the expected delivery, so the contributors know when to expect it.</target>
             </trans-unit>
             <trans-unit id="x.7Tu5U">
                 <source>narration.guided_step_crowdfunding_counterparts_shipping_done</source>

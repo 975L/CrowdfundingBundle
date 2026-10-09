@@ -10,7 +10,7 @@
 
 namespace c975L\CrowdfundingBundle\Entity;
 
-use c975L\ConfigBundle\Contract\UserInterface;
+use c975L\CrowdfundingBundle\Entity\Traits\UserTrait;
 use c975L\CrowdfundingBundle\Repository\CrowdfundingCounterpartRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -22,6 +22,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Table(name: 'crowdfunding_counterpart')]
 class CrowdfundingCounterpart implements \Stringable
 {
+    use UserTrait;
+
     public function __construct()
     {
         $this->contributorCounterparts = new ArrayCollection();
@@ -84,9 +86,6 @@ class CrowdfundingCounterpart implements \Stringable
 
     #[ORM\OneToOne(inversedBy: 'crowdfundingCounterpart', cascade: ['persist', 'remove'])]
     private ?CrowdfundingCounterpartMedia $media = null;
-
-    #[ORM\ManyToOne]
-    private ?UserInterface $user = null;
 
     public function __toString(): string
     {
@@ -282,18 +281,6 @@ class CrowdfundingCounterpart implements \Stringable
     public function setMedia(?CrowdfundingCounterpartMedia $media): static
     {
         $this->media = $media;
-
-        return $this;
-    }
-
-    public function getUser(): ?UserInterface
-    {
-        return $this->user;
-    }
-
-    public function setUser(?UserInterface $user): static
-    {
-        $this->user = $user;
 
         return $this;
     }

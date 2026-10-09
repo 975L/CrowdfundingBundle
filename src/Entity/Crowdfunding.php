@@ -10,7 +10,7 @@
 
 namespace c975L\CrowdfundingBundle\Entity;
 
-use c975L\ConfigBundle\Contract\UserInterface;
+use c975L\CrowdfundingBundle\Entity\Traits\UserTrait;
 use c975L\CrowdfundingBundle\Repository\CrowdfundingRepository;
 use c975L\UiBundle\Contract\HasBlocksInterface;
 use c975L\UiBundle\Contract\TrashableInterface;
@@ -31,6 +31,7 @@ class Crowdfunding implements HasBlocksInterface, TrashableInterface, \Stringabl
 {
     use HasBlocksTrait;
     use TrashableTrait;
+    use UserTrait;
 
     private string $type = 'crowdfunding';
 
@@ -123,9 +124,6 @@ class Crowdfunding implements HasBlocksInterface, TrashableInterface, \Stringabl
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $modification = null;
-
-    #[ORM\ManyToOne]
-    private ?UserInterface $user = null;
 
     public function __construct()
     {
@@ -591,18 +589,6 @@ class Crowdfunding implements HasBlocksInterface, TrashableInterface, \Stringabl
     public function setModification(\DateTimeInterface $modification): static
     {
         $this->modification = $modification;
-
-        return $this;
-    }
-
-    public function getUser(): ?UserInterface
-    {
-        return $this->user;
-    }
-
-    public function setUser(?UserInterface $user): static
-    {
-        $this->user = $user;
 
         return $this;
     }

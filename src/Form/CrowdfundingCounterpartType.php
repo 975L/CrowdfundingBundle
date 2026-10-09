@@ -95,6 +95,7 @@ class CrowdfundingCounterpartType extends AbstractType
             ->add('requiresShipping', CheckboxType::class, [
                 'label' => 'label.requires_shipping',
                 'required' => false,
+                'row_attr' => ['data-counterpart-shipping' => '1'],
             ])
             // The ladder is suggested in euros, the field dividing the cents the column holds
             ->add('price', MoneyType::class, [

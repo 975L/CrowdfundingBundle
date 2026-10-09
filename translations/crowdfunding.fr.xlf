@@ -106,13 +106,13 @@
                 <source>description.guided_step_crowdfunding_campaign_author</source>
                 <target>Qui porte le projet. Le nom, la présentation et le site apparaissent ensemble sur la page : un contributeur donne à quelqu'un, pas à une cagnotte.</target>
             </trans-unit>
+            <trans-unit id="_t4ilip">
+                <source>description.guided_step_crowdfunding_campaign_begin_date</source>
+                <target>Avant cette date, la campagne n'accepte aucune contribution : ses contreparties ne peuvent pas encore être ajoutées au panier.</target>
+            </trans-unit>
             <trans-unit id="Hgr3gSY">
                 <source>description.guided_step_crowdfunding_campaign_currency</source>
                 <target>Le code à trois lettres de la monnaie de la campagne (EUR). Le champ est obligatoire : sans lui, l'enregistrement est refusé.</target>
-            </trans-unit>
-            <trans-unit id="8pFJAvy">
-                <source>description.guided_step_crowdfunding_campaign_dates</source>
-                <target>La campagne n'accepte de contribution qu'entre ces deux dates. Avant, et après, les contreparties ne peuvent plus être ajoutées au panier.</target>
             </trans-unit>
             <trans-unit id="HRKqvMA">
                 <source>description.guided_step_crowdfunding_campaign_description</source>
@@ -121,6 +121,10 @@
             <trans-unit id="fHTZh3T">
                 <source>description.guided_step_crowdfunding_campaign_done</source>
                 <target>La campagne est en ligne dès qu'elle existe, et visible entre ses deux dates. Les parcours suivants la complètent : ses images, ses contreparties, sa loterie.</target>
+            </trans-unit>
+            <trans-unit id="aYILjEa">
+                <source>description.guided_step_crowdfunding_campaign_end_date</source>
+                <target>Passé cette date, la campagne n'accepte plus de contribution : ses contreparties ne peuvent plus être ajoutées au panier.</target>
             </trans-unit>
             <trans-unit id="_M0S4bg">
                 <source>description.guided_step_crowdfunding_campaign_goal</source>
@@ -165,6 +169,10 @@
             <trans-unit id="_0dRlZp">
                 <source>description.guided_step_crowdfunding_counterpart_quantity</source>
                 <target>Une quantité limitée retire la contrepartie de la vente une fois épuisée, et le panier refuse d'en commander plus qu'il n'en reste. Laissez zéro pour ne pas limiter.</target>
+            </trans-unit>
+            <trans-unit id="R0CBLKw">
+                <source>description.guided_step_crowdfunding_counterpart_shipping</source>
+                <target>Cochez la case si la contrepartie est un objet à poster : sa commande rejoint alors celles qui s'expédient depuis l'écran des paniers. Sans elle, la contrepartie est numérique. La livraison prévue dit aux contributeurs quand l'attendre.</target>
             </trans-unit>
             <trans-unit id="i7ZTeEy">
                 <source>description.guided_step_crowdfunding_counterparts_shipping_done</source>
@@ -774,13 +782,13 @@
                 <source>label.guided_step_crowdfunding_campaign_author</source>
                 <target>L'auteur</target>
             </trans-unit>
+            <trans-unit id="Wx.Js62">
+                <source>label.guided_step_crowdfunding_campaign_begin_date</source>
+                <target>La date de début</target>
+            </trans-unit>
             <trans-unit id="Jb6pXC_">
                 <source>label.guided_step_crowdfunding_campaign_currency</source>
                 <target>La devise</target>
-            </trans-unit>
-            <trans-unit id="cp.9zIz">
-                <source>label.guided_step_crowdfunding_campaign_dates</source>
-                <target>Les dates</target>
             </trans-unit>
             <trans-unit id="gaDAn30">
                 <source>label.guided_step_crowdfunding_campaign_description</source>
@@ -789,6 +797,10 @@
             <trans-unit id=".rDKH9V">
                 <source>label.guided_step_crowdfunding_campaign_done</source>
                 <target>C'est fait</target>
+            </trans-unit>
+            <trans-unit id=".E25z.I">
+                <source>label.guided_step_crowdfunding_campaign_end_date</source>
+                <target>La date de fin</target>
             </trans-unit>
             <trans-unit id="Y0TLiku">
                 <source>label.guided_step_crowdfunding_campaign_goal</source>
@@ -836,11 +848,15 @@
             </trans-unit>
             <trans-unit id="OcYkZI6">
                 <source>label.guided_step_crowdfunding_counterpart_quantity</source>
-                <target>La quantité et la livraison</target>
+                <target>La quantité limitée</target>
             </trans-unit>
             <trans-unit id="GsHraQp">
                 <source>label.guided_step_crowdfunding_counterpart_save</source>
                 <target>Enregistrer</target>
+            </trans-unit>
+            <trans-unit id="8Xbm7Bu">
+                <source>label.guided_step_crowdfunding_counterpart_shipping</source>
+                <target>L'expédition et la livraison</target>
             </trans-unit>
             <trans-unit id="hgQyHDg">
                 <source>label.guided_step_crowdfunding_counterparts_shipping_done</source>
@@ -1400,7 +1416,7 @@
             </trans-unit>
             <trans-unit id="lMuHD.4">
                 <source>text.crowdfundings</source>
-                <target>Tous nos financements participatifs</target>
+                <target>Les financements participatifs du site : découvrez chaque projet, ses contreparties, et soutenez-le en ligne.</target>
             </trans-unit>
             <trans-unit id="ExVqe8o">
                 <source>text.hero</source>

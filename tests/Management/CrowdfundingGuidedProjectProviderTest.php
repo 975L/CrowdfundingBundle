@@ -38,7 +38,7 @@ class CrowdfundingGuidedProjectProviderTest extends TestCase
         return new CrowdfundingGuidedProjectProvider($generator, $configService);
     }
 
-    // The 9000 block GuidedProjectProviderInterface reserves this bundle, at the step of 10 it states - and the order a campaign is actually built in, not an alphabetical one
+    // The 9000 block GuidedProjectProviderInterface reserves this bundle - and the order a campaign is actually built in, not an alphabetical one
     public function testGetGuidedProjectsRunsTheReservedBlockInBuildOrder(): void
     {
         $projects = $this->createProvider()->getGuidedProjects();
@@ -126,7 +126,7 @@ class CrowdfundingGuidedProjectProviderTest extends TestCase
             }
         }
 
-        // Nine of the ten: removing a campaign is done from the listing alone, with no form to save
+        // Every parcours but the two walking no form: removing a campaign is done from the listing alone, and the counterparts are posted from the baskets' actions
         $this->assertCount(9, $saveSteps, 'Each parcours walking a form walks the user to the save button once');
 
         foreach ($saveSteps as $step) {
@@ -228,7 +228,7 @@ class CrowdfundingGuidedProjectProviderTest extends TestCase
         $this->assertStringContainsString('Filmer et publier un tirage de loterie', $catalogue, 'The lottery parcours points at the procedure by its own title');
     }
 
-    // EasyAdmin folds every entry of a collection into a Bootstrap accordion item (see its crud/form_theme.html.twig): a field nested in one is in the page and invisible, and highlighting it outlines nothing anybody can see. Whichever parcours points inside an entry opens it first, on the step before
+    // EasyAdmin folds every entry of a collection into a Bootstrap accordion item (see its crud/form_theme.html.twig): a field nested in one is in the page and invisible, and highlighting it outlines nothing anybody can see. Whichever parcours points inside an entry opens it first, on an earlier step
     public function testNoStepPointsInsideACollectionEntryBeforeOpeningIt(): void
     {
         // The class the fold is opened by, EasyAdmin's own: renamed at a version bump, both steps opening an entry would highlight nothing
@@ -238,14 +238,14 @@ class CrowdfundingGuidedProjectProviderTest extends TestCase
         );
 
         foreach ($this->createProvider()->getGuidedProjects() as $project) {
-            $previous = null;
+            $previous = [];
 
             foreach ($project['steps'] as $step) {
                 $highlight = $step['highlight'] ?? '';
 
                 foreach (['[data-lottery-' => '[data-crowdfunding-lotteries]', '[data-counterpart-' => '[data-crowdfunding-counterparts]'] as $prefix => $collection) {
                     if (str_contains($highlight, $prefix)) {
-                        $this->assertSame(
+                        $this->assertContains(
                             $collection . ' .accordion-button',
                             $previous,
                             sprintf('"%s" points inside a folded entry with no step opening it first', $step['label'])
@@ -253,22 +253,26 @@ class CrowdfundingGuidedProjectProviderTest extends TestCase
                     }
                 }
 
-                $previous = $highlight;
+                $previous[] = $highlight;
             }
         }
     }
 
-    // A label or description with no translation reads as its own key in the panel, in whichever locale it is missing from
-    public function testEveryLabelAndDescriptionIsTranslatedInEveryLocale(): void
+    // A label, description or narration with no translation reads as its own key in the panel or the voice, in whichever locale it is missing from
+    public function testEveryLabelDescriptionAndNarrationIsTranslatedInEveryLocale(): void
     {
         foreach (['en', 'fr', 'es'] as $locale) {
             $translated = $this->translatedKeys('crowdfunding.' . $locale);
+            $narrated = $this->translatedKeys('crowdfunding_narration.' . $locale);
 
             foreach ($this->createProvider()->getGuidedProjects() as $project) {
                 foreach ([$project, ...$project['steps']] as $item) {
                     $this->assertContains($item['label'], $translated, sprintf('"%s" is missing from the %s catalogue', $item['label'], $locale));
                     if (isset($item['description'])) {
                         $this->assertContains($item['description'], $translated, sprintf('"%s" is missing from the %s catalogue', $item['description'], $locale));
+                    }
+                    if (isset($item['narration'])) {
+                        $this->assertContains($item['narration'], $narrated, sprintf('"%s" is missing from the %s narration catalogue', $item['narration'], $locale));
                     }
                 }
             }

@@ -10,7 +10,7 @@
 
 namespace c975L\CrowdfundingBundle\Entity;
 
-use c975L\ConfigBundle\Contract\UserInterface;
+use c975L\CrowdfundingBundle\Entity\Traits\UserTrait;
 use c975L\CrowdfundingBundle\Repository\LotteryPrizeRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -20,6 +20,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Table(name: 'crowdfunding_lottery_prize')]
 class LotteryPrize
 {
+    use UserTrait;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -52,9 +54,6 @@ class LotteryPrize
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $modification = null;
-
-    #[ORM\ManyToOne]
-    private ?UserInterface $user = null;
 
     // What this row says in the language being rendered, laid over the texts below and stored nowhere on the row: unmapped on purpose, Doctrine computing its changeset from the mapped properties and never from these getters, so a screen rendered in English cannot write English over the text the row was written in (see CrowdfundingTranslator, the only thing that sets it)
     /** @var array<string, string|null>|null */
@@ -158,18 +157,6 @@ class LotteryPrize
     public function setModification(?\DateTimeInterface $modification): self
     {
         $this->modification = $modification;
-
-        return $this;
-    }
-
-    public function getUser(): ?UserInterface
-    {
-        return $this->user;
-    }
-
-    public function setUser(?UserInterface $user): static
-    {
-        $this->user = $user;
 
         return $this;
     }

@@ -38,13 +38,13 @@
                 <source>narration.guided_step_crowdfunding_campaign_author</source>
                 <target>Renseignez l'auteur : qui porte le projet. Le nom, la présentation et le site apparaissent ensemble sur la page, car un contributeur donne à quelqu'un, pas à une cagnotte.</target>
             </trans-unit>
+            <trans-unit id="dlUNlQr">
+                <source>narration.guided_step_crowdfunding_campaign_begin_date</source>
+                <target>Fixez la date de début. Avant elle, la campagne n'accepte aucune contribution : ses contreparties ne peuvent pas encore être ajoutées au panier.</target>
+            </trans-unit>
             <trans-unit id="g.PXy2_">
                 <source>narration.guided_step_crowdfunding_campaign_currency</source>
                 <target>Indiquez la devise en trois lettres, EUR pour l'euro : sans elle, la campagne ne s'enregistre pas.</target>
-            </trans-unit>
-            <trans-unit id="iEoj5Fw">
-                <source>narration.guided_step_crowdfunding_campaign_dates</source>
-                <target>Fixez les dates de début et de fin. La campagne n'accepte de contribution qu'entre les deux : avant, et après, ses contreparties ne peuvent plus être ajoutées au panier.</target>
             </trans-unit>
             <trans-unit id="fUvUmco">
                 <source>narration.guided_step_crowdfunding_campaign_description</source>
@@ -53,6 +53,10 @@
             <trans-unit id="km659jZ">
                 <source>narration.guided_step_crowdfunding_campaign_done</source>
                 <target>Votre campagne est en ligne. Elle est visible entre ses deux dates, et les parcours suivants la complètent : ses images, ses contreparties, sa loterie.</target>
+            </trans-unit>
+            <trans-unit id="oO7k3cD">
+                <source>narration.guided_step_crowdfunding_campaign_end_date</source>
+                <target>Puis la date de fin. Passé ce jour, la campagne n'accepte plus de contribution : ses contreparties ne peuvent plus être ajoutées au panier.</target>
             </trans-unit>
             <trans-unit id="_u8T5ub">
                 <source>narration.guided_step_crowdfunding_campaign_goal</source>
@@ -100,11 +104,15 @@
             </trans-unit>
             <trans-unit id="Hwz.WYF">
                 <source>narration.guided_step_crowdfunding_counterpart_quantity</source>
-                <target>Renseignez la quantité et la livraison. Une quantité limitée retire la contrepartie de la vente une fois épuisée, et le panier refuse d'en commander plus qu'il n'en reste ; laissez zéro pour ne pas limiter.</target>
+                <target>Renseignez la quantité. Une quantité limitée retire la contrepartie de la vente une fois épuisée, et le panier refuse d'en commander plus qu'il n'en reste ; laissez zéro pour ne pas limiter.</target>
             </trans-unit>
             <trans-unit id="3BidmNS">
                 <source>narration.guided_step_crowdfunding_counterpart_save</source>
                 <target>Enregistrez pour mettre la contrepartie en vente.</target>
+            </trans-unit>
+            <trans-unit id="xyK0Jcu">
+                <source>narration.guided_step_crowdfunding_counterpart_shipping</source>
+                <target>Cochez la case si la contrepartie est un objet à poster : sa commande rejoindra celles qui s'expédient depuis l'écran des paniers ; sans elle, la contrepartie est numérique. Et indiquez la livraison prévue, pour que les contributeurs sachent quand l'attendre.</target>
             </trans-unit>
             <trans-unit id="x.7Tu5U">
                 <source>narration.guided_step_crowdfunding_counterparts_shipping_done</source>

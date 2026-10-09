@@ -1,5 +1,33 @@
 # Upgrade
 
+## v1.6.13
+
+### Deleting an account no longer stumbles on the campaigns it touched [Needs db update]
+
+**Four `user_id` foreign keys become `ON DELETE SET NULL`**, on `crowdfunding_crowdfunding`,
+`crowdfunding_counterpart`, `crowdfunding_lottery` and `crowdfunding_lottery_prize`. None of the four records an
+author: they only hold who created or last changed the row, and all four outlive whoever did. Left restricting, an
+account that had ever touched a campaign, a counterpart, a draw or a prize could no longer be deleted at all. **Run
+the four alterations**, dropping each key then adding it back:
+
+```sql
+ALTER TABLE crowdfunding_crowdfunding DROP FOREIGN KEY FK_EFE24B4FA76ED395;
+ALTER TABLE crowdfunding_crowdfunding ADD CONSTRAINT FK_EFE24B4FA76ED395 FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE SET NULL;
+ALTER TABLE crowdfunding_counterpart DROP FOREIGN KEY FK_1481F62A76ED395;
+ALTER TABLE crowdfunding_counterpart ADD CONSTRAINT FK_1481F62A76ED395 FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE SET NULL;
+ALTER TABLE crowdfunding_lottery DROP FOREIGN KEY FK_9D6DF3B9A76ED395;
+ALTER TABLE crowdfunding_lottery ADD CONSTRAINT FK_9D6DF3B9A76ED395 FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE SET NULL;
+ALTER TABLE crowdfunding_lottery_prize DROP FOREIGN KEY FK_D5260B10A76ED395;
+ALTER TABLE crowdfunding_lottery_prize ADD CONSTRAINT FK_D5260B10A76ED395 FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE SET NULL;
+```
+
+Replace `user` with your own user table if it is named otherwise, and check the key names with
+`SHOW CREATE TABLE` on a table created before Doctrine named its keys - generating the migration gets the same
+result, those being the statements it writes.
+
+A campaign whose creator is deleted is left to the editors: with no `user_id`, only `site-role-editor` still
+publishes its news from the public page.
+
 ## v1.3
 
 ### The campaigns are administered by the editor's role [BC-Break]

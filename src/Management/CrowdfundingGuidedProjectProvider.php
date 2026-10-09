@@ -90,10 +90,17 @@ class CrowdfundingGuidedProjectProvider implements GuidedProjectProviderInterfac
                     'narration' => 'narration.guided_step_crowdfunding_campaign_currency',
                     'highlight' => '#Crowdfunding_currency',
                 ],
+                // One step per date, a highlight pointing at a single element and the two fields sharing no container
                 [
-                    'label' => 'label.guided_step_crowdfunding_campaign_dates',
-                    'description' => 'description.guided_step_crowdfunding_campaign_dates',
-                    'narration' => 'narration.guided_step_crowdfunding_campaign_dates',
+                    'label' => 'label.guided_step_crowdfunding_campaign_begin_date',
+                    'description' => 'description.guided_step_crowdfunding_campaign_begin_date',
+                    'narration' => 'narration.guided_step_crowdfunding_campaign_begin_date',
+                    'highlight' => '#Crowdfunding_beginDate',
+                ],
+                [
+                    'label' => 'label.guided_step_crowdfunding_campaign_end_date',
+                    'description' => 'description.guided_step_crowdfunding_campaign_end_date',
+                    'narration' => 'narration.guided_step_crowdfunding_campaign_end_date',
                     'highlight' => '#Crowdfunding_endDate',
                 ],
                 [
@@ -296,6 +303,13 @@ class CrowdfundingGuidedProjectProvider implements GuidedProjectProviderInterfac
                     'description' => 'description.guided_step_crowdfunding_counterpart_quantity',
                     'narration' => 'narration.guided_step_crowdfunding_counterpart_quantity',
                     'highlight' => '[data-crowdfunding-counterparts] .accordion-collapse.show [data-counterpart-quantity]',
+                ],
+                // Without it the counterpart is digital, and its basket never reaches the shipping parcours
+                [
+                    'label' => 'label.guided_step_crowdfunding_counterpart_shipping',
+                    'description' => 'description.guided_step_crowdfunding_counterpart_shipping',
+                    'narration' => 'narration.guided_step_crowdfunding_counterpart_shipping',
+                    'highlight' => '[data-crowdfunding-counterparts] .accordion-collapse.show [data-counterpart-shipping]',
                 ],
                 [
                     'label' => 'label.guided_step_crowdfunding_counterpart_save',

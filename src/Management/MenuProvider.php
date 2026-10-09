@@ -58,7 +58,7 @@ class MenuProvider implements MenuProviderInterface
                 'icon' => 'fas fa-hand-holding-dollar',
                 // Leaves the admin for the site's own public page, so it opens in a new tab and joins the "Liens" section rather than this bundle's own entries (see MenuBuilder::getMenuItems())
                 'target' => '_blank',
-                // Text written for the tour, the listing page now showing its meta description instead
+                // The listing page's meta description without its %site%, a description taking no parameters
                 'description' => 'text.crowdfundings',
             ],
         ];

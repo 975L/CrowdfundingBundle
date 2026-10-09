@@ -1,5 +1,20 @@
 # Changelog
 
+## v1.6.13
+
+Account deletion no longer blocked by the campaigns it touched
+
+- Set the four `user_id` foreign keys to `ON DELETE SET NULL` (09/10/2026) **Needs db update**
+- Moved the `user` mapping into `Entity\Traits\UserTrait` (09/10/2026)
+- Documented the four key alterations in UPGRADE.md (09/10/2026)
+- Added a shipping step to the counterpart guided project (09/10/2026)
+- Split the campaign dates step into a begin and an end step (09/10/2026)
+- Narrowed the counterpart quantity step label to the limited quantity (09/10/2026)
+- Aligned the public listing's menu description on its meta description (09/10/2026)
+- Checked the narration keys of every guided step in the three locales (09/10/2026)
+- Allowed several steps inside an opened collection entry (09/10/2026)
+- Fixed the counting comments of the guided project test (09/10/2026)
+
 ## v1.6.12
 
 PaymentBundle told whether a running campaign posts a counterpart

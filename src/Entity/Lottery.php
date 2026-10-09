@@ -10,7 +10,7 @@
 
 namespace c975L\CrowdfundingBundle\Entity;
 
-use c975L\ConfigBundle\Contract\UserInterface;
+use c975L\CrowdfundingBundle\Entity\Traits\UserTrait;
 use c975L\CrowdfundingBundle\Repository\LotteryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -22,6 +22,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Table(name: 'crowdfunding_lottery')]
 class Lottery
 {
+    use UserTrait;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -58,9 +60,6 @@ class Lottery
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $modification = null;
-
-    #[ORM\ManyToOne]
-    private ?UserInterface $user = null;
 
     public function __construct()
     {
@@ -220,18 +219,6 @@ class Lottery
     public function setModification(?\DateTimeInterface $modification): self
     {
         $this->modification = $modification;
-
-        return $this;
-    }
-
-    public function getUser(): ?UserInterface
-    {
-        return $this->user;
-    }
-
-    public function setUser(?UserInterface $user): static
-    {
-        $this->user = $user;
 
         return $this;
     }
