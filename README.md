@@ -189,6 +189,15 @@ campaigns, most recent first, for the 30 days following their publication date. 
 visibility of its own: it borrows its campaign's and links to itself on that page (`#news-12`). It is never
 offered twice — a news told once is told.
 
+Both are also browsable (UiBundle's `BrowsableSocialContentSourceInterface`): on a draft's screen, SocialBundle's
+change of content takes another campaign — or news — chosen among those still free: the campaigns in the order the
+site lists them, the one the next automatic post would take first, the news the latest first; neither has groups, so
+there is nothing to draw again from. The other way round, the campaigns' list shows a "Réseaux sociaux" column —
+"Réservé 10/10" for a campaign a draft holds, "Publié 09/10" once it went out — read from UiBundle's
+`SocialContentStatusProviderInterface`, which SocialBundle implements; without SocialBundle, and in the recycle bin,
+the column is not shown. The publication guided project points at it on a site with SocialBundle.
+A news has no list of its own, being written on its campaign's form, so it carries no such column.
+
 ---
 
 ## Linking a campaign from a menu

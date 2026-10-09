@@ -278,6 +278,10 @@
                 <source>narration.guided_step_crowdfunding_publish_save</source>
                 <target>At the bottom of the form, click Save and return: the campaign is open.</target>
             </trans-unit>
+            <trans-unit id="0o9l73V">
+                <source>narration.guided_step_crowdfunding_publish_social</source>
+                <target>In the list, the Social networks column shows whether a post draft holds the campaign, or the date it was posted on.</target>
+            </trans-unit>
             <trans-unit id="VxPI7Ow">
                 <source>narration.guided_step_crowdfunding_publish_visit</source>
                 <target>On the row of the campaign, the eye has given way to an external link: click it to read the page everybody now reads.</target>

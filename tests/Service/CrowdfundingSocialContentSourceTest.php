@@ -15,11 +15,15 @@ use c975L\CrowdfundingBundle\Entity\Crowdfunding;
 use c975L\CrowdfundingBundle\Entity\CrowdfundingMedia;
 use c975L\CrowdfundingBundle\Repository\CrowdfundingRepository;
 use c975L\CrowdfundingBundle\Service\CrowdfundingSocialContentSource;
+use c975L\UiBundle\Model\SocialContent;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class CrowdfundingSocialContentSourceTest extends TestCase
 {
+    /** @var list<string> */
+    private array $excludedIds = [];
+
     private function createCrowdfunding(int $id, ?string $endDate = '+10 days', bool $hidden = false, ?string $beginDate = '-10 days'): Crowdfunding
     {
         $crowdfunding = new Crowdfunding()->setTitle('Album ' . $id)->setSlug('album-' . $id)->setDescription('<p>Le tome 2</p>')->setAuthorName('Laurent')->setHidden($hidden);
@@ -37,6 +41,11 @@ class CrowdfundingSocialContentSourceTest extends TestCase
         $repository = $this->createStub(CrowdfundingRepository::class);
         $repository->method('findAllSorted')->willReturn($crowdfundings);
         $repository->method('find')->willReturn($crowdfundings[0] ?? null);
+        $repository->method('findRunningSorted')->willReturnCallback(function (array $excludedIds, int $limit) use ($crowdfundings): array {
+            $this->excludedIds = $excludedIds;
+
+            return $crowdfundings;
+        });
 
         $urlGenerator = $this->createStub(UrlGeneratorInterface::class);
         $urlGenerator->method('generate')->willReturnCallback(static fn (string $route, array $parameters): string => '/crowdfunding/' . $parameters['slug']);
@@ -92,5 +101,21 @@ class CrowdfundingSocialContentSourceTest extends TestCase
     {
         $this->assertSame('1', $this->createSource([$this->createCrowdfunding(1)])->getContent('1')?->sourceId);
         $this->assertNull($this->createSource([$this->createCrowdfunding(1, hidden: true)])->getContent('1'));
+    }
+
+    // What a post's campaign is chosen among: the running ones still free, as contents - campaigns having no groups, the scopes given change nothing
+    public function testTheContentsToChooseAreTheFreeRunningCampaigns(): void
+    {
+        $contents = $this->createSource([$this->createCrowdfunding(2), $this->createCrowdfunding(1)])->findContents(['7'], ['3'], 48);
+
+        $this->assertSame(['2', '1'], array_map(static fn (SocialContent $content): string => $content->sourceId, $contents));
+        $this->assertSame(['7'], $this->excludedIds);
+        $this->assertSame([], $this->createSource([$this->createCrowdfunding(1)], null)->findContents([], [], 48));
+    }
+
+    // A campaign belongs to no group, so a post's campaign is never drawn again from one
+    public function testACampaignHasNoScope(): void
+    {
+        $this->assertNull($this->createSource([$this->createCrowdfunding(1)])->getContentScope('1'));
     }
 }

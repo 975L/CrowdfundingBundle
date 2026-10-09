@@ -12,6 +12,8 @@ namespace c975L\CrowdfundingBundle\Repository;
 
 use c975L\CrowdfundingBundle\Entity\Crowdfunding;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -22,6 +24,20 @@ class CrowdfundingRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Crowdfunding::class);
+    }
+
+    // The id of every campaign not in the trash, as a string - what the back-office list asks SocialBundle about in one go
+    /** @return list<string> */
+    public function findNotDeletedIds(): array
+    {
+        $ids = $this->createQueryBuilder('c')
+            ->select('c.id')
+            ->andWhere('c.isDeleted = false')
+            ->getQuery()
+            ->getSingleColumnResult()
+        ;
+
+        return array_map(strval(...), $ids);
     }
 
     // Finds all crowfundings sorted - the ones a visitor may read: a hidden campaign is not opened yet and a trashed one is on its way out, neither belonging to the listing nor to the sitemap
@@ -39,6 +55,39 @@ class CrowdfundingRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult()
         ;
+    }
+
+    // Keeps the campaigns a visitor may read and open today - the one rule both the campaigns and their news are posted under, ":today" left set for the caller's own use
+    public static function addRunningCriteria(QueryBuilder $qb, string $alias): QueryBuilder
+    {
+        return $qb
+            ->andWhere($alias . '.hidden = false')
+            ->andWhere($alias . '.isDeleted = false')
+            ->andWhere($alias . '.beginDate <= :today')
+            ->andWhere($alias . '.endDate >= :today')
+            ->setParameter('today', new \DateTime('today'), Types::DATE_MUTABLE)
+        ;
+    }
+
+    // The campaigns open today and not posted yet, in the order the site lists them - what a post's campaign is chosen among
+    /**
+     * @param list<string> $excludedIds
+     *
+     * @return list<Crowdfunding>
+     */
+    public function findRunningSorted(array $excludedIds, int $limit): array
+    {
+        $qb = self::addRunningCriteria($this->createQueryBuilder('c'), 'c')
+            ->orderBy('c.position', \SortDirection::Ascending)
+            ->addOrderBy('c.id', \SortDirection::Ascending)
+            ->setMaxResults($limit)
+        ;
+
+        if ([] !== $excludedIds) {
+            $qb->andWhere('c.id NOT IN (:excluded)')->setParameter('excluded', array_map(intval(...), $excludedIds));
+        }
+
+        return $qb->getQuery()->getResult();
     }
 
     // Finds a crowdfunding by id with joined data

@@ -95,6 +95,31 @@ class CrowdfundingRepositoryTest extends TestCase
         $this->assertSame('', $repository->dql);
     }
 
+    // What a post's campaign is chosen among: the visible ones open today, not posted yet, in the order the site lists them
+    public function testFindRunningSortedKeepsTheOpenCampaignsNotPostedYet(): void
+    {
+        $repository = $this->createRepository();
+
+        $repository->findRunningSorted(['7'], 48);
+
+        foreach (['c.hidden = false', 'c.isDeleted = false', 'c.beginDate <= :today', 'c.endDate >= :today', 'c.id NOT IN (:excluded)', 'ORDER BY c.position ASC, c.id ASC'] as $part) {
+            $this->assertStringContainsString($part, $repository->dql);
+        }
+
+        $this->assertSame([7], $repository->parameter('excluded'));
+    }
+
+    // A trashed campaign waits for no post, so SocialBundle is never asked about it
+    public function testFindNotDeletedIdsLeavesOutTheTrash(): void
+    {
+        $repository = $this->createRepository();
+
+        $repository->findNotDeletedIds();
+
+        $this->assertStringContainsString('SELECT c.id', $repository->dql);
+        $this->assertStringContainsString('c.isDeleted = false', $repository->dql);
+    }
+
     // Doctrine's own QueryBuilder, assembling the real DQL on an EntityManager that answers nothing: getQuery() hands the string it built to createQuery(), which is where it is read back
     private function createRepository(): CrowdfundingRepositoryDqlFixture
     {
@@ -146,11 +171,17 @@ class CrowdfundingRepositoryDqlFixture extends CrowdfundingRepository
     }
 }
 
-// Both terminal calls answer an empty result: everything this test reads has already been assembled by the time the query is run
+// Every terminal call answers an empty result: everything this test reads has already been assembled by the time the query is run
 class QueryAnsweringNothing extends Query
 {
     #[\Override]
     public function getResult($hydrationMode = self::HYDRATE_OBJECT): array
+    {
+        return [];
+    }
+
+    #[\Override]
+    public function getSingleColumnResult(): array
     {
         return [];
     }

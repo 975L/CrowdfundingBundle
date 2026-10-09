@@ -318,6 +318,10 @@
                 <source>description.guided_step_crowdfunding_publish_reopen</source>
                 <target>El guardado le devolvió a la lista. Reabra la campaña con el lápiz: el código QR solo se dibuja en su formulario.</target>
             </trans-unit>
+            <trans-unit id="8GOQRdX">
+                <source>description.guided_step_crowdfunding_publish_social</source>
+                <target>La columna Redes sociales indica, para cada campaña, si un borrador de publicación la reserva o en qué fecha se publicó.</target>
+            </trans-unit>
             <trans-unit id="XNWHIBI">
                 <source>description.guided_step_crowdfunding_publish_visit</source>
                 <target>El botón de previsualización ha dado paso a un enlace externo: la página de la campaña es ya la que todo el mundo lee.</target>
@@ -645,6 +649,22 @@
             <trans-unit id="by.JcZR">
                 <source>label.crowdfunding_not_started</source>
                 <target>Financiación no iniciada</target>
+            </trans-unit>
+            <trans-unit id="AazpE_9">
+                <source>label.crowdfunding_social</source>
+                <target>Redes sociales</target>
+            </trans-unit>
+            <trans-unit id="j5XunPw">
+                <source>label.crowdfunding_social_date_format</source>
+                <target>d/m</target>
+            </trans-unit>
+            <trans-unit id="TSio615">
+                <source>label.crowdfunding_social_published</source>
+                <target>Publicada %date%</target>
+            </trans-unit>
+            <trans-unit id="4YMGZMx">
+                <source>label.crowdfunding_social_reserved</source>
+                <target>Reservada %date%</target>
             </trans-unit>
             <trans-unit id="ppQ3IHB">
                 <source>label.crowdfundings</source>
@@ -1021,6 +1041,10 @@
             <trans-unit id="NoXwuPH">
                 <source>label.guided_step_crowdfunding_publish_save</source>
                 <target>Guardar</target>
+            </trans-unit>
+            <trans-unit id="jjfCbnT">
+                <source>label.guided_step_crowdfunding_publish_social</source>
+                <target>Seguir las publicaciones</target>
             </trans-unit>
             <trans-unit id="hxq6JX7">
                 <source>label.guided_step_crowdfunding_publish_visit</source>

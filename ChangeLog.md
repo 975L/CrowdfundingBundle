@@ -1,5 +1,20 @@
 # Changelog
 
+## v1.7.0
+
+Campaigns and news browsable from a social post draft
+
+- Implemented `BrowsableSocialContentSourceInterface` in both social content sources (09/10/2026)
+- Added `CrowdfundingRepository::findRunningSorted()` and `CrowdfundingNewsRepository::findFreshLatest()` (09/10/2026)
+- Shared the running campaign rule in `CrowdfundingRepository::addRunningCriteria()` (09/10/2026)
+- Drew the next news through `findContents()` instead of filtering every news in PHP (09/10/2026)
+- Reused the joined campaign of a news through `CrowdfundingSocialContentSource::contentOf()` (09/10/2026)
+- Added a social status column to the campaigns' list, hidden in the recycle bin (09/10/2026)
+- Added `CrowdfundingRepository::findNotDeletedIds()` (09/10/2026)
+- Converted the social badge date to the site's time zone (09/10/2026)
+- Added a social column step to the publication guided project, with SocialBundle only (09/10/2026)
+- Required `c975l/core-bundle` `^1.60.2` (09/10/2026)
+
 ## v1.6.13
 
 Account deletion no longer blocked by the campaigns it touched

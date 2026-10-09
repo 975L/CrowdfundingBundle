@@ -278,6 +278,10 @@
                 <source>narration.guided_step_crowdfunding_publish_save</source>
                 <target>En bas du formulaire, cliquez sur Enregistrer et revenir : la campagne est ouverte.</target>
             </trans-unit>
+            <trans-unit id="0o9l73V">
+                <source>narration.guided_step_crowdfunding_publish_social</source>
+                <target>Dans la liste, la colonne Réseaux sociaux indique si un brouillon de publication réserve la campagne, ou la date à laquelle elle a été publiée.</target>
+            </trans-unit>
             <trans-unit id="VxPI7Ow">
                 <source>narration.guided_step_crowdfunding_publish_visit</source>
                 <target>Sur la ligne de la campagne, l'œil a laissé place à un lien externe : cliquez-le pour lire la page que tout le monde lit désormais.</target>

@@ -278,6 +278,10 @@
                 <source>narration.guided_step_crowdfunding_publish_save</source>
                 <target>En la parte inferior del formulario, haga clic en Guardar y volver: la campaña está abierta.</target>
             </trans-unit>
+            <trans-unit id="0o9l73V">
+                <source>narration.guided_step_crowdfunding_publish_social</source>
+                <target>En la lista, la columna Redes sociales indica si un borrador de publicación reserva la campaña, o la fecha en que se publicó.</target>
+            </trans-unit>
             <trans-unit id="VxPI7Ow">
                 <source>narration.guided_step_crowdfunding_publish_visit</source>
                 <target>En la fila de la campaña, el ojo ha dado paso a un enlace externo: haga clic en él para leer la página que todo el mundo lee ya.</target>

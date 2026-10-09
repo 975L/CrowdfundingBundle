@@ -12,18 +12,17 @@ namespace c975L\CrowdfundingBundle\Service;
 
 use c975L\CrowdfundingBundle\Entity\CrowdfundingNews;
 use c975L\CrowdfundingBundle\Repository\CrowdfundingNewsRepository;
-use c975L\CrowdfundingBundle\Repository\CrowdfundingRepository;
+use c975L\UiBundle\Contract\BrowsableSocialContentSourceInterface;
 use c975L\UiBundle\Contract\SocialContentSourceInterface;
 use c975L\UiBundle\Model\SocialContent;
 
 // Hands SocialBundle's publication the news of the running campaigns, most recent first - a news has no page, image nor visibility of its own, borrowing its campaign's as CrowdfundingSocialContentSource hands it and linking to itself on that page
-class CrowdfundingNewsSocialContentSource implements SocialContentSourceInterface
+class CrowdfundingNewsSocialContentSource implements BrowsableSocialContentSourceInterface, SocialContentSourceInterface
 {
     // A news is news for a month: past that, posting it would announce what the followers already lived through
     private const int FRESH_DAYS = 30;
 
     public function __construct(
-        private readonly CrowdfundingRepository $crowdfundingRepository,
         private readonly CrowdfundingNewsRepository $newsRepository,
         private readonly CrowdfundingSocialContentSource $campaignSource,
     ) {
@@ -40,26 +39,28 @@ class CrowdfundingNewsSocialContentSource implements SocialContentSourceInterfac
         return null;
     }
 
+    // The freshest news still free, as the browse screen would offer it first
     public function getNextContent(array $excludedIds): ?SocialContent
     {
+        return $this->findContents($excludedIds, [], 1)[0] ?? null;
+    }
+
+    // The fresh news of the running campaigns still free, the most recent first - their campaign, joined and filtered by the query, is not read again. News have no groups, so the scopes are ignored
+    public function findContents(array $excludedIds, array $scopeIds, int $limit): array
+    {
         $fresh = new \DateTime(sprintf('-%d days', self::FRESH_DAYS))->setTime(0, 0);
-        $candidates = [];
-        foreach ($this->crowdfundingRepository->findAllSorted() as $crowdfunding) {
-            foreach ($crowdfunding->getNews() as $news) {
-                if (!\in_array((string) $news->getId(), $excludedIds, true) && $news->getPublishedDate() >= $fresh && $news->getPublishedDate() <= new \DateTime()) {
-                    $candidates[] = $news;
-                }
-            }
-        }
-        usort($candidates, static fn (CrowdfundingNews $a, CrowdfundingNews $b): int => $b->getPublishedDate() <=> $a->getPublishedDate());
-
-        foreach ($candidates as $news) {
-            $content = $this->toContent($news);
-            if (null !== $content) {
-                return $content;
-            }
+        $contents = [];
+        foreach ($this->newsRepository->findFreshLatest($excludedIds, $fresh, $limit) as $news) {
+            $crowdfunding = $news->getCrowdfunding();
+            $contents[] = null === $crowdfunding ? null : $this->toContent($news, $this->campaignSource->contentOf($crowdfunding));
         }
 
+        return array_values(array_filter($contents));
+    }
+
+    // Never a group: news are not split into any
+    public function getContentScope(string $sourceId): ?string
+    {
         return null;
     }
 
@@ -67,14 +68,14 @@ class CrowdfundingNewsSocialContentSource implements SocialContentSourceInterfac
     public function getContent(string $sourceId): ?SocialContent
     {
         $news = $this->newsRepository->find((int) $sourceId);
+        $campaignId = $news?->getCrowdfunding()?->getId();
 
-        return $news instanceof CrowdfundingNews ? $this->toContent($news) : null;
+        return $news instanceof CrowdfundingNews && null !== $campaignId ? $this->toContent($news, $this->campaignSource->getContent((string) $campaignId)) : null;
     }
 
-    private function toContent(CrowdfundingNews $news): ?SocialContent
+    // The news on its campaign's content, null when the campaign has none to give
+    private function toContent(CrowdfundingNews $news, ?SocialContent $campaign): ?SocialContent
     {
-        $campaignId = $news->getCrowdfunding()?->getId();
-        $campaign = null === $campaignId ? null : $this->campaignSource->getContent((string) $campaignId);
         if (null === $campaign) {
             return null;
         }

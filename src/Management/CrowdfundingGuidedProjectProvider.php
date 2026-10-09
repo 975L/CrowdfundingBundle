@@ -16,6 +16,7 @@ use c975L\CrowdfundingBundle\Controller\Management\CrowdfundingCrudController;
 use c975L\PaymentBundle\Controller\Management\BasketCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGeneratorInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 // This bundle's guided projects, running the 9000 block GuidedProjectProviderInterface reserves them - the same docblock stating every other bundle's, so a range is read there rather than recopied here. They follow the order a campaign is actually lived: the campaign itself, then the opening of it to the public, then what illustrates it, then what is offered in return, then the rest of its page, then the same campaign in another language, then its chronicle, then the lottery and the video of its draw, then the counterparts posted to the contributors, and last the two gestures that remove it. All but one open on the same screen, this bundle holding a single CRUD: a campaign carries its media, its counterparts, its news, its lottery and its blocks on its own edit form, so what tells the parcours apart is the fieldset they walk to, not the screen they open. The exception is the posting of the counterparts, which happens on PaymentBundle's orders, the contributions being baskets
 class CrowdfundingGuidedProjectProvider implements GuidedProjectProviderInterface
@@ -23,6 +24,9 @@ class CrowdfundingGuidedProjectProvider implements GuidedProjectProviderInterfac
     public function __construct(
         private readonly AdminUrlGeneratorInterface $adminUrlGenerator,
         private readonly ConfigServiceInterface $configService,
+        /** @var array<string, class-string> */
+        #[Autowire(param: 'kernel.bundles')]
+        private readonly array $bundles = [],
     ) {
     }
 
@@ -178,6 +182,7 @@ class CrowdfundingGuidedProjectProvider implements GuidedProjectProviderInterfac
                     'narration' => 'narration.guided_step_crowdfunding_publish_visit',
                     'highlight' => '.action-viewOnSite',
                 ],
+                ...$this->publishSocialSteps(),
                 // Back onto the campaign's own form: the save two steps above returned to the listing, and the code is only drawn on the edit screen (see CrowdfundingCrudController::configureFields), so the step below would otherwise open on a screen its marker is not on
                 [
                     'label' => 'label.guided_step_crowdfunding_publish_reopen',
@@ -712,6 +717,24 @@ class CrowdfundingGuidedProjectProvider implements GuidedProjectProviderInterfac
                     'description' => 'description.guided_step_crowdfunding_trash_done',
                     'narration' => 'narration.guided_step_crowdfunding_trash_done',
                 ],
+            ],
+        ];
+    }
+
+    // Still on the listing the visit step left on: the column saying whether a post holds the campaign, drawn only where SocialBundle is there to publish (see CrowdfundingCrudController::socialStatusFields)
+    /** @return list<array<string, string>> */
+    private function publishSocialSteps(): array
+    {
+        if (!isset($this->bundles['c975LSocialBundle'])) {
+            return [];
+        }
+
+        return [
+            [
+                'label' => 'label.guided_step_crowdfunding_publish_social',
+                'description' => 'description.guided_step_crowdfunding_publish_social',
+                'narration' => 'narration.guided_step_crowdfunding_publish_social',
+                'highlight' => 'th.crowdfunding-social',
             ],
         ];
     }

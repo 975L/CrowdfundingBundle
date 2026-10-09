@@ -318,6 +318,10 @@
                 <source>description.guided_step_crowdfunding_publish_reopen</source>
                 <target>The save brought you back to the listing. Reopen the campaign with the pencil: the QR code is only drawn on its own form.</target>
             </trans-unit>
+            <trans-unit id="8GOQRdX">
+                <source>description.guided_step_crowdfunding_publish_social</source>
+                <target>The Social networks column tells, for each campaign, whether a post draft holds it or on which date it was posted.</target>
+            </trans-unit>
             <trans-unit id="XNWHIBI">
                 <source>description.guided_step_crowdfunding_publish_visit</source>
                 <target>The preview button has given way to an external link: the campaign's page is now the one everybody reads.</target>
@@ -645,6 +649,22 @@
             <trans-unit id="by.JcZR">
                 <source>label.crowdfunding_not_started</source>
                 <target>Crowdfuding not started</target>
+            </trans-unit>
+            <trans-unit id="AazpE_9">
+                <source>label.crowdfunding_social</source>
+                <target>Social networks</target>
+            </trans-unit>
+            <trans-unit id="j5XunPw">
+                <source>label.crowdfunding_social_date_format</source>
+                <target>m/d</target>
+            </trans-unit>
+            <trans-unit id="TSio615">
+                <source>label.crowdfunding_social_published</source>
+                <target>Published %date%</target>
+            </trans-unit>
+            <trans-unit id="4YMGZMx">
+                <source>label.crowdfunding_social_reserved</source>
+                <target>Reserved %date%</target>
             </trans-unit>
             <trans-unit id="ppQ3IHB">
                 <source>label.crowdfundings</source>
@@ -1021,6 +1041,10 @@
             <trans-unit id="NoXwuPH">
                 <source>label.guided_step_crowdfunding_publish_save</source>
                 <target>Save</target>
+            </trans-unit>
+            <trans-unit id="jjfCbnT">
+                <source>label.guided_step_crowdfunding_publish_social</source>
+                <target>Follow the posts</target>
             </trans-unit>
             <trans-unit id="hxq6JX7">
                 <source>label.guided_step_crowdfunding_publish_visit</source>

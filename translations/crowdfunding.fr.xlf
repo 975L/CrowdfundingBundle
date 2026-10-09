@@ -318,6 +318,10 @@
                 <source>description.guided_step_crowdfunding_publish_reopen</source>
                 <target>L'enregistrement vous a ramené à la liste. Rouvrez la campagne avec le crayon : le code QR n'est dessiné que sur son formulaire.</target>
             </trans-unit>
+            <trans-unit id="8GOQRdX">
+                <source>description.guided_step_crowdfunding_publish_social</source>
+                <target>La colonne Réseaux sociaux dit, pour chaque campagne, si un brouillon de publication la réserve ou à quelle date elle a été publiée.</target>
+            </trans-unit>
             <trans-unit id="XNWHIBI">
                 <source>description.guided_step_crowdfunding_publish_visit</source>
                 <target>Le bouton de prévisualisation a laissé place à un lien externe : la page de la campagne est désormais celle que tout le monde lit.</target>
@@ -645,6 +649,22 @@
             <trans-unit id="by.JcZR">
                 <source>label.crowdfunding_not_started</source>
                 <target>Financement non commencé</target>
+            </trans-unit>
+            <trans-unit id="AazpE_9">
+                <source>label.crowdfunding_social</source>
+                <target>Réseaux sociaux</target>
+            </trans-unit>
+            <trans-unit id="j5XunPw">
+                <source>label.crowdfunding_social_date_format</source>
+                <target>d/m</target>
+            </trans-unit>
+            <trans-unit id="TSio615">
+                <source>label.crowdfunding_social_published</source>
+                <target>Publié %date%</target>
+            </trans-unit>
+            <trans-unit id="4YMGZMx">
+                <source>label.crowdfunding_social_reserved</source>
+                <target>Réservé %date%</target>
             </trans-unit>
             <trans-unit id="ppQ3IHB">
                 <source>label.crowdfundings</source>
@@ -1021,6 +1041,10 @@
             <trans-unit id="NoXwuPH">
                 <source>label.guided_step_crowdfunding_publish_save</source>
                 <target>Enregistrer</target>
+            </trans-unit>
+            <trans-unit id="jjfCbnT">
+                <source>label.guided_step_crowdfunding_publish_social</source>
+                <target>Suivre les publications</target>
             </trans-unit>
             <trans-unit id="hxq6JX7">
                 <source>label.guided_step_crowdfunding_publish_visit</source>

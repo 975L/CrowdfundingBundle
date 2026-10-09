@@ -13,7 +13,6 @@ namespace c975L\CrowdfundingBundle\Tests\Service;
 use c975L\CrowdfundingBundle\Entity\Crowdfunding;
 use c975L\CrowdfundingBundle\Entity\CrowdfundingNews;
 use c975L\CrowdfundingBundle\Repository\CrowdfundingNewsRepository;
-use c975L\CrowdfundingBundle\Repository\CrowdfundingRepository;
 use c975L\CrowdfundingBundle\Service\CrowdfundingNewsSocialContentSource;
 use c975L\CrowdfundingBundle\Service\CrowdfundingSocialContentSource;
 use c975L\UiBundle\Model\SocialContent;
@@ -22,6 +21,11 @@ use PHPUnit\Framework\TestCase;
 class CrowdfundingNewsSocialContentSourceTest extends TestCase
 {
     private Crowdfunding $crowdfunding;
+
+    /** @var list<string> */
+    private array $excludedIds = [];
+
+    private ?\DateTimeInterface $since = null;
 
     protected function setUp(): void
     {
@@ -40,16 +44,25 @@ class CrowdfundingNewsSocialContentSourceTest extends TestCase
 
     private function createSource(bool $campaignRunning = true, ?CrowdfundingNews $found = null): CrowdfundingNewsSocialContentSource
     {
-        $repository = $this->createStub(CrowdfundingRepository::class);
-        $repository->method('findAllSorted')->willReturn([$this->crowdfunding]);
-
         $newsRepository = $this->createStub(CrowdfundingNewsRepository::class);
         $newsRepository->method('find')->willReturn($found);
 
-        $campaignSource = $this->createStub(CrowdfundingSocialContentSource::class);
-        $campaignSource->method('getContent')->willReturn($campaignRunning ? new SocialContent('9', 'Album', 'https://example.org/crowdfunding/album', '/var/www/site/public/cover.webp', 'https://example.org/cover.webp') : null);
+        // What the query keeps, as it keeps it: free, published since the given day, the most recent first, up to the limit
+        $newsRepository->method('findFreshLatest')->willReturnCallback(function (array $excludedIds, \DateTimeInterface $since, int $limit): array {
+            $this->excludedIds = $excludedIds;
+            $this->since = $since;
+            $news = array_filter($this->crowdfunding->getNews()->getValues(), static fn (CrowdfundingNews $news): bool => !\in_array((string) $news->getId(), $excludedIds, true) && $news->getPublishedDate() >= $since);
+            usort($news, static fn (CrowdfundingNews $a, CrowdfundingNews $b): int => $b->getPublishedDate() <=> $a->getPublishedDate());
 
-        return new CrowdfundingNewsSocialContentSource($repository, $newsRepository, $campaignSource);
+            return \array_slice($news, 0, $limit);
+        });
+
+        $campaign = $campaignRunning ? new SocialContent('9', 'Album', 'https://example.org/crowdfunding/album', '/var/www/site/public/cover.webp', 'https://example.org/cover.webp') : null;
+        $campaignSource = $this->createStub(CrowdfundingSocialContentSource::class);
+        $campaignSource->method('getContent')->willReturn($campaign);
+        $campaignSource->method('contentOf')->willReturn($campaign);
+
+        return new CrowdfundingNewsSocialContentSource($newsRepository, $campaignSource);
     }
 
     // The latest news first, linked to itself on its campaign's page, with the campaign's cover
@@ -94,5 +107,25 @@ class CrowdfundingNewsSocialContentSourceTest extends TestCase
 
         $this->assertSame('1', $this->createSource(found: $news)->getContent('1')?->sourceId);
         $this->assertNull($this->createSource()->getContent('1'));
+    }
+
+    // What a post's news is chosen among: the fresh ones still free, from the first day of the window on - news having no groups, the scopes given change nothing
+    public function testTheContentsToChooseAreTheFreeFreshNews(): void
+    {
+        $this->addNews(2, '-2 days');
+        $this->addNews(1, '-10 days');
+
+        $contents = $this->createSource()->findContents(['7'], ['3'], 48);
+
+        $this->assertSame(['2', '1'], array_map(static fn (SocialContent $content): string => $content->sourceId, $contents));
+        $this->assertSame(['7'], $this->excludedIds);
+        $this->assertSame(new \DateTime('-30 days')->format('Y-m-d 00:00:00'), $this->since?->format('Y-m-d H:i:s'));
+        $this->assertSame([], $this->createSource(campaignRunning: false)->findContents([], [], 48));
+    }
+
+    // A news belongs to no group, so a post's news is never drawn again from one
+    public function testANewsHasNoScope(): void
+    {
+        $this->assertNull($this->createSource()->getContentScope('1'));
     }
 }

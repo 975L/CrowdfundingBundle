@@ -28,8 +28,10 @@ use c975L\CrowdfundingBundle\Form\Type\CrowdfundingQrCodeType;
 use c975L\CrowdfundingBundle\Management\CrowdfundingBlockOwnerResolver;
 use c975L\CrowdfundingBundle\Repository\CrowdfundingRepository;
 use c975L\CrowdfundingBundle\Service\CrowdfundingTranslator;
+use c975L\UiBundle\Contract\SocialContentStatusProviderInterface;
 use c975L\UiBundle\Form\BlockType;
 use c975L\UiBundle\Model\QrCodeOptions;
+use c975L\UiBundle\Model\SocialContentStatus;
 use c975L\UiBundle\Service\BlockMoveRowAttrBuilder;
 use c975L\UiBundle\Service\QrCodeGenerator;
 use Doctrine\Common\Collections\Collection;
@@ -80,6 +82,10 @@ class CrowdfundingCrudController extends AbstractCrudController
 
     public const string DELETE_PERMANENTLY_CSRF_TOKEN = 'crowdfunding_delete_permanently';
 
+    // The posts' hold on every campaign, asked once for the whole list rather than once per row
+    /** @var array<string, SocialContentStatus>|null */
+    private ?array $socialStatusMap = null;
+
     public function __construct(
         private readonly BlockMoveRowAttrBuilder $blockMoveRowAttrBuilder,
         private readonly ConfigServiceInterface $configService,
@@ -90,12 +96,56 @@ class CrowdfundingCrudController extends AbstractCrudController
         private readonly RedirectRepository $redirectRepository,
         private readonly ContentLocaleScreen $contentLocaleScreen,
         private readonly CrowdfundingTranslator $crowdfundingTranslator,
+        private readonly CrowdfundingRepository $crowdfundingRepository,
+        private readonly ?SocialContentStatusProviderInterface $socialStatuses = null,
     ) {
     }
 
     public static function getEntityFqcn(): string
     {
         return Crowdfunding::class;
+    }
+
+    // Whether a social post holds the campaign - reserved by a draft, or published - on a site with SocialBundle only, and never in the trash, where no post is waited for any more
+    /** @return list<FieldInterface> */
+    private function socialStatusFields(): array
+    {
+        if (null === $this->socialStatuses || $this->isTrash()) {
+            return [];
+        }
+
+        return [
+            TextField::new('id')
+                ->setLabel(t('label.crowdfunding_social', [], 'crowdfunding'))
+                ->formatValue(fn (mixed $value, Crowdfunding $crowdfunding): string => $this->socialStatusBadge($crowdfunding))
+                ->renderAsHtml()
+                ->setSortable(false)
+                // What the publication parcours highlights, the column sharing its "id" property with the IdField
+                ->addCssClass('crowdfunding-social')
+                ->onlyOnIndex(),
+        ];
+    }
+
+    // The badge of the post holding the campaign, empty when none does
+    private function socialStatusBadge(Crowdfunding $crowdfunding): string
+    {
+        $this->socialStatusMap ??= $this->socialStatuses?->getStatuses('crowdfunding', $this->crowdfundingRepository->findNotDeletedIds()) ?? [];
+        $status = $this->socialStatusMap[(string) $crowdfunding->getId()] ?? null;
+        if (null === $status) {
+            return '';
+        }
+
+        // The date's format is the language's own ("09/10" reads as the 10th of September in English), in the site's time zone whatever the one it was read in. Both keys written out in full, so the catalog test sees them named
+        $date = $status->at->setTimezone(new \DateTimeZone(date_default_timezone_get()))->format($this->translator->trans('label.crowdfunding_social_date_format', [], 'crowdfunding'));
+        $label = $status->isPublished()
+            ? $this->translator->trans('label.crowdfunding_social_published', ['%date%' => $date], 'crowdfunding')
+            : $this->translator->trans('label.crowdfunding_social_reserved', ['%date%' => $date], 'crowdfunding');
+
+        return sprintf(
+            '<span class="badge %s">%s</span>',
+            $status->isPublished() ? 'badge-success' : 'badge-warning',
+            htmlspecialchars($label),
+        );
     }
 
     public function configureFields(string $pageName): iterable
@@ -134,6 +184,7 @@ class CrowdfundingCrudController extends AbstractCrudController
             DateField::new('endDate')
                 ->setLabel(t('label.end_date', [], 'crowdfunding'))
                 ->setRequired(true),
+            ...$this->socialStatusFields(),
             TextEditorField::new('description')
                 ->setLabel(t('label.description', [], 'crowdfunding'))
                 ->hideOnIndex(),

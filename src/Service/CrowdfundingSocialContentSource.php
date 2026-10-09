@@ -13,13 +13,14 @@ namespace c975L\CrowdfundingBundle\Service;
 use c975L\ConfigBundle\Service\SiteUrlResolver;
 use c975L\CrowdfundingBundle\Entity\Crowdfunding;
 use c975L\CrowdfundingBundle\Repository\CrowdfundingRepository;
+use c975L\UiBundle\Contract\BrowsableSocialContentSourceInterface;
 use c975L\UiBundle\Contract\SocialContentSourceInterface;
 use c975L\UiBundle\Model\SocialContent;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 // Hands SocialBundle's publication the campaigns still collecting, in the order the site lists them - a site without SocialBundle simply never asks. What went out where is SocialBundle's to record
-class CrowdfundingSocialContentSource implements SocialContentSourceInterface
+class CrowdfundingSocialContentSource implements BrowsableSocialContentSourceInterface, SocialContentSourceInterface
 {
     // A running campaign lives on reminders: a month between two is what keeps it in sight without wearing its followers out
     private const int REPEAT_AFTER_DAYS = 30;
@@ -47,10 +48,22 @@ class CrowdfundingSocialContentSource implements SocialContentSourceInterface
     {
         foreach ($this->crowdfundingRepository->findAllSorted() as $crowdfunding) {
             if (!\in_array((string) $crowdfunding->getId(), $excludedIds, true) && $this->isRunning($crowdfunding)) {
-                return $this->toContent($crowdfunding);
+                return $this->contentOf($crowdfunding);
             }
         }
 
+        return null;
+    }
+
+    // The campaigns open today and still free, in the order the site lists them - the one the next automatic post would take comes first. Campaigns have no groups, so the scopes are ignored
+    public function findContents(array $excludedIds, array $scopeIds, int $limit): array
+    {
+        return array_values(array_filter(array_map($this->contentOf(...), $this->crowdfundingRepository->findRunningSorted($excludedIds, $limit))));
+    }
+
+    // Never a group: campaigns are not split into any
+    public function getContentScope(string $sourceId): ?string
+    {
         return null;
     }
 
@@ -60,7 +73,7 @@ class CrowdfundingSocialContentSource implements SocialContentSourceInterface
         $crowdfunding = $this->crowdfundingRepository->find((int) $sourceId);
 
         return $crowdfunding instanceof Crowdfunding && !$crowdfunding->isHidden() && !$crowdfunding->isDeleted() && $this->isRunning($crowdfunding)
-            ? $this->toContent($crowdfunding)
+            ? $this->contentOf($crowdfunding)
             : null;
     }
 
@@ -78,8 +91,8 @@ class CrowdfundingSocialContentSource implements SocialContentSourceInterface
         return $beginDate->format('Ymd') <= $today && $endDate->format('Ymd') >= $today;
     }
 
-    // Null while "site-url" is unset: the run happens in a console, with no request to take the host from
-    private function toContent(Crowdfunding $crowdfunding): ?SocialContent
+    // The content of a campaign already loaded and known to be running - null while "site-url" is unset: the run happens in a console, with no request to take the host from
+    public function contentOf(Crowdfunding $crowdfunding): ?SocialContent
     {
         $siteUrl = $this->siteUrlResolver->siteUrl();
         if (null === $siteUrl) {

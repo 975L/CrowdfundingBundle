@@ -27,6 +27,8 @@ use c975L\CrowdfundingBundle\Entity\Lottery;
 use c975L\CrowdfundingBundle\Entity\LotteryTicket;
 use c975L\CrowdfundingBundle\Repository\CrowdfundingRepository;
 use c975L\CrowdfundingBundle\Service\CrowdfundingTranslator;
+use c975L\UiBundle\Contract\SocialContentStatusProviderInterface;
+use c975L\UiBundle\Model\SocialContentStatus;
 use c975L\UiBundle\Service\BlockMoveRowAttrBuilder;
 use c975L\UiBundle\Service\QrCodeGenerator;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -454,6 +456,7 @@ class CrowdfundingCrudControllerTest extends TestCase
             $collaborators['redirectRepository'],
             $collaborators['contentLocaleScreen'],
             $collaborators['crowdfundingTranslator'],
+            $this->crowdfundingRepositoryOfController,
         );
         $controller->setContainer($this->container($validToken, $requestStack));
 
@@ -506,5 +509,35 @@ class CrowdfundingCrudControllerTest extends TestCase
         });
 
         return $entityManager;
+    }
+
+    // A campaign a post holds says so in the list, reserved or published with its date in the language's format - nothing for one no post holds. SocialBundle is asked once for the whole list, not once per row
+    public function testTheSocialBadgeSaysWhetherAPostHoldsTheCampaign(): void
+    {
+        $statuses = $this->createMock(SocialContentStatusProviderInterface::class);
+        $statuses->expects($this->once())->method('getStatuses')->with('crowdfunding', ['7', '8', '9'])->willReturn([
+            '7' => new SocialContentStatus(SocialContentStatus::PUBLISHED, new \DateTimeImmutable('2026-10-09')),
+            '9' => new SocialContentStatus(SocialContentStatus::RESERVED, new \DateTimeImmutable('2026-10-12')),
+        ]);
+        $repository = $this->createStub(CrowdfundingRepository::class);
+        $repository->method('findNotDeletedIds')->willReturn(['7', '8', '9']);
+        $translator = $this->createStub(TranslatorInterface::class);
+        $translator->method('trans')->willReturnCallback(static fn (string $id, array $parameters = []): string => 'label.crowdfunding_social_date_format' === $id ? 'm/d' : $id . ' ' . implode(' ', $parameters));
+
+        // Only what the badge reads, the rest of the constructor having nothing to do with it
+        $controller = new \ReflectionClass(CrowdfundingCrudController::class)->newInstanceWithoutConstructor();
+        foreach (['socialStatuses' => $statuses, 'crowdfundingRepository' => $repository, 'translator' => $translator] as $property => $value) {
+            new \ReflectionProperty(CrowdfundingCrudController::class, $property)->setValue($controller, $value);
+        }
+
+        $badge = static function (int $id) use ($controller): string {
+            $campaign = new Crowdfunding();
+            new \ReflectionProperty(Crowdfunding::class, 'id')->setValue($campaign, $id);
+
+            return new \ReflectionMethod(CrowdfundingCrudController::class, 'socialStatusBadge')->invoke($controller, $campaign);
+        };
+        $this->assertSame('<span class="badge badge-success">label.crowdfunding_social_published 10/09</span>', $badge(7));
+        $this->assertSame('', $badge(8));
+        $this->assertSame('<span class="badge badge-warning">label.crowdfunding_social_reserved 10/12</span>', $badge(9));
     }
 }

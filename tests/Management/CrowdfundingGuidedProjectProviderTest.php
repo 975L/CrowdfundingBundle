@@ -17,7 +17,8 @@ use PHPUnit\Framework\TestCase;
 
 class CrowdfundingGuidedProjectProviderTest extends TestCase
 {
-    private function createProvider(array &$controllers = []): CrowdfundingGuidedProjectProvider
+    // SocialBundle installed by default, so every check below also walks the step only drawn with it
+    private function createProvider(array &$controllers = [], array $bundles = ['c975LSocialBundle' => 'c975L\\SocialBundle\\c975LSocialBundle']): CrowdfundingGuidedProjectProvider
     {
         $generator = $this->createStub(AdminUrlGeneratorInterface::class);
         $generator->method('unsetAll')->willReturnSelf();
@@ -35,7 +36,16 @@ class CrowdfundingGuidedProjectProviderTest extends TestCase
             static fn (string $key): string => 'site-role-admin' === $key ? 'ROLE_ADMIN' : 'ROLE_EDITOR'
         );
 
-        return new CrowdfundingGuidedProjectProvider($generator, $configService);
+        return new CrowdfundingGuidedProjectProvider($generator, $configService, $bundles);
+    }
+
+    // The column the step points at is only drawn where SocialBundle is there to publish
+    public function testThePublishParcoursShowsTheSocialColumnOnlyWithSocialBundle(): void
+    {
+        $steps = static fn (array $projects): array => array_column(array_column($projects, 'steps', 'slug')['crowdfunding-publish'], 'highlight');
+
+        $this->assertContains('th.crowdfunding-social', $steps($this->createProvider()->getGuidedProjects()));
+        $this->assertNotContains('th.crowdfunding-social', $steps($this->createProvider(bundles: [])->getGuidedProjects()));
     }
 
     // The 9000 block GuidedProjectProviderInterface reserves this bundle - and the order a campaign is actually built in, not an alphabetical one
