@@ -365,7 +365,6 @@ class CrowdfundingCrudController extends AbstractCrudController
             ->linkToUrl(fn (Crowdfunding $crowdfunding): string => $this->generateUrl('crowdfunding_display', ['slug' => $crowdfunding->getSlug()]))
             ->setHtmlAttributes(['target' => '_blank'])
             ->displayIf(static fn (Crowdfunding $crowdfunding): bool => !$crowdfunding->isHidden() && !$crowdfunding->isDeleted() && '' !== (string) $crowdfunding->getSlug())
-            ->addCssClass('btn btn-secondary')
         ;
 
         // Opens the page of a campaign that is not opened yet, in a new tab - the same page the visitor will read, minus the block cache and with a banner saying so
@@ -373,14 +372,12 @@ class CrowdfundingCrudController extends AbstractCrudController
             ->linkToUrl(fn (Crowdfunding $crowdfunding): string => $this->generateUrl('crowdfunding_preview', ['slug' => $crowdfunding->getSlug()]))
             ->setHtmlAttributes(['target' => '_blank'])
             ->displayIf(static fn (Crowdfunding $crowdfunding): bool => $crowdfunding->isHidden() && !$crowdfunding->isDeleted() && '' !== (string) $crowdfunding->getSlug())
-            ->addCssClass('btn btn-secondary')
         ;
 
         // Takes a campaign back out of the recycle bin, with everything it still holds - it comes back hidden, its own switch having been turned on when it was trashed
         $restoreAction = Action::new('restore', t('action.restore', [], 'crowdfunding'), 'fa fa-trash-restore')
             ->linkToUrl(fn (Crowdfunding $crowdfunding): string => $this->tokenizedUrl('restore', $crowdfunding, self::RESTORE_CSRF_TOKEN))
             ->displayIf(static fn (Crowdfunding $crowdfunding): bool => $crowdfunding->isDeleted())
-            ->addCssClass('btn btn-secondary')
         ;
 
         // Removes the campaign for good, its medias, its counterparts and its draws with it - only reachable from the recycle bin
@@ -389,7 +386,6 @@ class CrowdfundingCrudController extends AbstractCrudController
             ->displayIf(static fn (Crowdfunding $crowdfunding): bool => $crowdfunding->isDeleted())
             ->askConfirmation(t('confirm.delete_permanently', [], 'crowdfunding'))
             ->asDangerAction()
-            ->addCssClass('btn btn-danger')
         ;
 
         $actions = $actions
@@ -494,10 +490,7 @@ class CrowdfundingCrudController extends AbstractCrudController
             : Action::new('trash', t('action.trash', [], 'crowdfunding'), 'fa fa-trash-alt')
                 ->linkToUrl(fn (): string => $this->trashIndexUrl());
 
-        return $action
-            ->createAsGlobalAction()
-            ->addCssClass('btn btn-secondary')
-        ;
+        return $action->createAsGlobalAction();
     }
 
     // Opens the first language screen straight from the list, the way ShopBundle's products and SiteBundle's pages are translated - the tabs above a campaign already opened are the only other way in, and a translation screen nobody finds translates nothing
@@ -505,9 +498,7 @@ class CrowdfundingCrudController extends AbstractCrudController
     {
         return $this->contentLocaleScreen
             ->action('translate', t('action.translate', [], 'crowdfunding'), 'fa fa-language', $this->crowdfundingTranslator->getTranslatableLocales())
-            ->displayIf(fn (Crowdfunding $crowdfunding): bool => !$crowdfunding->isDeleted() && $this->crowdfundingTranslator->isActive())
-            ->addCssClass('btn btn-secondary')
-        ;
+            ->displayIf(fn (Crowdfunding $crowdfunding): bool => !$crowdfunding->isDeleted() && $this->crowdfundingTranslator->isActive());
     }
 
     // The recycle bin both trash actions come back to, whether they ran or were refused

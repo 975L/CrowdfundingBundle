@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.7.1
+
+Custom actions styled by EasyAdmin 5.7 alone
+
+- Requires `easycorp/easyadmin-bundle` ^5.7 (14/10/2026)
+- Custom actions no longer add the `btn` classes EasyAdmin already sets (14/10/2026)
+
 ## v1.7.0
 
 Campaigns and news browsable from a social post draft
