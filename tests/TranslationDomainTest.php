@@ -146,6 +146,11 @@ class TranslationDomainTest extends TestCase
             $keys = array_merge($keys, $this->emailKeys($contents));
         }
 
+        // UiBundle's social column builds its keys from the type the controller names, so none is spelled out here
+        if (str_contains($contents, 'use SocialStatusCrudTrait;')) {
+            $keys = array_merge($keys, ['label.crowdfunding_social', 'label.crowdfunding_social_date_format', 'label.crowdfunding_social_reserved', 'label.crowdfunding_social_published']);
+        }
+
         // A form type resolving its own labels in the bundle's domain, and the menu and guided-project providers naming theirs the same way, carry no domain of their own; "narration" is left out, resolved in the "_narration" domain NarrationCatalogueTest holds
         if (str_contains($contents, "'translation_domain' => 'crowdfunding'")) {
             $keys = array_merge($keys, $this->declaredLabelKeys($contents));

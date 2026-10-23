@@ -22,6 +22,9 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 // Hands SocialBundle's publication the campaigns still collecting, in the order the site lists them - a site without SocialBundle simply never asks. What went out where is SocialBundle's to record
 class CrowdfundingSocialContentSource implements BrowsableSocialContentSourceInterface, SocialContentSourceInterface
 {
+    // The type SocialBundle files the campaigns under, also read by the back-office's social column
+    public const string SOURCE_TYPE = 'crowdfunding';
+
     // A running campaign lives on reminders: a month between two is what keeps it in sight without wearing its followers out
     private const int REPEAT_AFTER_DAYS = 30;
 
@@ -36,7 +39,7 @@ class CrowdfundingSocialContentSource implements BrowsableSocialContentSourceInt
 
     public function getSourceType(): string
     {
-        return 'crowdfunding';
+        return self::SOURCE_TYPE;
     }
 
     public function getRepeatAfterDays(): ?int

@@ -26,20 +26,6 @@ class CrowdfundingRepository extends ServiceEntityRepository
         parent::__construct($registry, Crowdfunding::class);
     }
 
-    // The id of every campaign not in the trash, as a string - what the back-office list asks SocialBundle about in one go
-    /** @return list<string> */
-    public function findNotDeletedIds(): array
-    {
-        $ids = $this->createQueryBuilder('c')
-            ->select('c.id')
-            ->andWhere('c.isDeleted = false')
-            ->getQuery()
-            ->getSingleColumnResult()
-        ;
-
-        return array_map(strval(...), $ids);
-    }
-
     // Finds all crowfundings sorted - the ones a visitor may read: a hidden campaign is not opened yet and a trashed one is on its way out, neither belonging to the listing nor to the sitemap
     /**
      * @return list<Crowdfunding>

@@ -28,7 +28,6 @@ use c975L\CrowdfundingBundle\Entity\LotteryTicket;
 use c975L\CrowdfundingBundle\Repository\CrowdfundingRepository;
 use c975L\CrowdfundingBundle\Service\CrowdfundingTranslator;
 use c975L\UiBundle\Contract\SocialContentStatusProviderInterface;
-use c975L\UiBundle\Model\SocialContentStatus;
 use c975L\UiBundle\Service\BlockMoveRowAttrBuilder;
 use c975L\UiBundle\Service\QrCodeGenerator;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -456,7 +455,6 @@ class CrowdfundingCrudControllerTest extends TestCase
             $collaborators['redirectRepository'],
             $collaborators['contentLocaleScreen'],
             $collaborators['crowdfundingTranslator'],
-            $this->crowdfundingRepositoryOfController,
         );
         $controller->setContainer($this->container($validToken, $requestStack));
 
@@ -511,33 +509,23 @@ class CrowdfundingCrudControllerTest extends TestCase
         return $entityManager;
     }
 
-    // A campaign a post holds says so in the list, reserved or published with its date in the language's format - nothing for one no post holds. SocialBundle is asked once for the whole list, not once per row
-    public function testTheSocialBadgeSaysWhetherAPostHoldsTheCampaign(): void
+    // The shared social column (see UiBundle's SocialStatusCrudTrait), asked about as "crowdfunding" in this bundle's domain, highlighted by the publication parcours through its class, and left out of the trash where no post is waited for any more
+    public function testTheSocialColumnIsOnTheCampaignsOutsideTheTrash(): void
     {
-        $statuses = $this->createMock(SocialContentStatusProviderInterface::class);
-        $statuses->expects($this->once())->method('getStatuses')->with('crowdfunding', ['7', '8', '9'])->willReturn([
-            '7' => new SocialContentStatus(SocialContentStatus::PUBLISHED, new \DateTimeImmutable('2026-10-09')),
-            '9' => new SocialContentStatus(SocialContentStatus::RESERVED, new \DateTimeImmutable('2026-10-12')),
-        ]);
-        $repository = $this->createStub(CrowdfundingRepository::class);
-        $repository->method('findNotDeletedIds')->willReturn(['7', '8', '9']);
-        $translator = $this->createStub(TranslatorInterface::class);
-        $translator->method('trans')->willReturnCallback(static fn (string $id, array $parameters = []): string => 'label.crowdfunding_social_date_format' === $id ? 'm/d' : $id . ' ' . implode(' ', $parameters));
+        $fields = static function (array $query): array {
+            $controller = new \ReflectionClass(CrowdfundingCrudController::class)->newInstanceWithoutConstructor();
+            foreach (['socialStatuses' => self::createStub(SocialContentStatusProviderInterface::class), 'requestStack' => new RequestStack([new Request($query)])] as $property => $value) {
+                new \ReflectionProperty(CrowdfundingCrudController::class, $property)->setValue($controller, $value);
+            }
 
-        // Only what the badge reads, the rest of the constructor having nothing to do with it
-        $controller = new \ReflectionClass(CrowdfundingCrudController::class)->newInstanceWithoutConstructor();
-        foreach (['socialStatuses' => $statuses, 'crowdfundingRepository' => $repository, 'translator' => $translator] as $property => $value) {
-            new \ReflectionProperty(CrowdfundingCrudController::class, $property)->setValue($controller, $value);
-        }
-
-        $badge = static function (int $id) use ($controller): string {
-            $campaign = new Crowdfunding();
-            new \ReflectionProperty(Crowdfunding::class, 'id')->setValue($campaign, $id);
-
-            return new \ReflectionMethod(CrowdfundingCrudController::class, 'socialStatusBadge')->invoke($controller, $campaign);
+            return new \ReflectionMethod(CrowdfundingCrudController::class, 'socialStatusFields')->invoke($controller);
         };
-        $this->assertSame('<span class="badge badge-success">label.crowdfunding_social_published 10/09</span>', $badge(7));
-        $this->assertSame('', $badge(8));
-        $this->assertSame('<span class="badge badge-warning">label.crowdfunding_social_reserved 10/12</span>', $badge(9));
+
+        $columns = $fields([]);
+        $this->assertCount(1, $columns);
+        $this->assertSame('label.crowdfunding_social', $columns[0]->getAsDto()->getLabel()->getMessage());
+        $this->assertSame('crowdfunding', $columns[0]->getAsDto()->getLabel()->getDomain());
+        $this->assertStringContainsString('crowdfunding-social', $columns[0]->getAsDto()->getCssClass());
+        $this->assertSame([], $fields(['trash' => '1']));
     }
 }

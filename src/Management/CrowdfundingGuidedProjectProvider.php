@@ -721,7 +721,7 @@ class CrowdfundingGuidedProjectProvider implements GuidedProjectProviderInterfac
         ];
     }
 
-    // Still on the listing the visit step left on: the column saying whether a post holds the campaign, drawn only where SocialBundle is there to publish (see CrowdfundingCrudController::socialStatusFields)
+    // Still on the listing the visit step left on: the column saying whether a post holds the campaign, drawn only where SocialBundle is there to publish (see UiBundle's SocialStatusCrudTrait, the column's class being "crowdfunding-social")
     /** @return list<array<string, string>> */
     private function publishSocialSteps(): array
     {

@@ -1,5 +1,14 @@
 # Changelog
 
+## v1.8.0
+
+Social column shared through UiBundle
+
+- Requires `c975l/core-bundle` ^1.73 for UiBundle's `SocialStatusCrudTrait` (23/10/2026)
+- The campaigns' social column asks SocialBundle about the rows of the page shown (23/10/2026)
+- Removed `CrowdfundingRepository::findNotDeletedIds()` and the repository argument of `CrowdfundingCrudController` (23/10/2026) [BC-Break]
+- Source type shared through `CrowdfundingSocialContentSource::SOURCE_TYPE` (23/10/2026)
+
 ## v1.7.1
 
 Custom actions styled by EasyAdmin 5.7 alone

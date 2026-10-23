@@ -109,17 +109,6 @@ class CrowdfundingRepositoryTest extends TestCase
         $this->assertSame([7], $repository->parameter('excluded'));
     }
 
-    // A trashed campaign waits for no post, so SocialBundle is never asked about it
-    public function testFindNotDeletedIdsLeavesOutTheTrash(): void
-    {
-        $repository = $this->createRepository();
-
-        $repository->findNotDeletedIds();
-
-        $this->assertStringContainsString('SELECT c.id', $repository->dql);
-        $this->assertStringContainsString('c.isDeleted = false', $repository->dql);
-    }
-
     // Doctrine's own QueryBuilder, assembling the real DQL on an EntityManager that answers nothing: getQuery() hands the string it built to createQuery(), which is where it is read back
     private function createRepository(): CrowdfundingRepositoryDqlFixture
     {
