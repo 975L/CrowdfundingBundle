@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.8.1
+
+CI installs the latest lizard
+
+- CI installs the latest `lizard` instead of pinning 1.17.31 (25/10/2026)
+
 ## v1.8.0
 
 Social column shared through UiBundle
