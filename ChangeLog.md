@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.8.2
+
+Demo pictures copied through UiBundle's DemoFixtureMediaCopier
+
+- `CrowdfundingDemoFixtureProvider` copies its pictures through UiBundle's `DemoFixtureMediaCopier` (30/10/2026)
+- Requires `c975l/core-bundle` ^1.81.3 (30/10/2026)
+
 ## v1.8.1
 
 CI installs the latest lizard

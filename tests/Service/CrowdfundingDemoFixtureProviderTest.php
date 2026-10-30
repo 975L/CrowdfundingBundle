@@ -16,6 +16,7 @@ use c975L\CrowdfundingBundle\Entity\CrowdfundingContributorCounterpart;
 use c975L\CrowdfundingBundle\Service\CrowdfundingDemoFixtureProvider;
 use c975L\UiBundle\Entity\Translation;
 use c975L\UiBundle\Registry\PlaceholderMediaRegistry;
+use c975L\UiBundle\Service\DemoFixtureMediaCopier;
 use c975L\UiBundle\Service\DemoFixtureTranslator;
 use PHPUnit\Framework\TestCase;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -30,7 +31,7 @@ class CrowdfundingDemoFixtureProviderTest extends TestCase
         $translator->method('trans')->willReturnCallback(static fn (string $key, array $parameters = [], ?string $domain = null, ?string $locale = null): string => ($locale ?? 'fr') . ':' . $key);
 
         // No placeholder declared, so no file is copied and the campaign is seeded without pictures
-        return new CrowdfundingDemoFixtureProvider($translator, new DemoFixtureTranslator($translator, ['fr', 'en', 'es'], 'fr'), new PlaceholderMediaRegistry(), sys_get_temp_dir());
+        return new CrowdfundingDemoFixtureProvider($translator, new DemoFixtureTranslator($translator, ['fr', 'en', 'es'], 'fr'), new PlaceholderMediaRegistry(), new DemoFixtureMediaCopier(sys_get_temp_dir()));
     }
 
     /** @return list<object> */

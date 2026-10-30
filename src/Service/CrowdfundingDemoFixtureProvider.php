@@ -21,10 +21,9 @@ use c975L\CrowdfundingBundle\Entity\LotteryPrize;
 use c975L\UiBundle\Contract\DemoFixtureLinkerInterface;
 use c975L\UiBundle\Contract\DemoFixtureProviderInterface;
 use c975L\UiBundle\Registry\PlaceholderMediaRegistry;
+use c975L\UiBundle\Service\DemoFixtureMediaCopier;
 use c975L\UiBundle\Service\DemoFixtureTranslator;
-use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use Vich\UploaderBundle\FileAbstraction\ReplacingFile;
 
 // The one open campaign a demo site runs, its tiers, news and contributors, the amounts summed from them and every visitor-facing text staged for translation
 class CrowdfundingDemoFixtureProvider implements DemoFixtureLinkerInterface, DemoFixtureProviderInterface
@@ -63,8 +62,7 @@ class CrowdfundingDemoFixtureProvider implements DemoFixtureLinkerInterface, Dem
         private readonly TranslatorInterface $translator,
         private readonly DemoFixtureTranslator $demoFixtureTranslator,
         private readonly PlaceholderMediaRegistry $placeholderMediaRegistry,
-        #[Autowire(param: 'kernel.project_dir')]
-        private readonly string $projectDir,
+        private readonly DemoFixtureMediaCopier $demoFixtureMediaCopier,
     ) {
     }
 
@@ -80,7 +78,7 @@ class CrowdfundingDemoFixtureProvider implements DemoFixtureLinkerInterface, Dem
 
             // A picture per tier, rotated through the generic pool so the three cards differ; a site declaring none gets the empty one the bundle's own listener adds
             $picture = [] === $images ? null : $images[\count($counterparts) % \count($images)];
-            $file = null === $picture ? null : $this->temporaryCopy($picture);
+            $file = null === $picture ? null : $this->demoFixtureMediaCopier->copy($picture);
             if (null !== $file) {
                 $media = new CrowdfundingCounterpartMedia()->setCrowdfundingCounterpart($counterparts[$slug]);
                 $media->setFile($file);
@@ -152,7 +150,7 @@ class CrowdfundingDemoFixtureProvider implements DemoFixtureLinkerInterface, Dem
         }
 
         foreach ($pictures as $index => $picture) {
-            $file = $this->temporaryCopy($picture);
+            $file = $this->demoFixtureMediaCopier->copy($picture);
             if (null === $file) {
                 continue;
             }
@@ -164,7 +162,7 @@ class CrowdfundingDemoFixtureProvider implements DemoFixtureLinkerInterface, Dem
                 $crowdfunding->addHero($media);
 
                 // A cover of its own rather than the same row read twice, a file having one use (see Crowdfunding::getSlides())
-                $cover = $this->temporaryCopy($picture);
+                $cover = $this->demoFixtureMediaCopier->copy($picture);
                 if (null !== $cover) {
                     $coverMedia = new CrowdfundingMedia()->setPosition(1);
                     $coverMedia->setFile($cover);
@@ -250,19 +248,6 @@ class CrowdfundingDemoFixtureProvider implements DemoFixtureLinkerInterface, Dem
 
         $this->demoFixtureTranslator->stage($owner, $ownerType, 'crowdfunding', $keys($plain));
         $this->demoFixtureTranslator->stage($owner, $ownerType, 'crowdfunding', $keys($rich), static fn (string $value): string => '<div>' . $value . '</div>');
-    }
-
-    // VichUploader moves the file it is handed, so it gets a copy - as a ReplacingFile, a plain File being what UploadHandler::hasUploadedFile() ignores in silence
-    private function temporaryCopy(string $publicPath): ?ReplacingFile
-    {
-        $source = $this->projectDir . '/public/' . $publicPath;
-        if (!is_file($source)) {
-            return null;
-        }
-
-        $target = sys_get_temp_dir() . '/c975l-demo-' . uniqid() . '-' . basename($publicPath);
-
-        return copy($source, $target) ? new ReplacingFile($target, true, true, true) : null;
     }
 
     // Every sample text, each spelled out as a call to the catalogue so the key is named where a reader - and the domain test - looks for it
