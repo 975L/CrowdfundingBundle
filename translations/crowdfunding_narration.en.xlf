@@ -332,7 +332,7 @@
             </trans-unit>
             <trans-unit id="fmAEW7n">
                 <source>narration.guided_step_crowdfunding_trash_delete</source>
-                <target>On that row, click the box-shaped button and confirm: the campaign leaves the listing for the recycle bin, keeping everything it holds.</target>
+                <target>On that row, click the box-shaped button and confirm: the campaign leaves the listing for the recycle bin, keeping everything it holds. To move several campaigns at once, tick them and choose "Move to the recycle bin".</target>
             </trans-unit>
             <trans-unit id="phhtfea">
                 <source>narration.guided_step_crowdfunding_trash_done</source>
@@ -344,7 +344,7 @@
             </trans-unit>
             <trans-unit id="1ooV8xW">
                 <source>narration.guided_step_crowdfunding_trash_purge</source>
-                <target>The red button beside it deletes the campaign for good, with its medias, its counterparts, its draws and the contributions it received. Nothing brings it back.</target>
+                <target>The red button beside it deletes the campaign for good, with its medias, its counterparts, its draws and the contributions it received. Nothing brings it back. Tick several campaigns and "Delete permanently" to empty the bin at once.</target>
             </trans-unit>
             <trans-unit id="AqjbtkM">
                 <source>narration.guided_step_crowdfunding_trash_restore</source>

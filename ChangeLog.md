@@ -1,5 +1,16 @@
 # Changelog
 
+## v1.8.3
+
+Recycle bin emptied in a batch, and titled as such
+
+- `CrowdfundingCrudController`: the batch "Delete" reads "Move to the recycle bin" on the campaigns and "Delete permanently" in the bin, where it now removes the selection for good instead of doing nothing - for the admin alone, as the row button (31/10/2026)
+- `CrowdfundingCrudController`: the recycle bin is titled "Recycle bin" rather than "Campaigns" (31/10/2026)
+- `CrowdfundingCrudController`: removing a campaign for good shared by its row button and the batch action (31/10/2026)
+- Recycle bin guided project mentions the batch gestures (31/10/2026)
+- `action.move_to_trash` and `action.delete_permanently` read from ConfigBundle's `config` catalog, shared with the batch action, and removed from the `crowdfunding` one (31/10/2026)
+- Requires `c975l/core-bundle` ^1.83.0 (31/10/2026)
+
 ## v1.8.2
 
 Demo pictures copied through UiBundle's DemoFixtureMediaCopier

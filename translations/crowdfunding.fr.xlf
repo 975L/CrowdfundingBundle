@@ -2,14 +2,6 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
     <file source-language="en" target-language="fr" datatype="plaintext" original="crowdfunding.en.xlf">
         <body>
-            <trans-unit id="sSgetpg">
-                <source>action.delete_permanently</source>
-                <target>Supprimer définitivement</target>
-            </trans-unit>
-            <trans-unit id="vUjYe27">
-                <source>action.move_to_trash</source>
-                <target>Mettre à la corbeille</target>
-            </trans-unit>
             <trans-unit id="OVrqPFV">
                 <source>action.preview</source>
                 <target>Prévisualiser</target>
@@ -368,7 +360,7 @@
             </trans-unit>
             <trans-unit id="0tj3CPQ">
                 <source>description.guided_step_crowdfunding_trash_delete</source>
-                <target>Le bouton en forme de carton sur la ligne de la campagne. Il demande confirmation, puis sort la campagne de la liste : sa page répond 410 et elle garde tout ce qu'elle contient.</target>
+                <target>Le bouton en forme de carton sur la ligne de la campagne. Il demande confirmation, puis sort la campagne de la liste : sa page répond 410 et elle garde tout ce qu'elle contient. Cochez plusieurs campagnes et « Mettre à la corbeille » pour les y mettre ensemble.</target>
             </trans-unit>
             <trans-unit id="5CL1y0.">
                 <source>description.guided_step_crowdfunding_trash_done</source>
@@ -380,7 +372,7 @@
             </trans-unit>
             <trans-unit id="kZI5Ik8">
                 <source>description.guided_step_crowdfunding_trash_purge</source>
-                <target>Le dernier geste, et le seul qui ne se défait pas : la campagne, ses médias, ses contreparties, ses tirages et les contributions reçues partent pour de bon, et une redirection gone est laissée à son adresse.</target>
+                <target>Le dernier geste, et le seul qui ne se défait pas : la campagne, ses médias, ses contreparties, ses tirages et les contributions reçues partent pour de bon, et une redirection gone est laissée à son adresse. Cochez plusieurs campagnes pour vider la corbeille d'un coup.</target>
             </trans-unit>
             <trans-unit id="UI0HAAt">
                 <source>description.guided_step_crowdfunding_trash_restore</source>

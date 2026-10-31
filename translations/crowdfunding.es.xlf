@@ -2,14 +2,6 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
     <file source-language="en" target-language="es" datatype="plaintext" original="crowdfunding.en.xlf">
         <body>
-            <trans-unit id="sSgetpg">
-                <source>action.delete_permanently</source>
-                <target>Eliminar definitivamente</target>
-            </trans-unit>
-            <trans-unit id="vUjYe27">
-                <source>action.move_to_trash</source>
-                <target>Mover a la papelera</target>
-            </trans-unit>
             <trans-unit id="OVrqPFV">
                 <source>action.preview</source>
                 <target>Previsualizar</target>
@@ -368,7 +360,7 @@
             </trans-unit>
             <trans-unit id="0tj3CPQ">
                 <source>description.guided_step_crowdfunding_trash_delete</source>
-                <target>El botón con forma de caja en la fila de la campaña. Pide confirmación y luego saca la campaña del listado: su página responde 410 y conserva todo lo que contiene.</target>
+                <target>El botón con forma de caja en la fila de la campaña. Pide confirmación y luego saca la campaña del listado: su página responde 410 y conserva todo lo que contiene. Marque varias campañas y «Mover a la papelera» para moverlas juntas.</target>
             </trans-unit>
             <trans-unit id="5CL1y0.">
                 <source>description.guided_step_crowdfunding_trash_done</source>
@@ -380,7 +372,7 @@
             </trans-unit>
             <trans-unit id="kZI5Ik8">
                 <source>description.guided_step_crowdfunding_trash_purge</source>
-                <target>El último gesto, y el único que no se deshace: la campaña, sus medios, sus contrapartidas, sus sorteos y las contribuciones recibidas desaparecen para siempre, y en su dirección queda una redirección gone.</target>
+                <target>El último gesto, y el único que no se deshace: la campaña, sus medios, sus contrapartidas, sus sorteos y las contribuciones recibidas desaparecen para siempre, y en su dirección queda una redirección gone. Marque varias campañas para vaciar la papelera de una vez.</target>
             </trans-unit>
             <trans-unit id="UI0HAAt">
                 <source>description.guided_step_crowdfunding_trash_restore</source>

@@ -332,7 +332,7 @@
             </trans-unit>
             <trans-unit id="fmAEW7n">
                 <source>narration.guided_step_crowdfunding_trash_delete</source>
-                <target>Sur cette ligne, cliquez le bouton en forme de carton et confirmez : la campagne quitte la liste pour la corbeille, en gardant tout ce qu'elle contient.</target>
+                <target>Sur cette ligne, cliquez le bouton en forme de carton et confirmez : la campagne quitte la liste pour la corbeille, en gardant tout ce qu'elle contient. Pour plusieurs campagnes à la fois, cochez-les et choisissez « Mettre à la corbeille ».</target>
             </trans-unit>
             <trans-unit id="phhtfea">
                 <source>narration.guided_step_crowdfunding_trash_done</source>
@@ -344,7 +344,7 @@
             </trans-unit>
             <trans-unit id="1ooV8xW">
                 <source>narration.guided_step_crowdfunding_trash_purge</source>
-                <target>Le bouton rouge à côté supprime la campagne pour de bon, avec ses médias, ses contreparties, ses tirages et les contributions reçues. Rien ne la ramène.</target>
+                <target>Le bouton rouge à côté supprime la campagne pour de bon, avec ses médias, ses contreparties, ses tirages et les contributions reçues. Rien ne la ramène. Cochez plusieurs campagnes et « Supprimer définitivement » pour vider la corbeille d'un coup.</target>
             </trans-unit>
             <trans-unit id="AqjbtkM">
                 <source>narration.guided_step_crowdfunding_trash_restore</source>

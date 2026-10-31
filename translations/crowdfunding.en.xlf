@@ -2,14 +2,6 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
     <file source-language="en" target-language="en" datatype="plaintext" original="crowdfunding.en.xlf">
         <body>
-            <trans-unit id="sSgetpg">
-                <source>action.delete_permanently</source>
-                <target>Delete permanently</target>
-            </trans-unit>
-            <trans-unit id="vUjYe27">
-                <source>action.move_to_trash</source>
-                <target>Move to the recycle bin</target>
-            </trans-unit>
             <trans-unit id="OVrqPFV">
                 <source>action.preview</source>
                 <target>Preview</target>
@@ -368,7 +360,7 @@
             </trans-unit>
             <trans-unit id="0tj3CPQ">
                 <source>description.guided_step_crowdfunding_trash_delete</source>
-                <target>The box button on the campaign's row. It asks for a confirmation, then takes the campaign out of the listing: its page answers 410 and it keeps everything it holds.</target>
+                <target>The box button on the campaign's row. It asks for a confirmation, then takes the campaign out of the listing: its page answers 410 and it keeps everything it holds. Tick several campaigns and "Move to the recycle bin" to move them together.</target>
             </trans-unit>
             <trans-unit id="5CL1y0.">
                 <source>description.guided_step_crowdfunding_trash_done</source>
@@ -380,7 +372,7 @@
             </trans-unit>
             <trans-unit id="kZI5Ik8">
                 <source>description.guided_step_crowdfunding_trash_purge</source>
-                <target>The last gesture, and the only one that undoes nothing: the campaign, its medias, its counterparts, its draws and the contributions it received go for good, and a gone redirect is left at its address.</target>
+                <target>The last gesture, and the only one that undoes nothing: the campaign, its medias, its counterparts, its draws and the contributions it received go for good, and a gone redirect is left at its address. Tick several campaigns to empty the bin at once.</target>
             </trans-unit>
             <trans-unit id="UI0HAAt">
                 <source>description.guided_step_crowdfunding_trash_restore</source>

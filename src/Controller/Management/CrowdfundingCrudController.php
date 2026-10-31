@@ -49,6 +49,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\KeyValueStore;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Contracts\Field\FieldInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Dto\BatchActionDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
@@ -355,7 +356,7 @@ class CrowdfundingCrudController extends AbstractCrudController
         ;
 
         // Removes the campaign for good, its medias, its counterparts and its draws with it - only reachable from the recycle bin
-        $deletePermanentlyAction = Action::new('deletePermanently', t('action.delete_permanently', [], 'crowdfunding'), 'fa fa-trash')
+        $deletePermanentlyAction = Action::new('deletePermanently', t('action.delete_permanently', [], 'config'), 'fa fa-trash')
             ->linkToUrl(fn (Crowdfunding $crowdfunding): string => $this->tokenizedUrl('deletePermanently', $crowdfunding, self::DELETE_PERMANENTLY_CSRF_TOKEN))
             ->displayIf(static fn (Crowdfunding $crowdfunding): bool => $crowdfunding->isDeleted())
             ->askConfirmation(t('confirm.delete_permanently', [], 'crowdfunding'))
@@ -384,11 +385,11 @@ class CrowdfundingCrudController extends AbstractCrudController
                     ->setIcon('fa fa-box-archive')
                     ->askConfirmation(t('confirm.move_to_trash', [], 'crowdfunding'))
                     ->displayIf(static fn (Crowdfunding $crowdfunding): bool => !$crowdfunding->isDeleted()),
-                $this->translator->trans('action.move_to_trash', [], 'crowdfunding'),
+                $this->translator->trans('action.move_to_trash', [], 'config'),
             ))
             // Same gesture on the screen itself, keeping its words there, where the bar has the room for them
             ->update(Crud::PAGE_EDIT, Action::DELETE, fn (Action $action) => $action
-                ->setLabel(t('action.move_to_trash', [], 'crowdfunding'))
+                ->setLabel(t('action.move_to_trash', [], 'config'))
                 ->setIcon('fa fa-box-archive')
                 ->askConfirmation(t('confirm.move_to_trash', [], 'crowdfunding'))
                 ->displayIf(static fn (Crowdfunding $crowdfunding): bool => !$crowdfunding->isDeleted()))
@@ -414,13 +415,14 @@ class CrowdfundingCrudController extends AbstractCrudController
             ))
             ->update(Crud::PAGE_INDEX, 'deletePermanently', fn (Action $action) => EasyAdminActionHelper::toIconOnly(
                 $action,
-                $this->translator->trans('action.delete_permanently', [], 'crowdfunding'),
+                $this->translator->trans('action.delete_permanently', [], 'config'),
             ))
             ->reorder(Crud::PAGE_INDEX, [Action::EDIT, Action::DETAIL, 'viewOnSite', 'preview', 'translate', 'restore', Action::DELETE, 'deletePermanently'])
             ->reorder(Crud::PAGE_EDIT, ['viewOnSite', 'preview'])
         ;
 
-        return $this->grantActions($actions, $role);
+        // The batch "Delete" runs deleteEntity() below, which trashes from the list and removes for good from the bin - worded for each, EasyAdmin's own "Delete" saying neither
+        return EasyAdminActionHelper::trashBatchDelete($this->grantActions($actions, $role), $this->isTrash(), $this->adminUrlGenerator);
     }
 
     // Every screen and every button of the campaigns behind the same role, named rather than left at the end of the chain above - a campaign is written and opened by whoever writes the site, which is the bar every other c975L CRUD sets on its own index
@@ -434,6 +436,8 @@ class CrowdfundingCrudController extends AbstractCrudController
             ->setPermission(Action::NEW, $role)
             ->setPermission(Action::EDIT, $role)
             ->setPermission(Action::DELETE, $role)
+            // In the bin the batch "Delete" removes for good: drawn for the admin alone, the guard itself being in deleteEntity(), as EasyAdmin's batchDelete() checks Action::DELETE
+            ->setPermission(Action::BATCH_DELETE, $this->isTrash() ? $adminRole : $role)
             ->setPermission(Action::DETAIL, $role)
             ->setPermission('viewOnSite', $role)
             ->setPermission('preview', $role)
@@ -594,12 +598,26 @@ class CrowdfundingCrudController extends AbstractCrudController
         return $collection instanceof PersistentCollection ? $collection->getDeleteDiff() : [];
     }
 
-    // Deleting a campaign only moves it to the recycle bin, with everything it holds: its url answers 410 from there, and it is restored or removed for good from that view alone
+    // Deleting a campaign only moves it to the recycle bin, with everything it holds: its url answers 410 from there, and it is restored or removed for good from that view alone. From the bin, the batch "Delete" removes it for good (flushed once by batchDelete())
     #[\Override]
     public function deleteEntity(EntityManagerInterface $entityManager, mixed $entityInstance): void
     {
         if (!$entityInstance instanceof Crowdfunding) {
             parent::deleteEntity($entityManager, $entityInstance);
+
+            return;
+        }
+
+        // Decided by the screen the delete came from, never by the row alone: a replayed "Move to the recycle bin" on a campaign already there, or a stale bin selection holding one restored meanwhile, is left alone
+        if ($entityInstance->isDeleted() !== $this->isTrash()) {
+            return;
+        }
+
+        // Removing for good is the admin's bar (see trashedCampaign()), stricter than the editor's one this screen is opened with - the batch path is held to it as the row button is
+        if ($entityInstance->isDeleted()) {
+            $this->denyAccessUnlessGranted($this->configService->get('site-role-admin'));
+            $this->removeForGood($entityManager, $entityInstance);
+            $this->addFlash('success', $this->translator->trans('flash.crowdfunding_deleted_permanently', [], 'crowdfunding'));
 
             return;
         }
@@ -656,14 +674,30 @@ class CrowdfundingCrudController extends AbstractCrudController
             return $this->redirect($this->trashIndexUrl());
         }
 
-        $this->writeGoneRedirect($entityManager, $crowdfunding);
-
-        $entityManager->remove($crowdfunding);
+        $this->removeForGood($entityManager, $crowdfunding);
         $entityManager->flush();
 
         $this->addFlash('success', $this->translator->trans('flash.crowdfunding_deleted_permanently', [], 'crowdfunding'));
 
         return $this->redirect($this->trashIndexUrl());
+    }
+
+    // Emptying the bin in a batch is flushed once for the whole selection rather than once per campaign, deleteEntity() leaving the removals pending
+    #[\Override]
+    public function batchDelete(AdminContext $context, BatchActionDto $batchActionDto): Response
+    {
+        $response = parent::batchDelete($context, $batchActionDto);
+        $this->container->get('doctrine')->getManagerForClass(Crowdfunding::class)?->flush();
+
+        return $response;
+    }
+
+    // What removing a campaign for good takes, whether from its row button or from the batch action of the bin: its url left answering 410, the rows it holds going with it through their cascades - flushed by the caller
+    private function removeForGood(EntityManagerInterface $entityManager, Crowdfunding $crowdfunding): void
+    {
+        $this->writeGoneRedirect($entityManager, $crowdfunding);
+
+        $entityManager->remove($crowdfunding);
     }
 
     // The campaign both trash actions run on: the role, the csrf token and the row itself, checked once for the two of them. Null is "go back to the recycle bin", where the row the action was clicked on is either still there or already gone
@@ -704,6 +738,8 @@ class CrowdfundingCrudController extends AbstractCrudController
             // Named in the editor's own language: with no label, EasyAdmin falls back on the class name and prints "Crowdfunding" on every screen and every button
             ->setEntityLabelInSingular(t('label.crowdfunding', [], 'crowdfunding'))
             ->setEntityLabelInPlural(t('label.crowdfundings', [], 'crowdfunding'))
+            // The bin is the same screen as the campaigns, and says which of the two is shown rather than printing "Campaigns" over both
+            ->setPageTitle(Crud::PAGE_INDEX, t($this->isTrash() ? 'action.trash' : 'label.crowdfundings', [], 'crowdfunding'))
             ->setEntityPermission($this->configService->get('site-role-editor'))
             // Carries the language tabs above the form, and nothing at all on a site declaring a single language (see ContentLocaleScreen)
             ->overrideTemplate('crud/edit', '@c975LCrowdfunding/management/crowdfunding_crud_edit.html.twig')

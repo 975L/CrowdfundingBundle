@@ -332,7 +332,7 @@
             </trans-unit>
             <trans-unit id="fmAEW7n">
                 <source>narration.guided_step_crowdfunding_trash_delete</source>
-                <target>En esa fila, haga clic en el botón con forma de caja y confirme: la campaña abandona la lista para irse a la papelera, conservando todo lo que contiene.</target>
+                <target>En esa fila, haga clic en el botón con forma de caja y confirme: la campaña abandona la lista para irse a la papelera, conservando todo lo que contiene. Para varias campañas a la vez, márquelas y elija «Mover a la papelera».</target>
             </trans-unit>
             <trans-unit id="phhtfea">
                 <source>narration.guided_step_crowdfunding_trash_done</source>
@@ -344,7 +344,7 @@
             </trans-unit>
             <trans-unit id="1ooV8xW">
                 <source>narration.guided_step_crowdfunding_trash_purge</source>
-                <target>El botón rojo de al lado elimina la campaña definitivamente, con sus medios, sus contrapartidas, sus sorteos y las contribuciones recibidas. Nada la devuelve.</target>
+                <target>El botón rojo de al lado elimina la campaña definitivamente, con sus medios, sus contrapartidas, sus sorteos y las contribuciones recibidas. Nada la devuelve. Marque varias campañas y «Eliminar definitivamente» para vaciar la papelera de una vez.</target>
             </trans-unit>
             <trans-unit id="AqjbtkM">
                 <source>narration.guided_step_crowdfunding_trash_restore</source>

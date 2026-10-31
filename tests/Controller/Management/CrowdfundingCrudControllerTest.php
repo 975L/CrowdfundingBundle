@@ -52,6 +52,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -92,6 +93,107 @@ class CrowdfundingCrudControllerTest extends TestCase
         $this->assertTrue($crowdfunding->isHidden());
         $this->assertSame([], $removed);
         $this->assertSame(1, $flushed);
+    }
+
+    // From the bin, the batch action removes a campaign for good and leaves a 410 at its url - pending until batchDelete() flushes the whole selection, with the row button's flash
+    public function testDeletingATrashedCampaignFromTheBinRemovesItForGood(): void
+    {
+        $crowdfunding = new Crowdfunding()->setSlug('sauver-les-chats')->setIsDeleted(true);
+        $persisted = [];
+        $removed = [];
+        $flushed = 0;
+
+        $this->createController($this->redirectRepository(), new Request(['trash' => 1]))->deleteEntity($this->recordingEntityManager($persisted, $removed, $flushed), $crowdfunding);
+
+        $this->assertSame([$crowdfunding], $removed);
+        $this->assertSame('/crowdfunding/sauver-les-chats', $persisted[0]->getFromPath());
+        $this->assertTrue($persisted[0]->isGone());
+        $this->assertSame(0, $flushed);
+        $this->assertCount(1, $this->request->getSession()->getFlashBag()->get('success'));
+    }
+
+    // A replayed "Move to the recycle bin" on a campaign already there removes nothing: only the bin removes for good
+    public function testDeletingATrashedCampaignOutsideTheBinRemovesNothing(): void
+    {
+        $crowdfunding = new Crowdfunding()->setSlug('sauver-les-chats')->setIsDeleted(true);
+        $persisted = [];
+        $removed = [];
+        $flushed = 0;
+
+        $this->createController($this->redirectRepository())->deleteEntity($this->recordingEntityManager($persisted, $removed, $flushed), $crowdfunding);
+
+        $this->assertTrue($crowdfunding->isDeleted());
+        $this->assertSame([], $removed);
+        $this->assertSame([], $persisted);
+        $this->assertSame(0, $flushed);
+    }
+
+    // A stale bin selection holding a campaign restored meanwhile leaves it on the site rather than trashing it again
+    public function testARestoredCampaignIsLeftAloneByTheBin(): void
+    {
+        $crowdfunding = new Crowdfunding()->setSlug('sauver-les-chats');
+        $persisted = [];
+        $removed = [];
+        $flushed = 0;
+
+        $this->createController($this->redirectRepository(), new Request(['trash' => 1]))->deleteEntity($this->recordingEntityManager($persisted, $removed, $flushed), $crowdfunding);
+
+        $this->assertFalse($crowdfunding->isDeleted());
+        $this->assertSame([], $removed);
+        $this->assertSame(0, $flushed);
+    }
+
+    // Removing for good is the admin's bar, stricter than the editor's the screen is opened with: an editor's batch in the bin removes nothing
+    public function testAnEditorCannotEmptyTheBinInABatch(): void
+    {
+        $crowdfunding = new Crowdfunding()->setSlug('sauver-les-chats')->setIsDeleted(true);
+        $persisted = [];
+        $removed = [];
+        $flushed = 0;
+
+        $controller = $this->createController($this->redirectRepository(), new Request(['trash' => 1]));
+        $controller->setContainer($this->container('expected', new RequestStack([$this->request]), false));
+
+        try {
+            $controller->deleteEntity($this->recordingEntityManager($persisted, $removed, $flushed), $crowdfunding);
+            $this->fail('An editor removed a campaign for good');
+        } catch (AccessDeniedException) {
+            $this->assertSame([], $removed);
+            $this->assertSame(0, $flushed);
+        }
+    }
+
+    // The batch "Delete" moves to the bin for the editor from the list, and removes for good for the admin alone from the bin
+    public function testTheBatchDeleteSwitchesWithTheBin(): void
+    {
+        $configService = $this->createStub(ConfigServiceInterface::class);
+        $configService->method('get')->willReturnCallback(static fn (string $key): string => 'site-role-admin' === $key ? 'ROLE_ADMIN' : 'ROLE_EDITOR');
+        $contentLocaleScreen = new ContentLocaleScreen(new RequestStack(), $this->createStub(AdminUrlGeneratorInterface::class), new SiteLocales(['fr', 'en'], 'fr'));
+        $batchDelete = function (?Request $request) use ($configService, $contentLocaleScreen): array {
+            $actions = $this->createController(request: $request, configService: $configService, contentLocaleScreen: $contentLocaleScreen)->configureActions(
+                Actions::new()
+                    ->add(Crud::PAGE_INDEX, Action::EDIT)
+                    ->add(Crud::PAGE_INDEX, Action::DELETE)
+                    ->add(Crud::PAGE_INDEX, Action::BATCH_DELETE)
+            )->getAsDto(null);
+
+            return [$actions->getAction(Crud::PAGE_INDEX, Action::BATCH_DELETE)->getLabel()->getMessage(), $actions->getActionPermissions()[Action::BATCH_DELETE]];
+        };
+
+        $this->assertSame(['action.move_to_trash', 'ROLE_EDITOR'], $batchDelete(null));
+        $this->assertSame(['action.delete_permanently', 'ROLE_ADMIN'], $batchDelete(new Request(['trash' => 1])));
+    }
+
+    // The bin says it is the bin rather than printing the campaigns' label over both views
+    public function testTheRecycleBinIsTitledAsSuch(): void
+    {
+        $configService = $this->createStub(ConfigServiceInterface::class);
+        $configService->method('get')->willReturn('ROLE_EDITOR');
+        $title = static fn (CrowdfundingCrudController $controller): string => $controller
+            ->configureCrud(Crud::new())->getAsDto()->getCustomPageTitle(Crud::PAGE_INDEX)->getMessage();
+
+        $this->assertSame('action.trash', $title($this->createController(request: new Request(['trash' => 1]), configService: $configService)));
+        $this->assertSame('label.crowdfundings', $title($this->createController(configService: $configService)));
     }
 
     // Anything else on that screen is deleted the way EasyAdmin deletes it, the recycle bin being the campaign's own
@@ -462,10 +564,10 @@ class CrowdfundingCrudControllerTest extends TestCase
     }
 
     // The services AbstractController reaches for: the role is granted, the token is the one the action was linked with, and the stack is what addFlash() puts its message on
-    private function container(string $validToken, RequestStack $requestStack): ContainerInterface
+    private function container(string $validToken, RequestStack $requestStack, bool $granted = true): ContainerInterface
     {
         $authorizationChecker = $this->createStub(AuthorizationCheckerInterface::class);
-        $authorizationChecker->method('isGranted')->willReturn(true);
+        $authorizationChecker->method('isGranted')->willReturn($granted);
 
         $csrfTokenManager = $this->createStub(CsrfTokenManagerInterface::class);
         $csrfTokenManager->method('isTokenValid')->willReturnCallback(static fn (CsrfToken $token): bool => $validToken === $token->getValue());
