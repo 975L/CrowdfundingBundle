@@ -39,6 +39,8 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Context\CrudContext;
+use EasyCorp\Bundle\EasyAdminBundle\Context\RequestContext;
+use EasyCorp\Bundle\EasyAdminBundle\Dto\BatchActionDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGeneratorInterface;
 use PHPUnit\Framework\TestCase;
@@ -95,7 +97,7 @@ class CrowdfundingCrudControllerTest extends TestCase
         $this->assertSame(1, $flushed);
     }
 
-    // From the bin, the batch action removes a campaign for good and leaves a 410 at its url - pending until batchDelete() flushes the whole selection, with the row button's flash
+    // From the bin, the batch action removes a campaign for good and leaves a 410 at its url - the message for the whole selection is TrashBatchDeleteTrait's, said once rather than per row
     public function testDeletingATrashedCampaignFromTheBinRemovesItForGood(): void
     {
         $crowdfunding = new Crowdfunding()->setSlug('sauver-les-chats')->setIsDeleted(true);
@@ -108,8 +110,8 @@ class CrowdfundingCrudControllerTest extends TestCase
         $this->assertSame([$crowdfunding], $removed);
         $this->assertSame('/crowdfunding/sauver-les-chats', $persisted[0]->getFromPath());
         $this->assertTrue($persisted[0]->isGone());
-        $this->assertSame(0, $flushed);
-        $this->assertCount(1, $this->request->getSession()->getFlashBag()->get('success'));
+        $this->assertSame(1, $flushed);
+        $this->assertSame([], $this->request->getSession()->getFlashBag()->peek('success'));
     }
 
     // A replayed "Move to the recycle bin" on a campaign already there removes nothing: only the bin removes for good
@@ -143,8 +145,8 @@ class CrowdfundingCrudControllerTest extends TestCase
         $this->assertSame(0, $flushed);
     }
 
-    // Removing for good is the admin's bar, stricter than the editor's the screen is opened with: an editor's batch in the bin removes nothing
-    public function testAnEditorCannotEmptyTheBinInABatch(): void
+    // Removing for good is the admin's bar, stricter than the editor's the screen is opened with: an editor's delete in the bin, EasyAdmin's single one included, removes nothing
+    public function testAnEditorCannotRemoveACampaignForGood(): void
     {
         $crowdfunding = new Crowdfunding()->setSlug('sauver-les-chats')->setIsDeleted(true);
         $persisted = [];
@@ -161,6 +163,21 @@ class CrowdfundingCrudControllerTest extends TestCase
             $this->assertSame([], $removed);
             $this->assertSame(0, $flushed);
         }
+    }
+
+    // Refused before the first row is touched by TrashBatchDeleteTrait, which reads the screen from the request the batch posts - rather than on the first trashed one, which would leave the selection half removed
+    public function testAnEditorsBatchInTheBinIsRefusedBeforeAnyRow(): void
+    {
+        $request = new Request(['trash' => 1]);
+        $controller = $this->createController($this->redirectRepository(), $request);
+        $controller->setContainer($this->container('expected', new RequestStack([$this->request]), false));
+
+        $this->expectException(AccessDeniedException::class);
+
+        $controller->batchDelete(
+            AdminContext::forTesting(RequestContext::forTesting($request)),
+            new BatchActionDto(Action::BATCH_DELETE, [1, 2], Crowdfunding::class, 'token'),
+        );
     }
 
     // The batch "Delete" moves to the bin for the editor from the list, and removes for good for the admin alone from the bin

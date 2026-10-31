@@ -409,6 +409,11 @@ gestures live:
 Both are `GET` actions guarded by a csrf token and by `site-role-admin`, and both refuse a campaign that is
 not in the recycle bin.
 
+Several campaigns are handled at once by ticking them: from the list the batch action reads *Move to the
+recycle bin*, from the bin it reads *Delete permanently* and removes the selection exactly as the row button
+does. That batch goes through ConfigBundle's `TrashBatchDeleteTrait`: `site-role-admin` is checked before the
+first campaign is touched, and a single message says how many went for good.
+
 ## A campaign in every language
 
 On a site declaring several languages, the three public screens answer at a localised url beside their bare

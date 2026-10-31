@@ -10,6 +10,7 @@
 
 namespace c975L\CrowdfundingBundle\Controller\Management;
 
+use c975L\ConfigBundle\Controller\Management\Trait\TrashBatchDeleteTrait;
 use c975L\ConfigBundle\Entity\Redirect;
 use c975L\ConfigBundle\Management\ContentLocaleScreen;
 use c975L\ConfigBundle\Management\EasyAdminActionHelper;
@@ -49,7 +50,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\KeyValueStore;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Contracts\Field\FieldInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
-use EasyCorp\Bundle\EasyAdminBundle\Dto\BatchActionDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
@@ -77,6 +77,8 @@ use function Symfony\Component\Translation\t;
 
 class CrowdfundingCrudController extends AbstractCrudController
 {
+    use TrashBatchDeleteTrait;
+
     use SocialStatusCrudTrait;
 
     // The path a campaign is served under, and what a "gone" Redirect is written from once one is deleted for good
@@ -436,7 +438,7 @@ class CrowdfundingCrudController extends AbstractCrudController
             ->setPermission(Action::NEW, $role)
             ->setPermission(Action::EDIT, $role)
             ->setPermission(Action::DELETE, $role)
-            // In the bin the batch "Delete" removes for good: drawn for the admin alone, the guard itself being in deleteEntity(), as EasyAdmin's batchDelete() checks Action::DELETE
+            // In the bin the batch "Delete" removes for good: drawn for the admin alone, the guard itself being TrashBatchDeleteTrait's and deleteEntity()'s, as EasyAdmin's batchDelete() checks Action::DELETE
             ->setPermission(Action::BATCH_DELETE, $this->isTrash() ? $adminRole : $role)
             ->setPermission(Action::DETAIL, $role)
             ->setPermission('viewOnSite', $role)
@@ -598,7 +600,7 @@ class CrowdfundingCrudController extends AbstractCrudController
         return $collection instanceof PersistentCollection ? $collection->getDeleteDiff() : [];
     }
 
-    // Deleting a campaign only moves it to the recycle bin, with everything it holds: its url answers 410 from there, and it is restored or removed for good from that view alone. From the bin, the batch "Delete" removes it for good (flushed once by batchDelete())
+    // Deleting a campaign only moves it to the recycle bin, with everything it holds: its url answers 410 from there, and it is restored or removed for good from that view alone. From the bin, the batch "Delete" removes it for good, TrashBatchDeleteTrait saying once for the whole selection what went
     #[\Override]
     public function deleteEntity(EntityManagerInterface $entityManager, mixed $entityInstance): void
     {
@@ -613,11 +615,10 @@ class CrowdfundingCrudController extends AbstractCrudController
             return;
         }
 
-        // Removing for good is the admin's bar (see trashedCampaign()), stricter than the editor's one this screen is opened with - the batch path is held to it as the row button is
+        // From the bin, at the admin role like its row button - TrashBatchDeleteTrait checked it before the first row and says once what went, this holds EasyAdmin's single delete to the same bar
         if ($entityInstance->isDeleted()) {
-            $this->denyAccessUnlessGranted($this->configService->get('site-role-admin'));
+            $this->denyAccessUnlessGranted((string) $this->configService->get('site-role-admin'));
             $this->removeForGood($entityManager, $entityInstance);
-            $this->addFlash('success', $this->translator->trans('flash.crowdfunding_deleted_permanently', [], 'crowdfunding'));
 
             return;
         }
@@ -675,29 +676,19 @@ class CrowdfundingCrudController extends AbstractCrudController
         }
 
         $this->removeForGood($entityManager, $crowdfunding);
-        $entityManager->flush();
 
         $this->addFlash('success', $this->translator->trans('flash.crowdfunding_deleted_permanently', [], 'crowdfunding'));
 
         return $this->redirect($this->trashIndexUrl());
     }
 
-    // Emptying the bin in a batch is flushed once for the whole selection rather than once per campaign, deleteEntity() leaving the removals pending
-    #[\Override]
-    public function batchDelete(AdminContext $context, BatchActionDto $batchActionDto): Response
-    {
-        $response = parent::batchDelete($context, $batchActionDto);
-        $this->container->get('doctrine')->getManagerForClass(Crowdfunding::class)?->flush();
-
-        return $response;
-    }
-
-    // What removing a campaign for good takes, whether from its row button or from the batch action of the bin: its url left answering 410, the rows it holds going with it through their cascades - flushed by the caller
+    // What removing a campaign for good takes, whether from its row button or from the batch action of the bin: its url left answering 410, the rows it holds going with it through their cascades - flushed on each row, TrashBatchDeleteTrait counting what is gone once the batch is through
     private function removeForGood(EntityManagerInterface $entityManager, Crowdfunding $crowdfunding): void
     {
         $this->writeGoneRedirect($entityManager, $crowdfunding);
 
         $entityManager->remove($crowdfunding);
+        $entityManager->flush();
     }
 
     // The campaign both trash actions run on: the role, the csrf token and the row itself, checked once for the two of them. Null is "go back to the recycle bin", where the row the action was clicked on is either still there or already gone

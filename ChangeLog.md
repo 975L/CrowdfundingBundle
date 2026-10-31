@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.8.4
+
+Recycle bin emptied through ConfigBundle's TrashBatchDeleteTrait
+
+- `CrowdfundingCrudController`: the bin's batch "Delete permanently" goes through ConfigBundle's `TrashBatchDeleteTrait` (31/10/2026)
+- `CrowdfundingCrudController`: the admin role is checked before the first row of that batch (31/10/2026)
+- `CrowdfundingCrudController`: a single message for the whole selection instead of one per row (31/10/2026)
+- `CrowdfundingCrudController`: `removeForGood()` flushes each row, its own `batchDelete()` override being dropped (31/10/2026)
+- Requires `c975l/core-bundle` ^1.84.0 (31/10/2026)
+
 ## v1.8.3
 
 Recycle bin emptied in a batch, and titled as such
