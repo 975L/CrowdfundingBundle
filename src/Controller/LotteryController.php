@@ -85,9 +85,14 @@ class LotteryController extends AbstractController
         ],
         methods: ['POST']
     )]
-    public function drawPrize(Lottery $lottery, int $rank): JsonResponse
+    public function drawPrize(Lottery $lottery, int $rank, Request $request): JsonResponse
     {
         $this->denyAccessUnlessGranted($this->configService->get('site-role-admin'));
+
+        // A draw is final and an admin's session goes with whatever page they are on: only the button of the lottery page carries this token
+        if (!$this->isCsrfTokenValid('lottery_draw', $request->headers->get('X-CSRF-Token'))) {
+            return new JsonResponse(['error' => 'Invalid token'], Response::HTTP_FORBIDDEN);
+        }
 
         if (false === $lottery->isActive()) {
             return new JsonResponse(['error' => 'Lottery not active'], Response::HTTP_BAD_REQUEST);

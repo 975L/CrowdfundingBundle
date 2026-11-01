@@ -13,10 +13,17 @@ namespace c975L\CrowdfundingBundle\Tests\Entity;
 use c975L\CrowdfundingBundle\Entity\Crowdfunding;
 use c975L\CrowdfundingBundle\Entity\CrowdfundingVideo;
 use c975L\UiBundle\Contract\VichMediaNamableInterface;
+use c975L\UiBundle\Validator\SafeUrl;
 use PHPUnit\Framework\TestCase;
 
 class CrowdfundingVideoTest extends TestCase
 {
+    // The back-office writes it, and it holds a bare YouTube id: SafeUrl and not Url, which would refuse every id
+    public function testTheYoutubeFieldDeclaresSafeUrl(): void
+    {
+        $this->assertCount(1, new \ReflectionProperty(CrowdfundingVideo::class, 'youtubeUrl')->getAttributes(SafeUrl::class));
+    }
+
     // Regression: implementing no naming contract made UiMediaNamer throw on any upload
     public function testImplementsVichMediaNamableInterface(): void
     {

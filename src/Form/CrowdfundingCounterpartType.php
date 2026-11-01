@@ -126,10 +126,8 @@ class CrowdfundingCounterpartType extends AbstractType
             ->add('orderedQuantity', IntegerType::class, [
                 'label' => 'label.ordered_quantity',
                 'required' => false,
-                'empty_data' => '',
-                'attr' => [
-                    'readonly' => true,
-                ],
+                // Disabled and not readonly: a form opened before a payment would otherwise write its old count back over the one the database keeps (see CrowdfundingCounterpartRepository::claimOrdered())
+                'disabled' => true,
             ])
             ->add('media', CrowdfundingCounterpartMediaType::class, [
                 'label' => false,

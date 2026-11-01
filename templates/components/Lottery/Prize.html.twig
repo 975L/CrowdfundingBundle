@@ -3,23 +3,22 @@
 {# "ticketClass" and not "class": Card declares a "class" prop, and a component's slot is rendered in the component's own context - a "class" set here is shadowed by the card's empty one, which is what left the drawn ticket without its gold #}
 {% set ticketClass = "not-drawn" %}
 {% set number = "XX-0000-YYY" %}
-{% set name = 'label.not_yet_drawn'|trans %}
 {% if true == winner %}
     {% set ticketClass = "winner" %}
     {% set number = prize.winningTicket.number %}
     {% set contributorName = null != prize.winningTicket.contributor.name ? prize.winningTicket.contributor.name : 'label.anonymous'|trans %}
-    {% set name = 'label.name'|trans ~ ": <strong>" ~ contributorName ~ "</strong>" %}
     {% set disabled = "disabled" %}
 {% endif %}
 <twig:c975LUi:Card:Card tag="article" id="prize-{{ prize.id }}" class="crowdfunding-prize" title="#{{ prize.rank }} - {{ prize.title }}">
     {# No ".card-data": UiBundle pins a whole tail to the bottom of the body (sass/_cards.scss), where only the draw belongs there and the description has to keep reading from the top. This bundle does that pinning itself, on the block below #}
     <div class="text-center" data-prize-rank="{{ prize.rank }}">
-        <p class="text-left">{{ prize.description|raw|nl2br }}</p>
+        <p class="text-left">{{ prize.description|default('')|sanitize_html('c975l.rich')|nl2br }}</p>
         {# The draw itself, in a block of its own: it is pinned to the bottom of the card (see sass/_lottery.scss), so the winning tickets of prizes described in three lines and in six read on one line #}
         <div class="crowdfunding-prize__draw">
             <h3>{{ 'label.winner_ticket'|trans({}, 'crowdfunding') }}</h3>
             <p class="ticket-number {{ ticketClass }}" data-lottery-target="winnerNumber">{{ number }}</p>
-            <p data-lottery-target="winnerName">{{ name|raw }}</p>
+            {# The name is typed by the contributor, so it is printed escaped and the markup around it written here #}
+            <p data-lottery-target="winnerName">{% if true == winner %}{{ 'label.name'|trans({}, 'crowdfunding') }}: <strong>{{ contributorName }}</strong>{% else %}{{ 'label.not_yet_drawn'|trans({}, 'crowdfunding') }}{% endif %}</p>
             {# Draw #}
             {% if prize.lottery.tickets is not empty and false == winner and is_granted(config('site-role-admin')) %}
                 {% set disabled = "" %}

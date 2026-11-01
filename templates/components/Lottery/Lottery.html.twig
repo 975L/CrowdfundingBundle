@@ -14,7 +14,7 @@
             <span>
                 <strong>{{ prize.title}}</strong>
                 <br>
-                {{ prize.description|raw|nl2br }}
+                {{ prize.description|default('')|sanitize_html('c975l.rich')|nl2br }}
                 </span>
             </li>
         {% endfor %}

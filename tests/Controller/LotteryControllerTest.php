@@ -31,6 +31,8 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Csrf\CsrfToken;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Translation\LocaleSwitcher;
 use Twig\Environment;
 
@@ -63,13 +65,34 @@ class LotteryControllerTest extends TestCase
     {
         $this->expectException(AccessDeniedException::class);
 
-        $this->createController(granted: false)->drawPrize(new Lottery(), 1);
+        $this->createController(granted: false)->drawPrize(new Lottery(), 1, new Request());
+    }
+
+    // A draw is final, and reaching the url from another page must not make one: without the token of the lottery's own button nothing is drawn
+    public function testDrawingWithoutTheTokenIsRefused(): void
+    {
+        $lotteryService = $this->createMock(LotteryServiceInterface::class);
+        $lotteryService->expects($this->never())->method('drawWinner');
+
+        $response = $this->createController(lotteryService: $lotteryService, csrfValid: false)->drawPrize(new Lottery(), 1, new Request());
+
+        $this->assertSame(Response::HTTP_FORBIDDEN, $response->getStatusCode());
+    }
+
+    // The token is checked on the header the button's fetch sends, and under the id the button's token was drawn for
+    public function testTheTokenIsReadOffTheHeader(): void
+    {
+        $csrfTokens = [];
+        $response = $this->createController(csrfValid: true, csrfTokens: $csrfTokens)->drawPrize(new Lottery(), 1, new Request(server: ['HTTP_X_CSRF_TOKEN' => 'good']));
+
+        $this->assertNotSame(Response::HTTP_FORBIDDEN, $response->getStatusCode());
+        $this->assertSame([['lottery_draw', 'good']], $csrfTokens);
     }
 
     // A lottery an admin has closed is over: its prizes are drawn, or the campaign decided not to
     public function testDrawingOnAClosedLotteryIsRefused(): void
     {
-        $response = $this->createController()->drawPrize(new Lottery()->setIsActive(false), 1);
+        $response = $this->createController()->drawPrize(new Lottery()->setIsActive(false), 1, new Request());
 
         $this->assertSame(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
         $this->assertSame(['error' => 'Lottery not active'], json_decode($response->getContent(), true));
@@ -81,7 +104,7 @@ class LotteryControllerTest extends TestCase
         $lotteryService = $this->createStub(LotteryServiceInterface::class);
         $lotteryService->method('drawWinner')->willReturn(null);
 
-        $response = $this->createController(lotteryService: $lotteryService)->drawPrize(new Lottery(), 1);
+        $response = $this->createController(lotteryService: $lotteryService)->drawPrize(new Lottery(), 1, new Request());
 
         $this->assertSame(Response::HTTP_NOT_FOUND, $response->getStatusCode());
     }
@@ -97,7 +120,7 @@ class LotteryControllerTest extends TestCase
         $lotteryService = $this->createStub(LotteryServiceInterface::class);
         $lotteryService->method('drawWinner')->willReturn($ticket);
 
-        $response = $this->createController(lotteryService: $lotteryService)->drawPrize(new Lottery(), 1);
+        $response = $this->createController(lotteryService: $lotteryService)->drawPrize(new Lottery(), 1, new Request());
 
         $this->assertSame(200, $response->getStatusCode());
         $this->assertSame(['number' => 'AB-1234-CDE', 'name' => 'Camille'], json_decode($response->getContent(), true));
@@ -136,7 +159,8 @@ class LotteryControllerTest extends TestCase
         return new LocalizedRouteNegotiator(self::createSiteLocales(), new LocaleSwitcher('fr', []), $router);
     }
 
-    private function createController(?LotteryServiceInterface $lotteryService = null, bool $granted = true): LotteryController
+    /** @param list<array{string, ?string}> $csrfTokens */
+    private function createController(?LotteryServiceInterface $lotteryService = null, bool $granted = true, bool $csrfValid = true, array &$csrfTokens = []): LotteryController
     {
         $configService = $this->createStub(ConfigServiceInterface::class);
         $configService->method('get')->willReturn('ROLE_ADMIN');
@@ -158,6 +182,14 @@ class LotteryControllerTest extends TestCase
         $container = new Container();
         $container->set('twig', $twig);
         $container->set('security.authorization_checker', $authorizationChecker);
+
+        $csrf = $this->createStub(CsrfTokenManagerInterface::class);
+        $csrf->method('isTokenValid')->willReturnCallback(static function (CsrfToken $token) use ($csrfValid, &$csrfTokens): bool {
+            $csrfTokens[] = [$token->getId(), $token->getValue()];
+
+            return $csrfValid;
+        });
+        $container->set('security.csrf.token_manager', $csrf);
         $controller->setContainer($container);
 
         return $controller;

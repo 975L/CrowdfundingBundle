@@ -13,6 +13,7 @@ namespace c975L\CrowdfundingBundle\Tests\Template;
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
+use Twig\TwigFilter;
 use Twig\TwigFunction;
 
 // The rank of a campaign card's title: <h3> under the head the block draws, <h2> when it draws none and the cards sit straight under the page's <h1> - an <h3> there skips a level, which is RGAA criterion 9.1 failing on the /crowdfunding page
@@ -62,6 +63,9 @@ class CardTitleLevelTest extends TestCase
         $loader->addPath(\dirname(__DIR__, 2) . '/templates', 'c975LCrowdfunding');
         $loader->addPath(\dirname(__DIR__, 2) . '/vendor/c975l/core-bundle/UiBundle/templates', 'c975LUi');
         $twig = new Environment($loader);
+
+        // A double of the filter CoreBundle brings: this test reads the cards' level, and a bare Environment knows no sanitizer
+        $twig->addFilter(new TwigFilter('sanitize_html', static fn (string $html): string => $html, ['is_safe' => ['html']]));
 
         // One campaign is enough for the block to draw its row - a string rather than an entity, the bare Environment writing the prop out as text
         $twig->addFunction(new TwigFunction('crowdfunding_block_campaigns', static fn (): array => ['campaign']));

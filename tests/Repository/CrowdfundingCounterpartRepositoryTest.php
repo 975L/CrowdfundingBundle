@@ -12,6 +12,7 @@ namespace c975L\CrowdfundingBundle\Tests\Repository;
 
 use c975L\CrowdfundingBundle\Entity\CrowdfundingCounterpart;
 use c975L\CrowdfundingBundle\Repository\CrowdfundingCounterpartRepository;
+use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
@@ -20,6 +21,8 @@ use PHPUnit\Framework\TestCase;
 // What PaymentBundle is told about parcels comes from this one query: a filter dropped here warns a site with only digital counterparts about an empty delivery grid again
 class CrowdfundingCounterpartRepositoryTest extends TestCase
 {
+    private string $sql = '';
+
     // Only a posted counterpart of a campaign that is visible, not trashed and not over yet counts
     public function testHasShippedCounterpartFiltersOnARunningVisibleCampaign(): void
     {
@@ -49,6 +52,53 @@ class CrowdfundingCounterpartRepositoryTest extends TestCase
     {
         $this->assertTrue($this->createRepository([['id' => 3]])->hasShippedCounterpart());
         $this->assertFalse($this->createRepository([])->hasShippedCounterpart());
+    }
+
+    // Two payments at the same second both read the same count: the run itself is the condition of its own count, a null or zero cap being no run to overflow
+    public function testTheRunIsTheConditionOfItsOwnCount(): void
+    {
+        $this->assertTrue($this->repositoryCatchingStatements(1)->claimOrdered(new CrowdfundingCounterpart(), 2));
+
+        $this->assertStringContainsString('ordered_quantity = COALESCE(ordered_quantity, 0) + :quantity', $this->sql);
+        $this->assertStringContainsString('COALESCE(ordered_quantity, 0) + :quantity <= limited_quantity', $this->sql);
+        $this->assertStringContainsString('limited_quantity IS NULL OR limited_quantity <= 0', $this->sql);
+    }
+
+    public function testAClaimTheRunRefusesAnswersFalse(): void
+    {
+        $this->assertFalse($this->repositoryCatchingStatements(0)->claimOrdered(new CrowdfundingCounterpart(), 2));
+    }
+
+    // Past the run, the count is still what was paid for
+    public function testWhatTheRunCouldNotHoldIsCountedWithoutCondition(): void
+    {
+        $this->repositoryCatchingStatements(1)->addOrdered(new CrowdfundingCounterpart(), 2);
+
+        $this->assertStringNotContainsString('limited_quantity', $this->sql);
+    }
+
+    private function repositoryCatchingStatements(int $affectedRows): CrowdfundingCounterpartRepository
+    {
+        $connection = $this->createStub(Connection::class);
+        $connection->method('executeStatement')->willReturnCallback(function (string $sql) use ($affectedRows): int {
+            $this->sql = $sql;
+
+            return $affectedRows;
+        });
+
+        $entityManager = $this->createStub(EntityManagerInterface::class);
+        $entityManager->method('getConnection')->willReturn($connection);
+
+        return new class ($entityManager) extends CrowdfundingCounterpartRepository {
+            public function __construct(private readonly EntityManagerInterface $entityManager)
+            {
+            }
+
+            protected function getEntityManager(): EntityManagerInterface
+            {
+                return $this->entityManager;
+            }
+        };
     }
 
     // Doctrine's own QueryBuilder on an EntityManager that answers the given rows: getQuery() hands the DQL it built to createQuery(), which is where it is read back

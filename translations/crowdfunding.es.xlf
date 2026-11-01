@@ -30,6 +30,10 @@
                 <source>confirm.move_to_trash</source>
                 <target>Esta campaña sale del listado hacia la papelera, conservando todo lo que contiene. Desde allí se restaura.</target>
             </trans-unit>
+            <trans-unit id="sQAXnjB">
+                <source>description.counterparts_oversold</source>
+                <target>%count% contrapartida(s) se han pagado por encima de su tirada (%titles%), al llegar dos pagos a la vez. Los contribuyentes han pagado: decida qué se les entrega y luego suba el límite de la contrapartida.</target>
+            </trans-unit>
             <trans-unit id="m0zKYk1">
                 <source>description.guided_project_crowdfunding_blocks</source>
                 <target>Todo lo que los campos del formulario no dicen se escribe en bloques, con el mismo editor con el que se componen las páginas del sitio.</target>
@@ -160,7 +164,7 @@
             </trans-unit>
             <trans-unit id="_0dRlZp">
                 <source>description.guided_step_crowdfunding_counterpart_quantity</source>
-                <target>Una cantidad limitada retira la contrapartida de la venta una vez agotada, y la cesta rechaza pedir más de lo que queda. Deje cero para no limitarla.</target>
+                <target>Una cantidad limitada retira la contrapartida de la venta una vez agotada, y la cesta rechaza pedir más de lo que queda. Déjela vacía para no limitarla: cero la retira de la venta.</target>
             </trans-unit>
             <trans-unit id="R0CBLKw">
                 <source>description.guided_step_crowdfunding_counterpart_shipping</source>
@@ -208,7 +212,7 @@
             </trans-unit>
             <trans-unit id="vEi1b6q">
                 <source>description.guided_step_crowdfunding_draw_video_youtube</source>
-                <target>Para un archivo demasiado pesado: publíquelo en YouTube y pegue su dirección en los vídeos de la campaña, sección «Medios». Es el único de los dos campos que acepta una dirección.</target>
+                <target>Para un archivo demasiado pesado: publíquelo en YouTube y pegue su identificador, lo que sigue a v= en su dirección, en los vídeos de la campaña, sección «Medios». Es el único de los dos campos que lo acepta.</target>
             </trans-unit>
             <trans-unit id="13LRffH">
                 <source>description.guided_step_crowdfunding_lottery_add</source>
@@ -260,7 +264,7 @@
             </trans-unit>
             <trans-unit id="h8uTQLk">
                 <source>description.guided_step_crowdfunding_media_videos</source>
-                <target>Justo debajo. Un vídeo de campaña acepta un archivo subido o, más sencillo, una dirección de YouTube: es la vía para un archivo pesado.</target>
+                <target>Justo debajo. Un vídeo de campaña acepta un archivo subido o, más sencillo, un identificador de YouTube, lo que sigue a v= en la dirección del vídeo: es la vía para un archivo pesado.</target>
             </trans-unit>
             <trans-unit id="h56Q.Qc">
                 <source>description.guided_step_crowdfunding_news_done</source>
@@ -617,6 +621,10 @@
             <trans-unit id="wW2Rykr">
                 <source>label.counterparts</source>
                 <target>Contrapartidas</target>
+            </trans-unit>
+            <trans-unit id="jlclC00">
+                <source>label.counterparts_oversold</source>
+                <target>Contrapartidas vendidas por encima de su tirada</target>
             </trans-unit>
             <trans-unit id="iFh7z4x">
                 <source>label.cover</source>

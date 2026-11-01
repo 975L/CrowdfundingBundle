@@ -29,7 +29,7 @@ class CrowdfundingCounterpartMediaType extends AbstractType
                 'download_uri' => true,
                 'asset_helper' => true,
                 'constraints' => [
-                    new File(maxSize: '20M'),
+                    new File(maxSize: '20M', mimeTypes: CrowdfundingMediaType::IMAGE_TYPES),
                 ],
             ])
         ;

@@ -52,7 +52,7 @@
     </summary>
     {# What the open row reveals: everything the tier gives, the quantities it was taken in, and the button that adds one to the basket #}
     <div class="crowdfunding-counterpart__panel">
-        <p class="description">{{ counterpart.description|raw|nl2br }}</p>
+        <p class="description">{{ counterpart.description|default('')|sanitize_html('c975l.rich')|nl2br }}</p>
         <twig:c975LCrowdfunding:CrowdfundingCounterpart:Quantity limited="{{ counterpart.limitedQuantity }}" ordered="{{ counterpart.orderedQuantity }}"/>
         {% if isOpen %}
             <twig:c975LCrowdfunding:CrowdfundingCounterpart:AddButton crowdfundingCounterpart="{{ counterpart }}"/>

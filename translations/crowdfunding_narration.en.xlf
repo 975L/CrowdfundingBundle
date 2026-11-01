@@ -104,7 +104,7 @@
             </trans-unit>
             <trans-unit id="Hwz.WYF">
                 <source>narration.guided_step_crowdfunding_counterpart_quantity</source>
-                <target>Fill in the quantity. A limited quantity takes the counterpart off sale once it runs out, and the basket refuses to order more than what is left; leave zero not to limit it.</target>
+                <target>Fill in the quantity. A limited quantity takes the counterpart off sale once it runs out, and the basket refuses to order more than what is left; leave it empty not to limit it, as zero withdraws it.</target>
             </trans-unit>
             <trans-unit id="3BidmNS">
                 <source>narration.guided_step_crowdfunding_counterpart_save</source>
@@ -160,7 +160,7 @@
             </trans-unit>
             <trans-unit id="gYNDANU">
                 <source>narration.guided_step_crowdfunding_draw_video_youtube</source>
-                <target>If the file is too heavy, publish it on YouTube and paste its address into the campaign's videos, in the "Media" section. It is the only one of the two fields taking an address.</target>
+                <target>If the file is too heavy, publish it on YouTube and paste its identifier, what follows v= in its address, into the campaign's videos, in the "Media" section. It is the only one of the two fields taking one.</target>
             </trans-unit>
             <trans-unit id="DhIgb5x">
                 <source>narration.guided_step_crowdfunding_lottery_add</source>
@@ -220,7 +220,7 @@
             </trans-unit>
             <trans-unit id="3pamyEn">
                 <source>narration.guided_step_crowdfunding_media_videos</source>
-                <target>Just below, the videos. A campaign video takes an uploaded file or, more simply, a YouTube address: that is the way to go for a heavy file.</target>
+                <target>Just below, the videos. A campaign video takes an uploaded file or, more simply, a YouTube identifier, what follows v= in the video's address: that is the way to go for a heavy file.</target>
             </trans-unit>
             <trans-unit id="6R_3wuu">
                 <source>narration.guided_step_crowdfunding_news_done</source>

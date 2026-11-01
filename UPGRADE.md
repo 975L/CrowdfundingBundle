@@ -1,5 +1,9 @@
 # Upgrade
 
+## v1.9.0
+
+`LotteryController::drawPrize()` takes the request and refuses a draw without the token `DrawButton` carries: a site overriding that template or `lottery.js` sends `data-token` on as the `X-CSRF-Token` header. `CrowdfundingBasketItemProvider` takes `CrowdfundingRepository` and a logger. Requires `c975l/core-bundle` ^1.85.0, for the `c975l.rich` sanitizer, and `c975l/payment-bundle` ^6.23.0, whose transaction around `onBasketPaid()` the counts written straight to the database rely on.
+
 ## v1.6.13
 
 ### Deleting an account no longer stumbles on the campaigns it touched [Needs db update]

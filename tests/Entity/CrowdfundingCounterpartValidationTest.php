@@ -12,6 +12,7 @@ namespace c975L\CrowdfundingBundle\Tests\Entity;
 
 use c975L\CrowdfundingBundle\Entity\Crowdfunding;
 use c975L\CrowdfundingBundle\Entity\CrowdfundingCounterpart;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Validator\Mapping\CascadingStrategy;
 use Symfony\Component\Validator\Validation;
@@ -65,5 +66,36 @@ class CrowdfundingCounterpartValidationTest extends TestCase
 
         $this->assertNotEmpty($counterparts);
         $this->assertSame(CascadingStrategy::CASCADE, $counterparts[0]->getCascadingStrategy());
+    }
+
+    // The constraint on a video's own address would otherwise never run, a row of a collection being validated by its campaign alone
+    public function testTheCampaignValidatesEachOfItsVideos(): void
+    {
+        $videos = $this->validator()->getMetadataFor(Crowdfunding::class)->getPropertyMetadata('videos');
+
+        $this->assertNotEmpty($videos);
+        $this->assertSame(CascadingStrategy::CASCADE, $videos[0]->getCascadingStrategy());
+    }
+
+    // Printed as an href: a script scheme or an address without its scheme is refused at the entity, nothing written being valid too
+    #[DataProvider('authorWebsites')]
+    public function testTheAuthorWebsiteIsAnAbsoluteWebAddress(?string $website, bool $valid): void
+    {
+        $violations = $this->validator()->validatePropertyValue(Crowdfunding::class, 'authorWebsite', $website);
+
+        $this->assertSame($valid, 0 === $violations->count());
+    }
+
+    /** @return iterable<string, array{?string, bool}> */
+    public static function authorWebsites(): iterable
+    {
+        yield 'https' => ['https://example.org/author', true];
+        yield 'http' => ['http://example.org', true];
+        yield 'nothing' => [null, true];
+        yield 'empty' => ['', true];
+        yield 'script' => ['javascript:alert(1)', false];
+        yield 'data' => ['data:text/html,<script>alert(1)</script>', false];
+        yield 'mail' => ['mailto:someone@example.org', false];
+        yield 'relative' => ['/author', false];
     }
 }

@@ -6,9 +6,9 @@
     <h2>{{ 'label.presentation'|trans({}, 'crowdfunding') }}</h2>
     <twig:c975LCrowdfunding:Crowdfunding:Videos videos="{{ crowdfunding.videos }}" editUrl="{{ crowdfunding_edit_url(crowdfunding, 'videos') }}"/>
     <h3>{{ 'label.project'|trans({}, 'crowdfunding') }}</h3>
-    {{ crowdfunding.description|raw }}
+    {{ crowdfunding.description|default('')|sanitize_html('c975l.rich') }}
     {% if showUse %}
         <h3>{{ 'label.use'|trans({}, 'crowdfunding') }}</h3>
-        {{ crowdfunding.useFor|raw }}
+        {{ crowdfunding.useFor|default('')|sanitize_html('c975l.rich') }}
     {% endif %}
 </section>

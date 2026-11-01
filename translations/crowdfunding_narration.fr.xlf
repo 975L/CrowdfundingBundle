@@ -104,7 +104,7 @@
             </trans-unit>
             <trans-unit id="Hwz.WYF">
                 <source>narration.guided_step_crowdfunding_counterpart_quantity</source>
-                <target>Renseignez la quantité. Une quantité limitée retire la contrepartie de la vente une fois épuisée, et le panier refuse d'en commander plus qu'il n'en reste ; laissez zéro pour ne pas limiter.</target>
+                <target>Renseignez la quantité. Une quantité limitée retire la contrepartie de la vente une fois épuisée, et le panier refuse d'en commander plus qu'il n'en reste ; laissez vide pour ne pas limiter, zéro la retirant de la vente.</target>
             </trans-unit>
             <trans-unit id="3BidmNS">
                 <source>narration.guided_step_crowdfunding_counterpart_save</source>
@@ -160,7 +160,7 @@
             </trans-unit>
             <trans-unit id="gYNDANU">
                 <source>narration.guided_step_crowdfunding_draw_video_youtube</source>
-                <target>Si le fichier est trop lourd, publiez-le sur YouTube et collez son adresse dans les vidéos de la campagne, section « Médias ». C'est le seul des deux champs qui accepte une adresse.</target>
+                <target>Si le fichier est trop lourd, publiez-le sur YouTube et collez son identifiant, ce qui suit v= dans son adresse, dans les vidéos de la campagne, section « Médias ». C'est le seul des deux champs qui l'accepte.</target>
             </trans-unit>
             <trans-unit id="DhIgb5x">
                 <source>narration.guided_step_crowdfunding_lottery_add</source>
@@ -220,7 +220,7 @@
             </trans-unit>
             <trans-unit id="3pamyEn">
                 <source>narration.guided_step_crowdfunding_media_videos</source>
-                <target>Juste en dessous, les vidéos. Une vidéo de campagne accepte un fichier téléversé ou, plus simplement, une adresse YouTube : c'est la voie à prendre pour un fichier lourd.</target>
+                <target>Juste en dessous, les vidéos. Une vidéo de campagne accepte un fichier téléversé ou, plus simplement, un identifiant YouTube, ce qui suit v= dans l'adresse de la vidéo : c'est la voie à prendre pour un fichier lourd.</target>
             </trans-unit>
             <trans-unit id="6R_3wuu">
                 <source>narration.guided_step_crowdfunding_news_done</source>

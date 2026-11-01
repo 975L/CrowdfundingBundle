@@ -11,6 +11,7 @@
 namespace c975L\CrowdfundingBundle\Entity;
 
 use c975L\UiBundle\Contract\VichMediaNamableInterface;
+use c975L\UiBundle\Validator\SafeUrl;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
 use Vich\UploaderBundle\Mapping\Attribute as Vich;
@@ -26,7 +27,9 @@ class CrowdfundingVideo extends Media implements VichMediaNamableInterface
     #[ORM\JoinColumn(nullable: true)]
     private ?Crowdfunding $crowdfunding = null;
 
+    // Despite its name it holds a bare YouTube id, appended to the embed address (see Video.html.twig): SafeUrl lets it through, where Assert\Url would refuse every one of them
     #[ORM\Column(length: 255, nullable: true)]
+    #[SafeUrl]
     private ?string $youtubeUrl = null;
 
     public function getCrowdfunding(): ?Crowdfunding

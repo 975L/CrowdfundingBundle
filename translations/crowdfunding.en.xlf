@@ -30,6 +30,10 @@
                 <source>confirm.move_to_trash</source>
                 <target>This campaign leaves the listing for the recycle bin, keeping everything it holds. It is restored from there.</target>
             </trans-unit>
+            <trans-unit id="sQAXnjB">
+                <source>description.counterparts_oversold</source>
+                <target>%count% counterpart(s) were paid for past their run (%titles%), two payments having arrived together. The contributors have paid: decide what they are given, then raise the counterpart's limit.</target>
+            </trans-unit>
             <trans-unit id="m0zKYk1">
                 <source>description.guided_project_crowdfunding_blocks</source>
                 <target>Everything the form's fields do not say is written in blocks, with the same editor the site's pages are composed with.</target>
@@ -160,7 +164,7 @@
             </trans-unit>
             <trans-unit id="_0dRlZp">
                 <source>description.guided_step_crowdfunding_counterpart_quantity</source>
-                <target>A limited quantity takes the counterpart off sale once it runs out, and the basket refuses to order more than what is left. Leave zero not to limit it.</target>
+                <target>A limited quantity takes the counterpart off sale once it runs out, and the basket refuses to order more than what is left. Leave it empty not to limit it: zero withdraws it.</target>
             </trans-unit>
             <trans-unit id="R0CBLKw">
                 <source>description.guided_step_crowdfunding_counterpart_shipping</source>
@@ -208,7 +212,7 @@
             </trans-unit>
             <trans-unit id="vEi1b6q">
                 <source>description.guided_step_crowdfunding_draw_video_youtube</source>
-                <target>For a file too heavy: publish it on YouTube, then paste its address into the campaign's videos, in the "Media" section. It is the only one of the two fields taking an address.</target>
+                <target>For a file too heavy: publish it on YouTube, then paste its identifier, what follows v= in its address, into the campaign's videos, in the "Media" section. It is the only one of the two fields taking one.</target>
             </trans-unit>
             <trans-unit id="13LRffH">
                 <source>description.guided_step_crowdfunding_lottery_add</source>
@@ -260,7 +264,7 @@
             </trans-unit>
             <trans-unit id="h8uTQLk">
                 <source>description.guided_step_crowdfunding_media_videos</source>
-                <target>Just below. A campaign video takes an uploaded file or, more simply, a YouTube address: that is the way to go for a heavy file.</target>
+                <target>Just below. A campaign video takes an uploaded file or, more simply, a YouTube identifier, what follows v= in the video's address: that is the way to go for a heavy file.</target>
             </trans-unit>
             <trans-unit id="h56Q.Qc">
                 <source>description.guided_step_crowdfunding_news_done</source>
@@ -617,6 +621,10 @@
             <trans-unit id="wW2Rykr">
                 <source>label.counterparts</source>
                 <target>Counterparts</target>
+            </trans-unit>
+            <trans-unit id="jlclC00">
+                <source>label.counterparts_oversold</source>
+                <target>Counterparts sold past their run</target>
             </trans-unit>
             <trans-unit id="iFh7z4x">
                 <source>label.cover</source>

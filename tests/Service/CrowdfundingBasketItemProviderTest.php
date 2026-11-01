@@ -15,6 +15,7 @@ use c975L\CrowdfundingBundle\Entity\CrowdfundingContributor;
 use c975L\CrowdfundingBundle\Entity\CrowdfundingCounterpart;
 use c975L\CrowdfundingBundle\Message\LotteryTicketsMessage;
 use c975L\CrowdfundingBundle\Repository\CrowdfundingCounterpartRepository;
+use c975L\CrowdfundingBundle\Repository\CrowdfundingRepository;
 use c975L\CrowdfundingBundle\Service\CrowdfundingBasketItemProvider;
 use c975L\CrowdfundingBundle\Service\CrowdfundingCounterpartServiceInterface;
 use c975L\CrowdfundingBundle\Service\LotteryServiceInterface;
@@ -23,6 +24,7 @@ use c975L\PaymentBundle\Contract\ShippingBasketItemProviderInterface;
 use c975L\PaymentBundle\Entity\Basket;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -30,6 +32,20 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 // The checkout path itself: what PaymentBundle asks this bundle at each step of a basket holding counterparts
 class CrowdfundingBasketItemProviderTest extends TestCase
 {
+    /** @var list<array{int, int}> */
+    private array $counted = [];
+
+    /** @var list<array{int, int}> */
+    private array $forced = [];
+
+    /** @var list<int> */
+    private array $credited = [];
+
+    /** @var list<string> */
+    private array $logged = [];
+
+    private bool $claimAnswers = true;
+
     public function testGetKindIsTheKeyPaymentBundleFilesTheseLinesUnder(): void
     {
         $this->assertSame('crowdfunding', $this->createProvider()->getKind());
@@ -300,9 +316,25 @@ class CrowdfundingBasketItemProviderTest extends TestCase
             ['name' => 'Camille', 'message' => null, 'email' => 'camille@example.com', 'counterparts' => [7 => 2]],
         );
 
-        $this->assertSame(6, $counterpart->getOrderedQuantity());
-        $this->assertSame(15000, $crowdfunding->getAmountAchieved());
+        $this->assertSame([[7, 2]], $this->counted);
+        $this->assertSame([5000], $this->credited);
         $this->assertCount(1, $crowdfunding->getContributors());
+    }
+
+    // Two payments at the same second both read the same count: the database is what says whether the run still held this one
+    public function testACounterpartIsCountedByTheDatabase(): void
+    {
+        $this->assertTrue($this->paidOnce(claimAnswers: true));
+        $this->assertSame([], $this->forced);
+        $this->assertSame([], $this->logged);
+    }
+
+    // The run went under this order while it was being paid: the customer has paid, so the contribution stands and the count tells the truth, and the shop is told in red
+    public function testAnOversoldCounterpartIsCountedAllTheSameAndFlagged(): void
+    {
+        $this->assertTrue($this->paidOnce(claimAnswers: false));
+        $this->assertSame([[7, 2]], $this->forced);
+        $this->assertCount(1, $this->logged);
     }
 
     // The message declares an int, and the id is the database's to assign: dispatched before the flush it carried a null, and the whole payment confirmation ended on a TypeError
@@ -348,10 +380,27 @@ class CrowdfundingBasketItemProviderTest extends TestCase
 
         $this->createProvider(counterpartService: $counterpartService, entityManager: $entityManager, messageBus: $messageBus)->onBasketPaid(new Basket(), [7 => ['quantity' => 3]], []);
 
-        $this->assertSame(4, $counterpart->getOrderedQuantity());
+        $this->assertSame([[7, 3]], $this->counted);
     }
 
     // Doctrine assigns the identifier at flush time, and nothing else here does: without it every contributor keeps the null the constructor left, which is exactly what the message refuses
+    // One counterpart paid for by a contributor, the database answering whether its run still held them
+    private function paidOnce(bool $claimAnswers): bool
+    {
+        $counterpart = $this->createCounterpart()->setPrice(2500);
+        $counterpartService = $this->createStub(CrowdfundingCounterpartServiceInterface::class);
+        $counterpartService->method('findOneById')->willReturn($counterpart);
+        $this->claimAnswers = $claimAnswers;
+
+        $this->createProvider(counterpartService: $counterpartService, entityManager: $this->createEntityManagerAssigningIds())->onBasketPaid(
+            new Basket(),
+            [7 => ['quantity' => 2]],
+            ['name' => 'Camille', 'message' => null, 'email' => 'camille@example.com', 'counterparts' => [7 => 2]],
+        );
+
+        return [] !== $this->counted;
+    }
+
     private function createEntityManagerAssigningIds(?callable $onFlush = null): EntityManagerInterface
     {
         $persisted = [];
@@ -403,6 +452,24 @@ class CrowdfundingBasketItemProviderTest extends TestCase
 
         $counterpartRepository = $this->createStub(CrowdfundingCounterpartRepository::class);
         $counterpartRepository->method('hasShippedCounterpart')->willReturn($hasShippedCounterpart);
+        $counterpartRepository->method('claimOrdered')->willReturnCallback(function (CrowdfundingCounterpart $counterpart, int $quantity): bool {
+            $this->counted[] = [7, $quantity];
+
+            return $this->claimAnswers;
+        });
+        $counterpartRepository->method('addOrdered')->willReturnCallback(function (CrowdfundingCounterpart $counterpart, int $quantity): void {
+            $this->forced[] = [7, $quantity];
+        });
+
+        $crowdfundingRepository = $this->createStub(CrowdfundingRepository::class);
+        $crowdfundingRepository->method('addAchieved')->willReturnCallback(function (Crowdfunding $crowdfunding, int $amount): void {
+            $this->credited[] = $amount;
+        });
+
+        $logger = $this->createStub(LoggerInterface::class);
+        $logger->method('critical')->willReturnCallback(function (string $message): void {
+            $this->logged[] = $message;
+        });
 
         $bus = $messageBus ?? $this->createStub(MessageBusInterface::class);
         if (null === $messageBus) {
@@ -416,6 +483,8 @@ class CrowdfundingBasketItemProviderTest extends TestCase
             $translator,
             $lotteryService ?? $this->createStub(LotteryServiceInterface::class),
             $counterpartRepository,
+            $crowdfundingRepository,
+            $logger,
         );
     }
 }

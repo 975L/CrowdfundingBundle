@@ -12,12 +12,15 @@ namespace c975L\CrowdfundingBundle\Service;
 
 use c975L\CrowdfundingBundle\Entity\CrowdfundingContributor;
 use c975L\CrowdfundingBundle\Entity\CrowdfundingContributorCounterpart;
+use c975L\CrowdfundingBundle\Entity\CrowdfundingCounterpart;
 use c975L\CrowdfundingBundle\Message\LotteryTicketsMessage;
 use c975L\CrowdfundingBundle\Repository\CrowdfundingCounterpartRepository;
+use c975L\CrowdfundingBundle\Repository\CrowdfundingRepository;
 use c975L\PaymentBundle\Contract\BasketItemProviderInterface;
 use c975L\PaymentBundle\Contract\ShippingBasketItemProviderInterface;
 use c975L\PaymentBundle\Entity\Basket;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -31,6 +34,8 @@ class CrowdfundingBasketItemProvider implements BasketItemProviderInterface, Shi
         private readonly TranslatorInterface $translator,
         private readonly LotteryServiceInterface $lotteryService,
         private readonly CrowdfundingCounterpartRepository $crowdfundingCounterpartRepository,
+        private readonly CrowdfundingRepository $crowdfundingRepository,
+        private readonly LoggerInterface $logger,
     ) {
     }
 
@@ -167,7 +172,7 @@ class CrowdfundingBasketItemProvider implements BasketItemProviderInterface, Shi
             if (null === $counterpart) {
                 continue;
             }
-            $counterpart->setOrderedQuantity(($counterpart->getOrderedQuantity() ?? 0) + $itemContent['quantity']);
+            $this->countOrdered($basket, $counterpart, (int) $itemContent['quantity']);
         }
 
         // What onBasketValidated() handed over, kept on the basket by PaymentBundle - already this basket's own, so there is nothing to match it against
@@ -203,8 +208,8 @@ class CrowdfundingBasketItemProvider implements BasketItemProviderInterface, Shi
 
             $crowdfunding = $counterpart->getCrowdfunding();
             if ($crowdfunding) {
-                $amount = $counterpart->getPrice() * $quantity;
-                $crowdfunding->setAmountAchieved($crowdfunding->getAmountAchieved() + $amount);
+                // Added in the database: two contributions settling at the same second both read the same total, and one of them would vanish from the campaign's bar
+                $this->crowdfundingRepository->addAchieved($crowdfunding, $counterpart->getPrice() * $quantity);
                 $crowdfunding->setModification(new \DateTime());
                 $crowdfunding->addContributor($contributor);
 
@@ -220,5 +225,18 @@ class CrowdfundingBasketItemProvider implements BasketItemProviderInterface, Shi
 
         // After the flush, and only then: the contributor's id is assigned by the database, and the message declares it an int - dispatched before, a basket holding no counterpart at all handed the bus a null
         $this->messageBus->dispatch(new LotteryTicketsMessage($contributor->getId()));
+    }
+
+    // The database says whether the run still held this order, two payments at the same second both reading the same count. The customer has paid, so a refusal takes nothing back: the count goes past the run and stays true, which is what the dashboard reads (see CrowdfundingAlertProvider), and the shop is told. Dated so a run counted here still invalidates the pages showing it
+    private function countOrdered(Basket $basket, CrowdfundingCounterpart $counterpart, int $quantity): void
+    {
+        $counterpart->setModification(new \DateTime());
+
+        if ($this->crowdfundingCounterpartRepository->claimOrdered($counterpart, $quantity)) {
+            return;
+        }
+
+        $this->crowdfundingCounterpartRepository->addOrdered($counterpart, $quantity);
+        $this->logger->critical('Basket {number}: counterpart {id} oversold, {quantity} paid for past its run', ['number' => $basket->getNumber(), 'id' => $counterpart->getId(), 'quantity' => $quantity]);
     }
 }

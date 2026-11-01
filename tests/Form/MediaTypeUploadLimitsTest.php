@@ -52,6 +52,16 @@ class MediaTypeUploadLimitsTest extends FormFieldsTestCase
         $this->assertTrue($file['options']['allow_delete']);
     }
 
+    // A picture and nothing else: no script, no page and no svg is served from the site's own origin, whatever the visitor's browser would make of it
+    public function testThePicturesOnlyAcceptImages(): void
+    {
+        foreach ([new CrowdfundingMediaType(), new CrowdfundingCounterpartMediaType()] as $type) {
+            $constraint = $this->buildFields($type)['file']['options']['constraints'][0];
+
+            $this->assertSame(['image/jpeg', 'image/png', 'image/webp', 'image/gif'], $constraint->mimeTypes);
+        }
+    }
+
     // Three container formats and nothing else: a browser plays them all, and anything else uploaded would need transcoding the site cannot do
     public function testTheVideosOnlyAcceptWhatABrowserPlays(): void
     {

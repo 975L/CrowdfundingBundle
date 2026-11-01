@@ -1,5 +1,23 @@
 # Changelog
 
+## v1.9.0
+
+Security audit: contributors' text escaped, runs counted atomically
+
+- `Contributor`, `Lottery/Prize`: a contributor's message and name are escaped, what is already stored included, the message keeping its line breaks (01/11/2026)
+- `CrowdfundingBasketItemProvider`: a conditional `UPDATE` on the run and an atomic `amountAchieved`, an order the run could not hold being counted all the same, logged as critical and flagged (01/11/2026)
+- `CrowdfundingAlertProvider`: a dashboard alert names the counterparts sold past their run (01/11/2026)
+- `CrowdfundingCounterpartType::orderedQuantity`: disabled, a form opened before a payment no longer writing its old count back (01/11/2026)
+- `CrowdfundingCounterpart/Quantity`: a run past its cap shows nothing left rather than a negative number (01/11/2026)
+- Guided projects: an empty quantity is what leaves a run unlimited, and the YouTube field takes an identifier (01/11/2026)
+- `CrowdfundingMediaType`, `CrowdfundingCounterpartMediaType`: pictures only (`image/jpeg`, `png`, `webp`, `gif`) (01/11/2026)
+- `LotteryController::drawPrize()`: checks a CSRF token, sent by `DrawButton` and `lottery.js` (01/11/2026)
+- `Presentation`, `UseFor`, `Author`, `News`, `Counterpart`, `Lottery/Prize`, `Lottery/Lottery`, `blocks/Campaigns`: `|raw` replaced with `|sanitize_html('c975l.rich')` (01/11/2026)
+- `CrowdfundingVideo::$youtubeUrl`, `CampaignsBlockType::linkUrl`: `SafeUrl`, a bare YouTube id or a path of the site still passing (01/11/2026)
+- `Crowdfunding::$authorWebsite`: `Assert\Url` http and https, a stored address without its scheme to be corrected at the next save (01/11/2026)
+- `Crowdfunding::$videos`: `Assert\Valid`, without which a video's constraint never ran (01/11/2026)
+- Requires `c975l/core-bundle` ^1.85.0 and `c975l/payment-bundle` ^6.23.0 (01/11/2026)
+
 ## v1.8.4
 
 Recycle bin emptied through ConfigBundle's TrashBatchDeleteTrait

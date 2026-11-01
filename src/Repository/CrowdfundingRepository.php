@@ -135,4 +135,13 @@ class CrowdfundingRepository extends ServiceEntityRepository
             ->getOneOrNullResult()
         ;
     }
+
+    // Adds what a contribution brought to the campaign in one statement, two of them settling at the same second both reading the same total
+    public function addAchieved(Crowdfunding $crowdfunding, int $amount): void
+    {
+        $this->getEntityManager()->getConnection()->executeStatement(
+            'UPDATE crowdfunding_crowdfunding SET amount_achieved = COALESCE(amount_achieved, 0) + :amount WHERE id = :id',
+            ['id' => $crowdfunding->getId(), 'amount' => $amount]
+        );
+    }
 }

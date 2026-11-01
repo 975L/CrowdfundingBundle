@@ -39,4 +39,36 @@ class CrowdfundingCounterpartRepository extends ServiceEntityRepository
             ->getQuery()
             ->getScalarResult();
     }
+
+    // Counts an order against the run, and says whether the run still held it: a single statement, for two payments at the same second both read the same count. A null cap is no run, and one at 0 a withdrawal this order was validated before
+    public function claimOrdered(CrowdfundingCounterpart $counterpart, int $quantity): bool
+    {
+        return 1 === (int) $this->getEntityManager()->getConnection()->executeStatement(
+            'UPDATE crowdfunding_counterpart SET ordered_quantity = COALESCE(ordered_quantity, 0) + :quantity'
+                . ' WHERE id = :id AND (limited_quantity IS NULL OR limited_quantity <= 0 OR COALESCE(ordered_quantity, 0) + :quantity <= limited_quantity)',
+            ['id' => $counterpart->getId(), 'quantity' => $quantity]
+        );
+    }
+
+    // Counts an order the run could not hold, the customer having paid for it: the count stays true, and past its cap it is what the dashboard reads
+    public function addOrdered(CrowdfundingCounterpart $counterpart, int $quantity): void
+    {
+        $this->getEntityManager()->getConnection()->executeStatement(
+            'UPDATE crowdfunding_counterpart SET ordered_quantity = COALESCE(ordered_quantity, 0) + :quantity WHERE id = :id',
+            ['id' => $counterpart->getId(), 'quantity' => $quantity]
+        );
+    }
+
+    // The titles of the counterparts sold past their run (see CrowdfundingAlertProvider)
+    /** @return list<string> */
+    public function findOversoldTitles(): array
+    {
+        return $this->createQueryBuilder('c')
+            ->select('c.title')
+            ->andWhere('c.limitedQuantity > 0')
+            ->andWhere('c.orderedQuantity > c.limitedQuantity')
+            ->orderBy('c.title')
+            ->getQuery()
+            ->getSingleColumnResult();
+    }
 }

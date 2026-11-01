@@ -58,7 +58,9 @@ class Crowdfunding implements HasBlocksInterface, TrashableInterface, \Stringabl
     #[ORM\Column(type: Types::TEXT)]
     private ?string $authorPresentation = null;
 
+    // Printed as the href of a link leaving the site: only an absolute web address makes sense
     #[ORM\Column(length: 100, nullable: true)]
+    #[Assert\Url(protocols: ['http', 'https'])]
     private ?string $authorWebsite = null;
 
     #[ORM\Column(type: Types::TEXT)]
@@ -106,8 +108,9 @@ class Crowdfunding implements HasBlocksInterface, TrashableInterface, \Stringabl
     #[Assert\Valid]
     private Collection $counterparts;
 
-    // "orphanRemoval" like $medias, and for the same file left behind
+    // "orphanRemoval" like $medias, and for the same file left behind. Valid: a row of a collection is validated only when the campaign looks inside it, or the constraint on its $youtubeUrl never runs
     #[ORM\OneToMany(targetEntity: CrowdfundingVideo::class, mappedBy: 'crowdfunding', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[Assert\Valid]
     private Collection $videos;
 
     // "orphanRemoval" like the collections above - a lottery cascades to its own prizes, tickets and videos, so nothing of it is left pointing at a row that is gone

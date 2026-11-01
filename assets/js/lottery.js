@@ -36,11 +36,11 @@ export default class extends Controller {
         }
 
         // Calls API
-        this.drawWinner(prizeRank, this.animationDuration);
+        this.drawWinner(prizeRank, this.animationDuration, button.dataset.token);
     }
 
     // Draws a winner
-    drawWinner(prizeRank, duration) {
+    drawWinner(prizeRank, duration, token) {
         // Build url by replacing identifier and prize rank
         const drawUrl = this.drawUrlValue
             .replace("IDENTIFIER", this.identifierValue)
@@ -50,7 +50,9 @@ export default class extends Controller {
             method: "POST",
             headers: {
                 "X-Requested-With": "XMLHttpRequest",
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                // What makes this click the admin's own and not a page they were sent to (see LotteryController::drawPrize())
+                "X-CSRF-Token": token
             }
         })
         .then((response) => {

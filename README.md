@@ -50,6 +50,7 @@ Add CrowdfundingBundle on top of the shared [UiBundle](https://github.com/975L/U
 - Three transactional emails composable in the back office, via UiBundle's `EmailTemplateProviderInterface`
 - Campaign pages offered as menu targets (`LinkableRouteProviderInterface`) and media folders declared to the backup
 - Pending lottery draws reported to the status dashboard (`StatusProviderInterface`)
+- Counterparts sold past their run named on the dashboard (`AlertProviderInterface`)
 - Every file a campaign declares checked against the disk, under its own `files-crowdfunding` health check kind
 - **A skill for coding agents**, shipped in the package and read straight from `vendor/` — see [AI agent skills](#ai-agent-skills)
 
@@ -387,7 +388,8 @@ it is served to a visitor afterwards. The kinds of this bundle compose it as the
 
 **Who administers a campaign.** The whole CRUD sits behind `site-role-editor`, as SiteBundle's pages do:
 index, form, entity permission, QR code and the two buttons leading to the site. Only the recycle bin's own
-two gestures are stricter, on `site-role-admin`, and so is the lottery's draw.
+two gestures are stricter, on `site-role-admin`, and so is the lottery's draw, whose `POST` also asks the csrf
+token `DrawButton` carries, sent by `lottery.js` as the `X-CSRF-Token` header.
 
 **What the form deletes.** The campaign's five collections carry `orphanRemoval`, so a media, a tier, a
 video, a news or a draw taken off the form is removed rather than left behind with a null campaign. Two are

@@ -1,7 +1,8 @@
 {% if contributor.message != null %}
     {% set name = contributor.name != null ? contributor.name : 'label.anonymous'|trans({}, 'crowdfunding') %}
     <div>
-        <p>{{ contributor.message|raw }}</p>
+        {# Typed by whoever contributes, anonymous visitors included: escaped, its line breaks kept #}
+        <p>{{ contributor.message|nl2br }}</p>
         <p class="crowdfunding-meta">{{ name }} {{ contributor.creation|date('d/m/Y') }}</p>
     </div>
 {% endif %}

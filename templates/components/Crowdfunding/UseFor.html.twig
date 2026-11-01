@@ -7,5 +7,5 @@
 {% set editUrl = crowdfunding_edit_url(crowdfunding, 'useFor') %}
 <section id="use-for"{% if editUrl %} data-block-edit-url="{{ editUrl }}"{% endif %}>
     <h2>{{ 'label.use'|trans }}</h2>
-    {{ crowdfunding.useFor|raw }}
+    {{ crowdfunding.useFor|default('')|sanitize_html('c975l.rich') }}
 </section>

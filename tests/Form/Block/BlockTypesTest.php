@@ -16,6 +16,7 @@ use c975L\CrowdfundingBundle\Form\Block\LotteryBlockType;
 use c975L\CrowdfundingBundle\Form\Block\SliderBlockType;
 use c975L\CrowdfundingBundle\Tests\Form\FormFieldsTestCase;
 use c975L\UiBundle\Service\BlockAnchorSlugger;
+use c975L\UiBundle\Validator\SafeUrl;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -92,5 +93,13 @@ class BlockTypesTest extends FormFieldsTestCase
         $fields = array_keys($this->buildFields(new CampaignsBlockType(new BlockAnchorSlugger(new AsciiSlugger()))));
 
         $this->assertSame(['anchor', 'eyebrow', 'title', 'content', 'linkLabel', 'linkUrl', 'max', 'background'], $fields);
+    }
+
+    // Printed as an href, and a path of the site is a legitimate value: SafeUrl and not Url
+    public function testTheCampaignsBlockLinkIsASafeUrl(): void
+    {
+        $fields = $this->buildFields(new CampaignsBlockType(new BlockAnchorSlugger(new AsciiSlugger())));
+
+        $this->assertInstanceOf(SafeUrl::class, $fields['linkUrl']['options']['constraints'][0]);
     }
 }

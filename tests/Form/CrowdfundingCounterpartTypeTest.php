@@ -27,12 +27,12 @@ class CrowdfundingCounterpartTypeTest extends FormFieldsTestCase
         $this->assertSame('', $fields['slug']['options']['empty_data']);
     }
 
-    // The run already taken is what validateAddition() compares the limit against: an admin editing it by hand would let a counterpart be oversold
+    // The run already taken is what validateAddition() compares the limit against: neither an admin's hand nor a form opened before a payment writes it back
     public function testTheOrderedQuantityIsShownButNeverTyped(): void
     {
         $fields = $this->buildFields(new CrowdfundingCounterpartType());
 
-        $this->assertTrue($fields['orderedQuantity']['options']['attr']['readonly']);
+        $this->assertTrue($fields['orderedQuantity']['options']['disabled']);
     }
 
     // The price is an amount in cents, as everywhere in the ecosystem, and the field divides it for the admin
