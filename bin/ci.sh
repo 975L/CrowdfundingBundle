@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Replays the CI locally, but on fresh dependencies: the development machine's vendor holds symlinks to the sibling repositories, which expose code not yet tagged on Packagist. This script works on a clean copy, where `composer update` only sees the published versions - exactly what GitHub sees.
+# Replays the CI locally, but on fresh dependencies: the development machine's vendor stays at the versions of its composer.lock, which can lag behind Packagist. This script works on a clean copy, where `composer update` only sees the published versions - exactly what GitHub sees.
 
 set -euo pipefail
 
@@ -36,7 +36,7 @@ rsync -a \
 
 cd "$WORK"
 
-echo "→ composer update (Packagist, sans les liens symboliques du vendor local)"
+echo "→ composer update (Packagist, sans le vendor ni le composer.lock locaux)"
 composer update --no-interaction --no-progress
 
 # The quality tools are not dependencies of the bundle, PHPStan aside - require-dev carries it for its deprecation rules. The CI installs them with setup-php, which always takes the latest release, while the development machine keeps whatever was installed the day it was installed, so replaying `composer qa` with the machine's own tools proves nothing: a rule removed upstream since is still enforced here, a rule added since is missed. They are installed fresh, through Composer rather than as setup-php's phars (same rules, different packaging), one isolated project per tool so their dependencies never have to agree, and put ahead of everything else in the PATH

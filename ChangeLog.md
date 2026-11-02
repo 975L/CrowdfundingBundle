@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.9.2
+
+Corrected stale ci.sh comment
+
+- Corrected `bin/ci.sh` comment and message: vendor follows composer.lock, no symlinks (02/11/2026)
+
 ## v1.9.1
 
 Contributors' addresses kept out of the activity log
