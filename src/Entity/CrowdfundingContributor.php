@@ -10,6 +10,7 @@
 
 namespace c975L\CrowdfundingBundle\Entity;
 
+use c975L\ConfigBundle\Attribute\ActivityLogUnnamed;
 use c975L\CrowdfundingBundle\Repository\CrowdfundingContributorRepository;
 use c975L\PaymentBundle\Entity\Basket;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -19,6 +20,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CrowdfundingContributorRepository::class)]
 #[ORM\Table(name: 'crowdfunding_contributor')]
+#[ActivityLogUnnamed]
 class CrowdfundingContributor implements \Stringable
 {
     #[ORM\Id]

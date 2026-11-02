@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.9.1
+
+Contributors' addresses kept out of the activity log
+
+- `CrowdfundingContributor` carries `ActivityLogUnnamed` (02/11/2026)
+- Requires `c975l/core-bundle` ^1.86.0 (02/11/2026)
+
 ## v1.9.0
 
 Security audit: contributors' text escaped, runs counted atomically

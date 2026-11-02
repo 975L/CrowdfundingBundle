@@ -10,6 +10,7 @@
 
 namespace c975L\CrowdfundingBundle\Tests\Entity;
 
+use c975L\ConfigBundle\Attribute\ActivityLogUnnamed;
 use c975L\CrowdfundingBundle\Entity\CrowdfundingContributor;
 use c975L\CrowdfundingBundle\Entity\CrowdfundingCounterpart;
 use PHPUnit\Framework\TestCase;
@@ -26,6 +27,12 @@ class CrowdfundingContributorTest extends TestCase
     public function testAContributorIsPrintedAsTheirEmail(): void
     {
         $this->assertSame('camille@example.com', (string) new CrowdfundingContributor()->setEmail('camille@example.com'));
+    }
+
+    // That email is personal data: printed as such, it must not land in the activity log under the row's name
+    public function testAContributorsEmailStaysOutOfTheActivityLog(): void
+    {
+        $this->assertCount(1, new \ReflectionClass(CrowdfundingContributor::class)->getAttributes(ActivityLogUnnamed::class));
     }
 
     // The quantity lives on the join row rather than on either side of it: the same contributor can take three of one counterpart and one of another
