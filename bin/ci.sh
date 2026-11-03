@@ -39,13 +39,13 @@ TOOLS="$WORK/.ci-tools"
 for Package in squizlabs/php_codesniffer friendsofphp/php-cs-fixer rector/rector; do
     Directory="$TOOLS/$(basename "$Package")"
     mkdir -p "$Directory"
-    composer --working-dir="$Directory" require "$Package" --no-interaction --no-progress --quiet
+    composer --working-dir="$Directory" require "$Package" --no-interaction --no-progress
     PATH="$Directory/vendor/bin:$PATH"
 done
 
-# Lizard is a Python tool, and it is pinned where the PHP ones take their latest release: its counting changed between versions and this is the one Codacy runs, which the thresholds composer.json hands it are read against
+# Lizard is a Python tool taking its latest release like the four above, as the CI and the local one do: pinning one side alone lets the counts drift apart
 python3 -m venv "$TOOLS/lizard"
-"$TOOLS/lizard/bin/pip" install --quiet lizard==1.17.31
+"$TOOLS/lizard/bin/pip" install --quiet lizard
 PATH="$TOOLS/lizard/bin:$PATH"
 export PATH
 
@@ -72,7 +72,7 @@ for Version in $PHP_VERSIONS; do
 
     echo "→ Tests sur PHP $Version, dépendances résolues pour cette version"
     rm -rf vendor composer.lock
-    "php$Version" "$COMPOSER" update --no-interaction --no-progress --quiet
+    "php$Version" "$COMPOSER" update --no-interaction --no-progress
     "php$Version" vendor/bin/phpunit
 done
 

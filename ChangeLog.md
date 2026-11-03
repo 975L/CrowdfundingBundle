@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.9.4
+
+Composer states why a resolution failed in bin/ci.sh
+
+- `bin/ci.sh`: Composer states why a PHP version failed to resolve (03/11/2026)
+- `bin/ci.sh`: Composer states why a quality tool failed to install (03/11/2026)
+- `bin/ci.sh`: lizard takes its latest release, as the CI does (03/11/2026)
+
 ## v1.9.3
 
 CI tests PHP 8.5 and 8.6, bin/ci.sh replays them locally
