@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.9.3
+
+CI tests PHP 8.5 and 8.6, bin/ci.sh replays them locally
+
+- CI runs the tests on PHP 8.5 and 8.6 besides the quality job on 8.4 (03/11/2026)
+- `bin/ci.sh` runs the tests on each other PHP version installed locally (03/11/2026)
+
 ## v1.9.2
 
 Corrected stale ci.sh comment
