@@ -146,6 +146,10 @@ class TranslationDomainTest extends TestCase
             $keys = array_merge($keys, $this->emailKeys($contents));
         }
 
+        // A row confirmation names its key bare, titledConfirmation() resolving it in this bundle's domain
+        preg_match_all("/titledConfirmation\\('([a-z0-9_.]+)'\\)/", $contents, $matches);
+        $keys = array_merge($keys, $matches[1]);
+
         // UiBundle's social column builds its keys from the type the controller names, so none is spelled out here
         if (str_contains($contents, 'use SocialStatusCrudTrait;')) {
             $keys = array_merge($keys, ['label.crowdfunding_social', 'label.crowdfunding_social_date_format', 'label.crowdfunding_social_reserved', 'label.crowdfunding_social_published']);

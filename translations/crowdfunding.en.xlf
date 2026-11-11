@@ -24,11 +24,11 @@
             </trans-unit>
             <trans-unit id="X4j.TeG">
                 <source>confirm.delete_permanently</source>
-                <target>This campaign, its medias, its counterparts, its draws and the contributions it received are deleted for good. Nothing brings them back.</target>
+                <target>The campaign "%title%", its medias, its counterparts, its draws and the contributions it received are deleted for good. Nothing brings them back.</target>
             </trans-unit>
             <trans-unit id="dm8sVDz">
                 <source>confirm.move_to_trash</source>
-                <target>This campaign leaves the listing for the recycle bin, keeping everything it holds. It is restored from there.</target>
+                <target>The campaign "%title%" leaves the listing for the recycle bin, keeping everything it holds. It is restored from there.</target>
             </trans-unit>
             <trans-unit id="sQAXnjB">
                 <source>description.counterparts_oversold</source>

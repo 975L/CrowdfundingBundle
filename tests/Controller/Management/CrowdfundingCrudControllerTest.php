@@ -647,4 +647,18 @@ class CrowdfundingCrudControllerTest extends TestCase
         $this->assertStringContainsString('crowdfunding-social', $columns[0]->getAsDto()->getCssClass());
         $this->assertSame([], $fields(['trash' => '1']));
     }
+
+    // A confirmation names the row it acts on, resolved row by row, and a row saved without a title by its id
+    public function testTheTrashConfirmationNamesTheCampaign(): void
+    {
+        $confirmation = new \ReflectionMethod(CrowdfundingCrudController::class, 'titledConfirmation')->invoke(null, 'confirm.move_to_trash');
+        $untitled = new Crowdfunding()->setTitle('');
+        new \ReflectionProperty(Crowdfunding::class, 'id')->setValue($untitled, 7);
+
+        $this->assertSame(['%title%' => 'item-1'], $confirmation(new Crowdfunding()->setTitle('item-1'))->getParameters());
+        $this->assertSame(['%title%' => 'item-2'], $confirmation(new Crowdfunding()->setTitle('item-2'))->getParameters());
+        $this->assertSame(['%title%' => '#7'], $confirmation($untitled)->getParameters());
+        $this->assertSame('confirm.move_to_trash', $confirmation($untitled)->getMessage());
+        $this->assertSame('crowdfunding', $confirmation($untitled)->getDomain());
+    }
 }

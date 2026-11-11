@@ -24,11 +24,11 @@
             </trans-unit>
             <trans-unit id="X4j.TeG">
                 <source>confirm.delete_permanently</source>
-                <target>Esta campaña, sus medios, sus contrapartidas, sus sorteos y las contribuciones recibidas se eliminan para siempre. Nada los devuelve.</target>
+                <target>La campaña «%title%», sus medios, sus contrapartidas, sus sorteos y las contribuciones recibidas se eliminan para siempre. Nada los devuelve.</target>
             </trans-unit>
             <trans-unit id="dm8sVDz">
                 <source>confirm.move_to_trash</source>
-                <target>Esta campaña sale del listado hacia la papelera, conservando todo lo que contiene. Desde allí se restaura.</target>
+                <target>La campaña «%title%» sale del listado hacia la papelera, conservando todo lo que contiene. Desde allí se restaura.</target>
             </trans-unit>
             <trans-unit id="sQAXnjB">
                 <source>description.counterparts_oversold</source>

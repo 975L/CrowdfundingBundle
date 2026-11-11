@@ -71,6 +71,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Intl\Locales;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
+use Symfony\Component\Translation\TranslatableMessage;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 use function Symfony\Component\Translation\t;
@@ -361,7 +362,7 @@ class CrowdfundingCrudController extends AbstractCrudController
         $deletePermanentlyAction = Action::new('deletePermanently', t('action.delete_permanently', [], 'config'), 'fa fa-trash')
             ->linkToUrl(fn (Crowdfunding $crowdfunding): string => $this->tokenizedUrl('deletePermanently', $crowdfunding, self::DELETE_PERMANENTLY_CSRF_TOKEN))
             ->displayIf(static fn (Crowdfunding $crowdfunding): bool => $crowdfunding->isDeleted())
-            ->askConfirmation(t('confirm.delete_permanently', [], 'crowdfunding'))
+            ->askConfirmation(self::titledConfirmation('confirm.delete_permanently'))
             ->asDangerAction()
         ;
 
@@ -385,7 +386,7 @@ class CrowdfundingCrudController extends AbstractCrudController
             ->update(Crud::PAGE_INDEX, Action::DELETE, fn (Action $action) => EasyAdminActionHelper::toIconOnly(
                 $action
                     ->setIcon('fa fa-box-archive')
-                    ->askConfirmation(t('confirm.move_to_trash', [], 'crowdfunding'))
+                    ->askConfirmation(self::titledConfirmation('confirm.move_to_trash'))
                     ->displayIf(static fn (Crowdfunding $crowdfunding): bool => !$crowdfunding->isDeleted()),
                 $this->translator->trans('action.move_to_trash', [], 'config'),
             ))
@@ -393,7 +394,7 @@ class CrowdfundingCrudController extends AbstractCrudController
             ->update(Crud::PAGE_EDIT, Action::DELETE, fn (Action $action) => $action
                 ->setLabel(t('action.move_to_trash', [], 'config'))
                 ->setIcon('fa fa-box-archive')
-                ->askConfirmation(t('confirm.move_to_trash', [], 'crowdfunding'))
+                ->askConfirmation(self::titledConfirmation('confirm.move_to_trash'))
                 ->displayIf(static fn (Crowdfunding $crowdfunding): bool => !$crowdfunding->isDeleted()))
             ->update(Crud::PAGE_INDEX, Action::DETAIL, fn (Action $action) => EasyAdminActionHelper::toIconOnly(
                 $action,
@@ -783,6 +784,16 @@ class CrowdfundingCrudController extends AbstractCrudController
             FormField::addFieldset(t('label.lottery', [], 'crowdfunding')),
             $this->translationCollection('lotteries', LotteryType::class, $locale),
         ];
+    }
+
+    // A confirmation naming the row it acts on, EasyAdmin handing the closure that row - one saved without a title is named by its id
+    private static function titledConfirmation(string $key): \Closure
+    {
+        return static function (Crowdfunding $crowdfunding) use ($key): TranslatableMessage {
+            $title = (string) $crowdfunding->getTitle();
+
+            return t($key, ['%title%' => '' !== $title ? $title : '#' . $crowdfunding->getId()], 'crowdfunding');
+        };
     }
 
     // One of the campaign's collections on its language screen: every row it already holds, through the type it is always edited with, and neither "+" nor bin - a tier taken away there would be taken away from every language at once

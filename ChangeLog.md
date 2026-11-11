@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.10.0
+
+Trash and delete confirmations name the campaign
+
+- Trash and permanent delete confirmations name the campaign they act on (11/11/2026)
+- `TranslationDomainTest` reads the keys handed to `titledConfirmation()` (11/11/2026)
+- `easycorp/easyadmin-bundle` required in ^5.10 (11/11/2026)
+
 ## v1.9.4
 
 Composer states why a resolution failed in bin/ci.sh
