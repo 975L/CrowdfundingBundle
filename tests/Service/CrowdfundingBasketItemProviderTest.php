@@ -13,13 +13,20 @@ namespace c975L\CrowdfundingBundle\Tests\Service;
 use c975L\CrowdfundingBundle\Entity\Crowdfunding;
 use c975L\CrowdfundingBundle\Entity\CrowdfundingContributor;
 use c975L\CrowdfundingBundle\Entity\CrowdfundingCounterpart;
+use c975L\CrowdfundingBundle\Entity\LotteryPrize;
+use c975L\CrowdfundingBundle\Entity\LotteryTicket;
+use c975L\CrowdfundingBundle\Message\CrowdfundingContributionMessage;
 use c975L\CrowdfundingBundle\Message\LotteryTicketsMessage;
+use c975L\CrowdfundingBundle\Repository\CrowdfundingContributorRepository;
 use c975L\CrowdfundingBundle\Repository\CrowdfundingCounterpartRepository;
 use c975L\CrowdfundingBundle\Repository\CrowdfundingRepository;
+use c975L\CrowdfundingBundle\Repository\LotteryPrizeRepository;
+use c975L\CrowdfundingBundle\Repository\LotteryTicketRepository;
 use c975L\CrowdfundingBundle\Service\CrowdfundingBasketItemProvider;
 use c975L\CrowdfundingBundle\Service\CrowdfundingCounterpartServiceInterface;
 use c975L\CrowdfundingBundle\Service\LotteryServiceInterface;
 use c975L\PaymentBundle\Contract\BasketItemProviderInterface;
+use c975L\PaymentBundle\Contract\RefundableBasketItemProviderInterface;
 use c975L\PaymentBundle\Contract\ShippingBasketItemProviderInterface;
 use c975L\PaymentBundle\Entity\Basket;
 use Doctrine\ORM\EntityManagerInterface;
@@ -44,6 +51,21 @@ class CrowdfundingBasketItemProviderTest extends TestCase
     /** @var list<string> */
     private array $logged = [];
 
+    /** @var list<int> */
+    private array $released = [];
+
+    /** @var list<array{int, int}> */
+    private array $returned = [];
+
+    /** @var list<CrowdfundingContributor> */
+    private array $basketContributors = [];
+
+    /** @var list<LotteryTicket> */
+    private array $contributorTickets = [];
+
+    /** @var list<LotteryPrize> */
+    private array $wonPrizes = [];
+
     private bool $claimAnswers = true;
 
     public function testGetKindIsTheKeyPaymentBundleFilesTheseLinesUnder(): void
@@ -54,6 +76,7 @@ class CrowdfundingBasketItemProviderTest extends TestCase
     public function testItImplementsThePaymentContract(): void
     {
         $this->assertInstanceOf(BasketItemProviderInterface::class, $this->createProvider());
+        $this->assertInstanceOf(RefundableBasketItemProviderInterface::class, $this->createProvider());
     }
 
     // A running campaign offering a posted counterpart keeps PaymentBundle warning about an empty delivery grid
@@ -348,11 +371,12 @@ class CrowdfundingBasketItemProviderTest extends TestCase
             $flushed = true;
         });
 
-        $messageBus = $this->createMock(MessageBusInterface::class);
-        $messageBus->expects($this->once())->method('dispatch')
-            ->with($this->isInstanceOf(LotteryTicketsMessage::class))
-            ->willReturnCallback(function (object $message) use (&$flushed): Envelope {
-                $this->assertTrue($flushed, 'The tickets were announced before the flush, so the contributor had no id yet.');
+        $dispatched = [];
+        $messageBus = $this->createStub(MessageBusInterface::class);
+        $messageBus->method('dispatch')
+            ->willReturnCallback(function (object $message) use (&$flushed, &$dispatched): Envelope {
+                $this->assertTrue($flushed, 'A message was sent before the flush, so the contributor had no id yet.');
+                $dispatched[] = $message::class;
 
                 return new Envelope($message);
             });
@@ -362,9 +386,11 @@ class CrowdfundingBasketItemProviderTest extends TestCase
             [7 => ['quantity' => 1]],
             ['name' => null, 'message' => null, 'email' => 'camille@example.com', 'counterparts' => [7 => 1]],
         );
+
+        $this->assertSame([LotteryTicketsMessage::class, CrowdfundingContributionMessage::class], $dispatched);
     }
 
-    // A basket PaymentBundle hands over without the data onBasketValidated() built - an order placed before this hook existed - bumps the run and stops there rather than writing a contributor with no email
+    // A basket PaymentBundle hands over without the data onBasketValidated() built - an order placed before this hook existed - counts the run and the campaign, writes no contributor, and still thanks the buyer
     public function testOnBasketPaidWritesNoContributorWithoutCheckoutData(): void
     {
         $counterpart = $this->createCounterpart()->setOrderedQuantity(1);
@@ -376,11 +402,181 @@ class CrowdfundingBasketItemProviderTest extends TestCase
         $entityManager->expects($this->never())->method('persist');
 
         $messageBus = $this->createMock(MessageBusInterface::class);
-        $messageBus->expects($this->never())->method('dispatch');
+        $messageBus->expects($this->once())->method('dispatch')->with($this->isInstanceOf(CrowdfundingContributionMessage::class))->willReturnCallback(static fn (object $message): Envelope => new Envelope($message));
 
         $this->createProvider(counterpartService: $counterpartService, entityManager: $entityManager, messageBus: $messageBus)->onBasketPaid(new Basket(), [7 => ['quantity' => 3]], []);
 
         $this->assertSame([[7, 3]], $this->counted);
+        $this->assertSame([3000], $this->credited);
+    }
+
+    // A basket paid in test mode counts nothing real: no run, no total, no contributor, no ticket, no e-mail
+    public function testATestBasketCountsNothing(): void
+    {
+        $counterpartService = $this->createStub(CrowdfundingCounterpartServiceInterface::class);
+        $counterpartService->method('findOneById')->willReturn($this->createCounterpart());
+
+        $lotteryService = $this->createMock(LotteryServiceInterface::class);
+        $lotteryService->expects($this->never())->method('generateTicketsForContributor');
+        $messageBus = $this->createMock(MessageBusInterface::class);
+        $messageBus->expects($this->never())->method('dispatch');
+
+        $this->createProvider(counterpartService: $counterpartService, messageBus: $messageBus, lotteryService: $lotteryService)->onBasketPaid(
+            new Basket()->setTestMode(true),
+            [7 => ['quantity' => 1, 'total' => 1000]],
+            ['name' => null, 'message' => null, 'email' => 'item-1@example.com', 'counterparts' => [7 => 1]],
+        );
+
+        $this->assertSame([], $this->counted);
+        $this->assertSame([], $this->credited);
+    }
+
+    // The campaign counts the line total the basket froze, minus its share of a promotional code - never the price of the day
+    public function testTheAmountCountedIsTheFrozenTotalMinusTheDiscountShare(): void
+    {
+        $counterpartService = $this->createStub(CrowdfundingCounterpartServiceInterface::class);
+        $counterpartService->method('findOneById')->willReturn($this->createCounterpart()->setPrice(9999));
+
+        $basket = new Basket()->setTotal(10000)->setDiscountKind(Basket::CODE_KIND_DISCOUNT)->setDiscountAmount(5000);
+        $this->createProvider(counterpartService: $counterpartService, entityManager: $this->createEntityManagerAssigningIds())->onBasketPaid($basket, [7 => ['quantity' => 2, 'total' => 4000]], []);
+
+        $this->assertSame([2000], $this->credited);
+    }
+
+    // A gift card pays the order, it does not discount it: the campaign counts the whole line
+    public function testAGiftCardTakesNothingOffTheAmountCounted(): void
+    {
+        $counterpartService = $this->createStub(CrowdfundingCounterpartServiceInterface::class);
+        $counterpartService->method('findOneById')->willReturn($this->createCounterpart());
+
+        $basket = new Basket()->setTotal(10000)->setDiscountKind(Basket::CODE_KIND_GIFT_CARD)->setDiscountAmount(5000);
+        $this->createProvider(counterpartService: $counterpartService, entityManager: $this->createEntityManagerAssigningIds())->onBasketPaid($basket, [7 => ['quantity' => 2, 'total' => 4000]], []);
+
+        $this->assertSame([4000], $this->credited);
+    }
+
+    // A counterpart given for nothing writes no public contributor, no message and no ticket - the thank-you e-mail still goes
+    public function testAFreeContributionWritesNoContributorNorTicket(): void
+    {
+        $counterpartService = $this->createStub(CrowdfundingCounterpartServiceInterface::class);
+        $counterpartService->method('findOneById')->willReturn($this->createCounterpart()->setPrice(0));
+
+        $lotteryService = $this->createMock(LotteryServiceInterface::class);
+        $lotteryService->expects($this->never())->method('generateTicketsForContributor');
+        $entityManager = $this->createMock(EntityManagerInterface::class);
+        $entityManager->expects($this->never())->method('persist');
+
+        $this->createProvider(counterpartService: $counterpartService, entityManager: $entityManager, lotteryService: $lotteryService)->onBasketPaid(
+            new Basket(),
+            [7 => ['quantity' => 5, 'total' => 0]],
+            ['name' => 'item-1', 'message' => 'spam', 'email' => 'item-1@example.com', 'counterparts' => [7 => 5]],
+        );
+
+        $this->assertSame([[7, 5]], $this->counted);
+        $this->assertSame([], $this->credited);
+    }
+
+    // A basket holding two campaigns writes one contributor in each, each credited with its own lines
+    public function testEachCampaignOfTheBasketGetsItsOwnContributor(): void
+    {
+        $first = $this->createCounterpart();
+        $second = $this->createCounterpart();
+        $counterpartService = $this->createStub(CrowdfundingCounterpartServiceInterface::class);
+        $counterpartService->method('findOneById')->willReturnMap([[7, $first], [8, $second]]);
+
+        $this->createProvider(counterpartService: $counterpartService, entityManager: $this->createEntityManagerAssigningIds())->onBasketPaid(
+            new Basket(),
+            [7 => ['quantity' => 1, 'total' => 1000], 8 => ['quantity' => 2, 'total' => 2000]],
+            ['name' => null, 'message' => null, 'email' => 'item-1@example.com', 'counterparts' => [7 => 1, 8 => 2]],
+        );
+
+        $this->assertSame([1000, 2000], $this->credited);
+        $this->assertCount(1, $first->getCrowdfunding()->getContributors());
+        $this->assertCount(1, $second->getCrowdfunding()->getContributors());
+        $this->assertNotSame($first->getCrowdfunding()->getContributors()->first(), $second->getCrowdfunding()->getContributors()->first());
+    }
+
+    // A signature or a message longer than its column is cut, so the paid order is still delivered
+    public function testOnBasketValidatedCutsWhatIsTooLongForItsColumn(): void
+    {
+        $checkoutData = $this->createProvider()->onBasketValidated(new Basket(), [], ['coordinates' => ['contributorName' => '  ' . str_repeat('a', 60), 'contributorMessage' => str_repeat('é', 300)]]);
+
+        $this->assertSame(str_repeat('a', 50), $checkoutData['name']);
+        $this->assertSame(255, mb_strlen($checkoutData['message']));
+    }
+
+    // A value that is not a text is ignored rather than cast
+    public function testOnBasketValidatedIgnoresAValueThatIsNotAText(): void
+    {
+        $checkoutData = $this->createProvider()->onBasketValidated(new Basket(), [], ['coordinates' => ['contributorName' => ['item-1'], 'contributorMessage' => '   ']]);
+
+        $this->assertNull($checkoutData['name']);
+        $this->assertNull($checkoutData['message']);
+    }
+
+    // A refund takes back exactly what the payment counted, gives the run back and removes the contributor with its tickets
+    public function testARefundTakesBackWhatThePaymentCounted(): void
+    {
+        $counterpart = $this->createCounterpart();
+        $counterpartService = $this->createStub(CrowdfundingCounterpartServiceInterface::class);
+        $counterpartService->method('findOneById')->willReturn($counterpart);
+        $contributor = new CrowdfundingContributor();
+        $counterpart->getCrowdfunding()->addContributor($contributor);
+        $this->basketContributors = [$contributor];
+        $this->contributorTickets = [new LotteryTicket(), new LotteryTicket()];
+
+        $removed = [];
+        $entityManager = $this->createStub(EntityManagerInterface::class);
+        $entityManager->method('remove')->willReturnCallback(static function (object $entity) use (&$removed): void {
+            $removed[] = $entity::class;
+        });
+
+        $basket = new Basket()->setTotal(10000)->setDiscountKind(Basket::CODE_KIND_DISCOUNT)->setDiscountAmount(5000);
+        $this->createProvider(counterpartService: $counterpartService, entityManager: $entityManager)->onBasketRefunded($basket, [7 => ['quantity' => 2, 'total' => 4000]]);
+
+        $this->assertSame([2000], $this->released);
+        $this->assertSame([[7, 2]], $this->returned);
+        $this->assertSame([LotteryTicket::class, LotteryTicket::class, CrowdfundingContributor::class], $removed);
+        $this->assertCount(0, $counterpart->getCrowdfunding()->getContributors());
+    }
+
+    // A ticket already drawn stays with its prize, so its contributor leaves the list but keeps its row, and the shop is told
+    public function testARefundKeepsATicketAlreadyDrawn(): void
+    {
+        $counterpart = $this->createCounterpart();
+        $counterpartService = $this->createStub(CrowdfundingCounterpartServiceInterface::class);
+        $counterpartService->method('findOneById')->willReturn($counterpart);
+        $contributor = new CrowdfundingContributor();
+        $counterpart->getCrowdfunding()->addContributor($contributor);
+        $winning = new LotteryTicket();
+        $this->basketContributors = [$contributor];
+        $this->contributorTickets = [$winning, new LotteryTicket()];
+        $this->wonPrizes = [new LotteryPrize()->setWinningTicket($winning)];
+
+        $removed = [];
+        $entityManager = $this->createStub(EntityManagerInterface::class);
+        $entityManager->method('remove')->willReturnCallback(static function (object $entity) use (&$removed): void {
+            $removed[] = $entity;
+        });
+
+        $this->createProvider(counterpartService: $counterpartService, entityManager: $entityManager)->onBasketRefunded(new Basket(), [7 => ['quantity' => 1, 'total' => 1000]]);
+
+        $this->assertCount(1, $removed);
+        $this->assertNotSame($winning, $removed[0]);
+        $this->assertCount(0, $counterpart->getCrowdfunding()->getContributors());
+        $this->assertCount(1, $this->logged);
+    }
+
+    // A test basket counted nothing, so its refund takes nothing back
+    public function testARefundedTestBasketTakesNothingBack(): void
+    {
+        $counterpartService = $this->createStub(CrowdfundingCounterpartServiceInterface::class);
+        $counterpartService->method('findOneById')->willReturn($this->createCounterpart());
+
+        $this->createProvider(counterpartService: $counterpartService)->onBasketRefunded(new Basket()->setTestMode(true), [7 => ['quantity' => 1, 'total' => 1000]]);
+
+        $this->assertSame([], $this->released);
+        $this->assertSame([], $this->returned);
     }
 
     // Doctrine assigns the identifier at flush time, and nothing else here does: without it every contributor keeps the null the constructor left, which is exactly what the message refuses
@@ -466,10 +662,27 @@ class CrowdfundingBasketItemProviderTest extends TestCase
             $this->credited[] = $amount;
         });
 
+        $crowdfundingRepository->method('releaseAchieved')->willReturnCallback(function (Crowdfunding $crowdfunding, int $amount): void {
+            $this->released[] = $amount;
+        });
+        $counterpartRepository->method('releaseOrdered')->willReturnCallback(function (CrowdfundingCounterpart $counterpart, int $quantity): void {
+            $this->returned[] = [7, $quantity];
+        });
+
         $logger = $this->createStub(LoggerInterface::class);
         $logger->method('critical')->willReturnCallback(function (string $message): void {
             $this->logged[] = $message;
         });
+        $logger->method('warning')->willReturnCallback(function (string $message): void {
+            $this->logged[] = $message;
+        });
+
+        $contributorRepository = $this->createStub(CrowdfundingContributorRepository::class);
+        $contributorRepository->method('findBy')->willReturnCallback(fn (): array => $this->basketContributors);
+        $ticketRepository = $this->createStub(LotteryTicketRepository::class);
+        $ticketRepository->method('findBy')->willReturnCallback(fn (): array => $this->contributorTickets);
+        $prizeRepository = $this->createStub(LotteryPrizeRepository::class);
+        $prizeRepository->method('findBy')->willReturnCallback(fn (): array => $this->wonPrizes);
 
         $bus = $messageBus ?? $this->createStub(MessageBusInterface::class);
         if (null === $messageBus) {
@@ -485,6 +698,9 @@ class CrowdfundingBasketItemProviderTest extends TestCase
             $counterpartRepository,
             $crowdfundingRepository,
             $logger,
+            $contributorRepository,
+            $ticketRepository,
+            $prizeRepository,
         );
     }
 }

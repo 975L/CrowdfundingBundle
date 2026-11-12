@@ -598,7 +598,7 @@ class CrowdfundingGuidedProjectProvider implements GuidedProjectProviderInterfac
                     'narration' => 'narration.guided_step_crowdfunding_draw_video_upload',
                     'highlight' => '[data-crowdfunding-lotteries] .accordion-collapse.show [data-lottery-videos]',
                 ],
-                // The way out for a file too heavy to upload: only a campaign's video carries an address, a lottery's taking a file and nothing else (see CrowdfundingVideo::$youtubeUrl, which LotteryVideo has no equivalent of)
+                // The way out for a file too heavy to upload: only a campaign's video carries an address, a lottery's taking a file and nothing else (see CrowdfundingVideo::$videoUrl, which LotteryVideo has no equivalent of)
                 [
                     'label' => 'label.guided_step_crowdfunding_draw_video_youtube',
                     'description' => 'description.guided_step_crowdfunding_draw_video_youtube',

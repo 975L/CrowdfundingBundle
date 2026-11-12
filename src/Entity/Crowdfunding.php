@@ -47,12 +47,15 @@ class Crowdfunding implements HasBlocksInterface, TrashableInterface, \Stringabl
     private Collection $blocks;
 
     #[ORM\Column(length: 100)]
+    #[Assert\Length(max: 100)]
     private ?string $title = null;
 
     #[ORM\Column(length: 100)]
+    #[Assert\Length(max: 100)]
     private ?string $slug = null;
 
     #[ORM\Column(length: 50)]
+    #[Assert\Length(max: 50)]
     private ?string $authorName = null;
 
     #[ORM\Column(type: Types::TEXT)]
@@ -61,6 +64,7 @@ class Crowdfunding implements HasBlocksInterface, TrashableInterface, \Stringabl
     // Printed as the href of a link leaving the site: only an absolute web address makes sense
     #[ORM\Column(length: 100, nullable: true)]
     #[Assert\Url(protocols: ['http', 'https'])]
+    #[Assert\Length(max: 100)]
     private ?string $authorWebsite = null;
 
     #[ORM\Column(type: Types::TEXT)]
@@ -73,6 +77,7 @@ class Crowdfunding implements HasBlocksInterface, TrashableInterface, \Stringabl
     private ?int $amountAchieved = null;
 
     #[ORM\Column(length: 3)]
+    #[Assert\Length(max: 3)]
     private ?string $currency = null;
 
     #[ORM\Column(type: Types::TEXT)]
@@ -93,7 +98,8 @@ class Crowdfunding implements HasBlocksInterface, TrashableInterface, \Stringabl
     private Collection $medias;
 
     // Cascaded like everything else the campaign holds: without it, deleting a funded campaign for good was refused by the database, its contributors still pointing at the row being deleted. Only the second, deliberate deletion ever reaches here - the recycle bin removes nothing
-    #[ORM\OneToMany(targetEntity: CrowdfundingContributor::class, mappedBy: 'crowdfunding', cascade: ['remove'])]
+    // EXTRA_LAZY: the count the pages print is a COUNT query, the list itself read only where it is shown
+    #[ORM\OneToMany(targetEntity: CrowdfundingContributor::class, mappedBy: 'crowdfunding', cascade: ['remove'], fetch: 'EXTRA_LAZY')]
     #[ORM\OrderBy(['id' => \SortDirection::Ascending])]
     private Collection $contributors;
 
@@ -108,7 +114,7 @@ class Crowdfunding implements HasBlocksInterface, TrashableInterface, \Stringabl
     #[Assert\Valid]
     private Collection $counterparts;
 
-    // "orphanRemoval" like $medias, and for the same file left behind. Valid: a row of a collection is validated only when the campaign looks inside it, or the constraint on its $youtubeUrl never runs
+    // "orphanRemoval" like $medias, and for the same file left behind. Valid: a row of a collection is validated only when the campaign looks inside it, or the constraints on its $videoUrl never run
     #[ORM\OneToMany(targetEntity: CrowdfundingVideo::class, mappedBy: 'crowdfunding', cascade: ['persist', 'remove'], orphanRemoval: true)]
     #[Assert\Valid]
     private Collection $videos;

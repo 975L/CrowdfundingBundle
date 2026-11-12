@@ -31,6 +31,7 @@ abstract class Media
 
     // What a file's type is read from, the hierarchy holding no column for it: the extension is what an upload already carries, and a type stored beside it would be one more thing to keep true
     private const array MIME_TYPES = [
+        // Read only: refused at upload (see CrowdfundingMediaType::IMAGE_TYPES), kept so a picture stored before still answers its type
         'avif' => 'image/avif',
         'gif' => 'image/gif',
         'jpeg' => 'image/jpeg',

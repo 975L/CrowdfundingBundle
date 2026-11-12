@@ -26,6 +26,15 @@ class CrowdfundingNewsTypeTest extends FormFieldsTestCase
     }
 
     // Both fields name their domain themselves, the type declaring none of its own
+    // An emptied field reaches the entity's NotBlank as an empty text, never a null its setters refuse
+    public function testBothFieldsSendAnEmptyTextWhenEmptied(): void
+    {
+        $fields = $this->buildFields(new CrowdfundingNewsType());
+
+        $this->assertSame('', $fields['title']['options']['empty_data']);
+        $this->assertSame('', $fields['content']['options']['empty_data']);
+    }
+
     public function testBothFieldsResolveTheirLabelInThisBundleCatalogue(): void
     {
         $fields = $this->buildFields(new CrowdfundingNewsType());

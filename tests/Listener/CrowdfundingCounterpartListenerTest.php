@@ -15,41 +15,58 @@ use c975L\CrowdfundingBundle\Entity\CrowdfundingCounterpart;
 use c975L\CrowdfundingBundle\Entity\CrowdfundingCounterpartMedia;
 use c975L\CrowdfundingBundle\Listener\CrowdfundingCounterpartListener;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Event\PreFlushEventArgs;
 use Doctrine\ORM\Event\PrePersistEventArgs;
+use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\Persistence\ObjectManager;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\String\Slugger\AsciiSlugger;
 
+// A counterpart is named, dated and signed on a write and on a real edit only: a contribution counting its run never hands it to the contributor
 class CrowdfundingCounterpartListenerTest extends TestCase
 {
-    // The slug is rebuilt from the title on every save rather than typed: it is what the basket line and the counterpart's own anchor are keyed on
-    public function testPreFlushSlugsTheTitleInLowercase(): void
+    // The slug is built from the title rather than typed: it is what the basket line and the counterpart's own anchor are keyed on
+    public function testPrePersistSlugsTheTitleInLowercase(): void
     {
         $counterpart = new CrowdfundingCounterpart()->setTitle('Le Tote bag édition limitée');
 
-        $this->createListener()->preFlush($counterpart, $this->createPreFlushArgs());
+        $this->createListener()->prePersist($counterpart, $this->persistArgs($counterpart));
 
         $this->assertSame('le-tote-bag-edition-limitee', $counterpart->getSlug());
     }
 
-    // A DATETIME_MUTABLE column: an immutable stamp is refused by Doctrine at flush
-    public function testPreFlushStampsTheModificationWithAMutableDate(): void
-    {
-        $counterpart = new CrowdfundingCounterpart()->setTitle('Un lot');
-
-        $this->createListener()->preFlush($counterpart, $this->createPreFlushArgs());
-
-        $this->assertInstanceOf(\DateTime::class, $counterpart->getModification());
-    }
-
-    public function testPreFlushRecordsWhoEditedTheCounterpart(): void
+    // A renamed counterpart is slugged again
+    public function testAnEditSlugsDatesAndSignsTheCounterpart(): void
     {
         $user = $this->createStub(UserInterface::class);
-        $counterpart = new CrowdfundingCounterpart()->setTitle('Un lot');
+        $counterpart = new CrowdfundingCounterpart()->setTitle('Item 2')->setSlug('item-1');
 
-        $this->createListener($user)->preFlush($counterpart, $this->createPreFlushArgs());
+        $this->createListener($user)->preUpdate($counterpart, $this->updateArgs($counterpart, ['title' => ['Item 1', 'Item 2']]));
+
+        $this->assertSame('item-2', $counterpart->getSlug());
+        $this->assertInstanceOf(\DateTime::class, $counterpart->getModification());
+        $this->assertSame($user, $counterpart->getUser());
+    }
+
+    // A contribution counting the run dates the counterpart, and changes neither its author nor anything else
+    public function testAContributionChangesNeitherTheAuthorNorTheDate(): void
+    {
+        $author = $this->createStub(UserInterface::class);
+        $counterpart = new CrowdfundingCounterpart()->setTitle('Item 1')->setSlug('item-1')->setUser($author);
+        $counterpart->setModification(new \DateTime('2026-01-12'));
+
+        $this->createListener($this->createStub(UserInterface::class))->preUpdate($counterpart, $this->updateArgs($counterpart, ['orderedQuantity' => [1, 2], 'modification' => [null, null]]));
+
+        $this->assertSame($author, $counterpart->getUser());
+        $this->assertSame('2026-01-12', $counterpart->getModification()->format('Y-m-d'));
+    }
+
+    public function testPrePersistRecordsWhoCreatedTheCounterpart(): void
+    {
+        $user = $this->createStub(UserInterface::class);
+        $counterpart = new CrowdfundingCounterpart()->setTitle('Item 1');
+
+        $this->createListener($user)->prePersist($counterpart, $this->persistArgs($counterpart));
 
         $this->assertSame($user, $counterpart->getUser());
     }
@@ -59,7 +76,7 @@ class CrowdfundingCounterpartListenerTest extends TestCase
     {
         $counterpart = new CrowdfundingCounterpart();
 
-        $this->createListener()->prePersist($counterpart, $this->createPrePersistArgs($counterpart));
+        $this->createListener()->prePersist($counterpart, $this->persistArgs($counterpart));
 
         $this->assertInstanceOf(CrowdfundingCounterpartMedia::class, $counterpart->getMedia());
         $this->assertSame($counterpart, $counterpart->getMedia()->getCrowdfundingCounterpart());
@@ -70,7 +87,7 @@ class CrowdfundingCounterpartListenerTest extends TestCase
     {
         $counterpart = new CrowdfundingCounterpart();
 
-        $this->createListener()->prePersist($counterpart, $this->createPrePersistArgs($counterpart));
+        $this->createListener()->prePersist($counterpart, $this->persistArgs($counterpart));
 
         $this->assertInstanceOf(\DateTimeImmutable::class, $counterpart->getMedia()->getUpdatedAt());
     }
@@ -81,28 +98,31 @@ class CrowdfundingCounterpartListenerTest extends TestCase
         $media = new CrowdfundingCounterpartMedia();
         $counterpart = new CrowdfundingCounterpart()->setMedia($media);
 
-        $this->createListener()->prePersist($counterpart, $this->createPrePersistArgs($counterpart));
+        $this->createListener()->prePersist($counterpart, $this->persistArgs($counterpart));
 
         $this->assertSame($media, $counterpart->getMedia());
     }
 
-    public function testPrePersistStampsTheCreationWithAMutableDate(): void
+    // DATETIME_MUTABLE columns, both set on an insert since preUpdate never runs on one
+    public function testPrePersistStampsBothDatesWithMutableDates(): void
     {
         $counterpart = new CrowdfundingCounterpart();
 
-        $this->createListener()->prePersist($counterpart, $this->createPrePersistArgs($counterpart));
+        $this->createListener()->prePersist($counterpart, $this->persistArgs($counterpart));
 
         $this->assertInstanceOf(\DateTime::class, $counterpart->getCreation());
+        $this->assertInstanceOf(\DateTime::class, $counterpart->getModification());
     }
 
-    private function createPreFlushArgs(): PreFlushEventArgs
-    {
-        return new PreFlushEventArgs($this->createStub(EntityManagerInterface::class));
-    }
-
-    private function createPrePersistArgs(object $entity): PrePersistEventArgs
+    private function persistArgs(object $entity): PrePersistEventArgs
     {
         return new PrePersistEventArgs($entity, $this->createStub(ObjectManager::class));
+    }
+
+    /** @param array<string, array{mixed, mixed}> $changeSet */
+    private function updateArgs(object $entity, array $changeSet): PreUpdateEventArgs
+    {
+        return new PreUpdateEventArgs($entity, $this->createStub(EntityManagerInterface::class), $changeSet);
     }
 
     private function createListener(?UserInterface $user = null): CrowdfundingCounterpartListener
@@ -110,6 +130,6 @@ class CrowdfundingCounterpartListenerTest extends TestCase
         $security = $this->createStub(Security::class);
         $security->method('getUser')->willReturn($user);
 
-        return new CrowdfundingCounterpartListener($security, $this->createStub(EntityManagerInterface::class), new AsciiSlugger());
+        return new CrowdfundingCounterpartListener($security, new AsciiSlugger());
     }
 }

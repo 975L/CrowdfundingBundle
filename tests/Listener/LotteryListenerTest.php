@@ -14,8 +14,8 @@ use c975L\ConfigBundle\Contract\UserInterface;
 use c975L\CrowdfundingBundle\Entity\Lottery;
 use c975L\CrowdfundingBundle\Listener\LotteryListener;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Event\PreFlushEventArgs;
 use Doctrine\ORM\Event\PrePersistEventArgs;
+use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\Persistence\ObjectManager;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -68,28 +68,23 @@ class LotteryListenerTest extends TestCase
     }
 
     // A DATETIME_MUTABLE column: an immutable stamp is refused by Doctrine at flush
-    public function testPreFlushStampsTheModificationWithAMutableDate(): void
+    public function testPreUpdateStampsTheModificationWithAMutableDate(): void
     {
         $lottery = new Lottery();
 
-        $this->createListener()->preFlush($lottery, $this->createPreFlushArgs());
+        $this->createListener()->preUpdate($lottery, $this->updateArgs($lottery, ['title' => ['a', 'b']]));
 
         $this->assertInstanceOf(\DateTime::class, $lottery->getModification());
     }
 
-    public function testPreFlushRecordsWhoEditedTheLottery(): void
+    public function testPreUpdateRecordsWhoEditedTheLottery(): void
     {
         $user = $this->createStub(UserInterface::class);
         $lottery = new Lottery();
 
-        $this->createListener($user)->preFlush($lottery, $this->createPreFlushArgs());
+        $this->createListener($user)->preUpdate($lottery, $this->updateArgs($lottery, ['title' => ['a', 'b']]));
 
         $this->assertSame($user, $lottery->getUser());
-    }
-
-    private function createPreFlushArgs(): PreFlushEventArgs
-    {
-        return new PreFlushEventArgs($this->createStub(EntityManagerInterface::class));
     }
 
     private function createPrePersistArgs(object $entity): PrePersistEventArgs
@@ -102,6 +97,13 @@ class LotteryListenerTest extends TestCase
         $security = $this->createStub(Security::class);
         $security->method('getUser')->willReturn($user);
 
-        return new LotteryListener($security, $this->createStub(EntityManagerInterface::class));
+        return new LotteryListener($security);
+    }
+
+    // The change set is passed by reference, so it has to be a variable
+    /** @param array<string, array{mixed, mixed}> $changeSet */
+    private function updateArgs(object $entity, array $changeSet = []): PreUpdateEventArgs
+    {
+        return new PreUpdateEventArgs($entity, $this->createStub(EntityManagerInterface::class), $changeSet);
     }
 }

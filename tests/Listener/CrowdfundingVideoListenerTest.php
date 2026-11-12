@@ -14,54 +14,58 @@ use c975L\ConfigBundle\Contract\UserInterface;
 use c975L\CrowdfundingBundle\Entity\CrowdfundingVideo;
 use c975L\CrowdfundingBundle\Listener\CrowdfundingVideoListener;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Event\PreFlushEventArgs;
+use Doctrine\ORM\Event\PrePersistEventArgs;
+use Doctrine\ORM\Event\PreUpdateEventArgs;
+use Doctrine\Persistence\ObjectManager;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\SecurityBundle\Security;
 
-// The campaign's presentation video, uploaded or pointed at on YouTube
+// A video is signed by whoever adds it, and keeps that author whoever saves it next
 class CrowdfundingVideoListenerTest extends TestCase
 {
-    public function testPreFlushRecordsWhoAddedTheVideo(): void
+    public function testPrePersistRecordsWhoAddedTheVideo(): void
     {
         $user = $this->createStub(UserInterface::class);
-        $video = new CrowdfundingVideo();
+        $entity = new CrowdfundingVideo();
 
-        $this->createListener($user)->preFlush($video, $this->createPreFlushArgs());
+        $this->createListener($user)->prePersist($entity, new PrePersistEventArgs($entity, $this->createStub(ObjectManager::class)));
 
-        $this->assertSame($user, $video->getUser());
+        $this->assertSame($user, $entity->getUser());
     }
 
-    // A media carries no modification date - the trait asks method_exists() before reaching for one - so the uploader survives every later save of the campaign
-    public function testPreFlushKeepsTheUploaderOnAVideoSavedAgain(): void
+    // The uploader survives every later save of the campaign
+    public function testPreUpdateKeepsTheUploader(): void
     {
         $uploader = $this->createStub(UserInterface::class);
-        $video = new CrowdfundingVideo();
-        $video->setUser($uploader);
+        $entity = new CrowdfundingVideo()->setUser($uploader);
 
-        $this->createListener($this->createStub(UserInterface::class))->preFlush($video, $this->createPreFlushArgs());
+        $this->createListener($this->createStub(UserInterface::class))->preUpdate($entity, $this->updateArgs($entity));
 
-        $this->assertSame($uploader, $video->getUser());
+        $this->assertSame($uploader, $entity->getUser());
     }
 
-    public function testPreFlushLeavesTheUserNullWhenNobodyIsLoggedIn(): void
+    // Nobody logged in: a row written from the CLI keeps no author rather than being handed something it cannot store
+    public function testPrePersistLeavesTheUserNullWhenNobodyIsLoggedIn(): void
     {
-        $video = new CrowdfundingVideo();
+        $entity = new CrowdfundingVideo();
 
-        $this->createListener()->preFlush($video, $this->createPreFlushArgs());
+        $this->createListener(null)->prePersist($entity, new PrePersistEventArgs($entity, $this->createStub(ObjectManager::class)));
 
-        $this->assertNull($video->getUser());
+        $this->assertNull($entity->getUser());
     }
 
-    private function createPreFlushArgs(): PreFlushEventArgs
-    {
-        return new PreFlushEventArgs($this->createStub(EntityManagerInterface::class));
-    }
-
-    private function createListener(?UserInterface $user = null): CrowdfundingVideoListener
+    private function createListener(?UserInterface $user): CrowdfundingVideoListener
     {
         $security = $this->createStub(Security::class);
         $security->method('getUser')->willReturn($user);
 
-        return new CrowdfundingVideoListener($security, $this->createStub(EntityManagerInterface::class));
+        return new CrowdfundingVideoListener($security);
+    }
+
+    // The change set is passed by reference, so it has to be a variable
+    /** @param array<string, array{mixed, mixed}> $changeSet */
+    private function updateArgs(object $entity, array $changeSet = []): PreUpdateEventArgs
+    {
+        return new PreUpdateEventArgs($entity, $this->createStub(EntityManagerInterface::class), $changeSet);
     }
 }

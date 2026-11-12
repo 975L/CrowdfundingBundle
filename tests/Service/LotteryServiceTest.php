@@ -77,13 +77,37 @@ class LotteryServiceTest extends TestCase
     {
         $entityManager = $this->createMock(EntityManagerInterface::class);
         $entityManager->expects($this->never())->method('persist');
-        $entityManager->expects($this->once())->method('flush');
+        $entityManager->expects($this->never())->method('flush');
 
         $this->createService(entityManager: $entityManager)->generateTicketsForContributor(
             $this->createContributor(),
             new CrowdfundingCounterpart()->setLotteryTickets(0),
             2,
         );
+    }
+
+    // A lottery switched off, past its draw date or with a prize already drawn sells no more tickets
+    public function testGenerateTicketsForContributorSkipsTheClosedLotteries(): void
+    {
+        $crowdfunding = new Crowdfunding();
+        $crowdfunding->addLottery(new Lottery()->setIsActive(false));
+        $crowdfunding->addLottery(new Lottery()->setDrawDate(new \DateTime('-1 day')));
+        $drawn = $this->createLottery([1]);
+        $drawn->getPrizes()->first()->setWinningTicket($this->createTicket('AA-0001-BBB'));
+        $crowdfunding->addLottery($drawn);
+        $open = new Lottery()->setDrawDate(new \DateTime('+1 month'));
+        $crowdfunding->addLottery($open);
+
+        $persisted = [];
+        $entityManager = $this->createStub(EntityManagerInterface::class);
+        $entityManager->method('persist')->willReturnCallback(static function (object $entity) use (&$persisted): void {
+            $persisted[] = $entity;
+        });
+
+        $this->createService(entityManager: $entityManager)->generateTicketsForContributor(new CrowdfundingContributor()->setCrowdfunding($crowdfunding), new CrowdfundingCounterpart()->setLotteryTickets(1), 1);
+
+        $this->assertCount(1, $persisted);
+        $this->assertSame($open, $persisted[0]->getLottery());
     }
 
     // Each ticket carries who took it, under which counterpart and for which lottery: that is what the winner's email is built from

@@ -13,24 +13,32 @@ namespace c975L\CrowdfundingBundle\Listener;
 use c975L\CrowdfundingBundle\Entity\CrowdfundingVideo;
 use c975L\CrowdfundingBundle\Listener\Traits\UserTrait;
 use Doctrine\Bundle\DoctrineBundle\Attribute\AsEntityListener;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Event\PreFlushEventArgs;
+use Doctrine\ORM\Event\PrePersistEventArgs;
+use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Events;
 use Symfony\Bundle\SecurityBundle\Security;
 
-#[AsEntityListener(event: Events::preFlush, method: 'preFlush', entity: CrowdfundingVideo::class)]
+// Signs a campaign's video on a write or a real edit only, never on a flush that leaves it unchanged
+#[AsEntityListener(event: Events::prePersist, method: 'prePersist', entity: CrowdfundingVideo::class)]
+#[AsEntityListener(event: Events::preUpdate, method: 'preUpdate', entity: CrowdfundingVideo::class)]
 class CrowdfundingVideoListener
 {
     use UserTrait;
 
     public function __construct(
         private readonly Security $security,
-        private readonly EntityManagerInterface $entityManager,
     ) {
     }
 
-    public function preFlush(CrowdfundingVideo $entity, PreFlushEventArgs $event): void
+    // A new video is signed by the signed-in account
+    public function prePersist(CrowdfundingVideo $entity, PrePersistEventArgs $event): void
     {
-        $this->setUser($entity);
+        $this->stampUser($entity, false);
+    }
+
+    // An edited video keeps the author it was given
+    public function preUpdate(CrowdfundingVideo $entity, PreUpdateEventArgs $event): void
+    {
+        $this->stampUser($entity, false);
     }
 }

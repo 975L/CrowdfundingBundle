@@ -33,6 +33,7 @@ Add CrowdfundingBundle on top of the shared [UiBundle](https://github.com/975L/U
 - Crowdfunding campaigns with counterparts, contributors, news, videos
 - Lottery tied to a crowdfunding campaign (prizes, tickets, winner draw)
 - Plugs into PaymentBundle's Basket/checkout engine via `BasketItemProviderInterface`, and tells it via `ShippingBasketItemProviderInterface` whether a running campaign offers a posted counterpart
+- A contribution counts what was really paid (the basket's frozen line total minus its share of a promotional code), one contributor per campaign of the basket; a test basket counts nothing, a free one lists no contributor, and a full refund takes it all back (`RefundableBasketItemProviderInterface`)
 - EasyAdmin CRUD for crowdfunding, from which counterparts, medias, videos and the lottery are all edited
 - A campaign hidden until it is opened, previewed from the back office, and deleted in two steps through a
   recycle bin — see [opening, previewing and deleting a campaign](#opening-previewing-and-deleting-a-campaign)
@@ -449,7 +450,7 @@ and buries what matters. A campaign's own progress belongs on its page, where it
 
 ## Emails
 
-Three emails, all composed in the back office rather than in a Twig file: the contribution's thank-you,
+Three emails, all composed in the back office rather than in a Twig file: the contribution's thank-you (sent on every paid basket holding counterparts, never for a test one),
 the lottery tickets a contribution earned, and the winning ticket. `Email\CrowdfundingEmailTemplateProvider`
 declares them, `c975l:ui:email-templates:ensure` seeds the rows an admin then rewrites, and the renderer
 falls back on the declaration itself if a row is ever deleted.
@@ -515,7 +516,7 @@ database on the click, `LotteryWinningTicketMessage` is dispatched at once, and 
 prize hands back the winner already drawn rather than picking another one.
 
 Note that the video of a draw goes on the *lottery*, whose `videos` field only takes an uploaded file. Only
-a *campaign* video carries a `youtubeUrl`, which is the way out for a file too heavy to upload.
+a *campaign* video carries a `videoUrl`, its address on any platform UiBundle's `VideoPlatform` declares (YouTube, Vimeo, Dailymotion, TikTok), which is the way out for a file too heavy to upload. Its column is still `youtube_url`, and a bare YouTube id saved when YouTube was the only platform still plays.
 
 A campaign's news entries are the second procedure, `publier-actualite-campagne`, for a related reason: they
 are written in one place and corrected in another. The form that *publishes* one is rendered on the

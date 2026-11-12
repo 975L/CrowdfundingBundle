@@ -1,6 +1,9 @@
 {% if null != video %}
-    {% if video.youtubeUrl != "" %}
-        <twig:c975LUi:Video:Iframe src="https://www.youtube-nocookie.com/embed/{{ video.youtubeUrl }}" width="600"/>
+    {# Whatever platform the address belongs to, framed through its privacy-respecting embed (see UiBundle's VideoPlatform), and never an address of no declared platform #}
+    {% if video.videoUrl %}
+        {% if video.videoEmbedUrl %}
+            <twig:c975LUi:Video:Iframe src="{{ video.videoEmbedUrl }}" width="600"/>
+        {% endif %}
     {% else %}
         <twig:c975LUi:Video:Video src="{{ asset(video.name) }}" type="video/mp4" width="600"/>
     {% endif %}

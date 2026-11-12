@@ -13,6 +13,7 @@ namespace c975L\CrowdfundingBundle\Entity;
 use c975L\CrowdfundingBundle\Repository\CrowdfundingNewsRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CrowdfundingNewsRepository::class)]
 #[ORM\Table(name: 'crowdfunding_news')]
@@ -24,9 +25,12 @@ class CrowdfundingNews implements \Stringable
     private ?int $id = null;
 
     #[ORM\Column(length: 100)]
+    #[Assert\NotBlank]
+    #[Assert\Length(max: 100)]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Assert\NotBlank]
     private ?string $content = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]

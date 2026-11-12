@@ -47,6 +47,8 @@ class CrowdfundingCounterpartType extends AbstractType
         $builder
             // The suggested names are drawn by the edit screen (see _suggestions.html.twig): a datalist proposes, the field stays free text
             ->add('title', TextType::class, [
+                // An emptied field reaches the entity's NotBlank rather than a setter refusing null
+                'empty_data' => '',
                 'label' => 'label.title',
                 'required' => true,
                 'attr' => [
@@ -61,6 +63,8 @@ class CrowdfundingCounterpartType extends AbstractType
                 ],
             ])
             ->add('description', TextareaType::class, [
+                // An emptied field reaches the entity's NotBlank rather than a setter refusing null
+                'empty_data' => '',
                 'label' => 'label.description',
                 'required' => false,
                 // Opt-in marker read by the block form theme, which is what puts Donovan under a plain textarea
@@ -110,9 +114,6 @@ class CrowdfundingCounterpartType extends AbstractType
                 'required' => true,
                 'empty_data' => 'eur',
                 'label' => 'label.currency',
-                'attr' => [
-                    'value' => 'eur',
-                ],
             ])
             ->add('expectedDelivery', TextType::class, [
                 'required' => true,

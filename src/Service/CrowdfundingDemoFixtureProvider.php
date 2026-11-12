@@ -39,9 +39,9 @@ class CrowdfundingDemoFixtureProvider implements DemoFixtureLinkerInterface, Dem
     // In cents, as every price of the ecosystem
     private const int GOAL = 300000;
 
-    // slug => [title, description, price, limited quantity (0 = unlimited), shipped]
+    // slug => [title, description, price, limited quantity (null = unlimited), shipped]
     private const array COUNTERPARTS = [
-        'merci' => ['counterpart_thanks_title', 'counterpart_thanks_description', 1500, 0, false],
+        'merci' => ['counterpart_thanks_title', 'counterpart_thanks_description', 1500, null, false],
         'bol-emaille' => ['counterpart_bowl_title', 'counterpart_bowl_description', 4500, 50, true],
         'journee-atelier' => ['counterpart_day_title', 'counterpart_day_description', 12000, 10, false],
     ];
@@ -196,7 +196,7 @@ class CrowdfundingDemoFixtureProvider implements DemoFixtureLinkerInterface, Dem
             ->setModification($creation);
     }
 
-    private function counterpart(string $slug, string $title, string $description, int $price, int $limited, bool $shipped, \DateTime $creation): CrowdfundingCounterpart
+    private function counterpart(string $slug, string $title, string $description, int $price, ?int $limited, bool $shipped, \DateTime $creation): CrowdfundingCounterpart
     {
         $counterpart = new CrowdfundingCounterpart()
             ->setTitle($this->text($title))

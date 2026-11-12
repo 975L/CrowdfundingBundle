@@ -13,32 +13,40 @@ namespace c975L\CrowdfundingBundle\Listener;
 use c975L\CrowdfundingBundle\Entity\LotteryPrize;
 use c975L\CrowdfundingBundle\Listener\Traits\UserTrait;
 use Doctrine\Bundle\DoctrineBundle\Attribute\AsEntityListener;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Event\PreFlushEventArgs;
 use Doctrine\ORM\Event\PrePersistEventArgs;
+use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Events;
 use Symfony\Bundle\SecurityBundle\Security;
 
-#[AsEntityListener(event: Events::preFlush, method: 'preFlush', entity: LotteryPrize::class)]
+// Dates and signs a prize when it is written and when it is really edited
 #[AsEntityListener(event: Events::prePersist, method: 'prePersist', entity: LotteryPrize::class)]
+#[AsEntityListener(event: Events::preUpdate, method: 'preUpdate', entity: LotteryPrize::class)]
 class LotteryPrizeListener
 {
     use UserTrait;
 
     public function __construct(
         private readonly Security $security,
-        private readonly EntityManagerInterface $entityManager,
     ) {
     }
 
-    public function preFlush(LotteryPrize $entity, PreFlushEventArgs $event): void
-    {
-        $entity->setModification(new \DateTime());
-        $this->setUser($entity);
-    }
-
+    // A new prize is dated and signed
     public function prePersist(LotteryPrize $entity, PrePersistEventArgs $event): void
     {
-        $entity->setCreation(new \DateTime());
+        // A date the row already carries is kept, so a frozen demo dataset or an import keeps its own
+        if (null === $entity->getCreation()) {
+            $entity->setCreation(new \DateTime());
+        }
+        if (null === $entity->getModification()) {
+            $entity->setModification(new \DateTime());
+        }
+        $this->stampUser($entity, false);
+    }
+
+    // Doctrine only calls it on a real change set, and recomputes it afterwards
+    public function preUpdate(LotteryPrize $entity, PreUpdateEventArgs $event): void
+    {
+        $entity->setModification(new \DateTime());
+        $this->stampUser($entity, true);
     }
 }

@@ -160,7 +160,7 @@
             </trans-unit>
             <trans-unit id="gYNDANU">
                 <source>narration.guided_step_crowdfunding_draw_video_youtube</source>
-                <target>Si le fichier est trop lourd, publiez-le sur YouTube et collez son identifiant, ce qui suit v= dans son adresse, dans les vidéos de la campagne, section « Médias ». C'est le seul des deux champs qui l'accepte.</target>
+                <target>Si le fichier est trop lourd, publiez-le sur une plateforme vidéo, YouTube, Vimeo ou Dailymotion, et collez son adresse dans les vidéos de la campagne, section « Médias ». C'est le seul des deux champs qui l'accepte.</target>
             </trans-unit>
             <trans-unit id="DhIgb5x">
                 <source>narration.guided_step_crowdfunding_lottery_add</source>

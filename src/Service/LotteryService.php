@@ -21,31 +21,48 @@ class LotteryService implements LotteryServiceInterface
     ) {
     }
 
-    // Generates tickets for a contributor based on their purchase
+    // Generates tickets for a contributor based on their purchase, in the lotteries still open only
     public function generateTicketsForContributor(CrowdfundingContributor $contributor, CrowdfundingCounterpart $counterpart, int $quantity): void
     {
-        $tickets = [];
-        $crowdfunding = $contributor->getCrowdfunding();
-        // Generates tickets
-        if ($counterpart->getLotteryTickets() > 0) {
-            $lotteries = $crowdfunding->getLotteries();
-            foreach ($lotteries as $lottery) {
-                $ticketsToGenerate = $counterpart->getLotteryTickets() * $quantity;
-                for ($i = 0; $i < $ticketsToGenerate; ++$i) {
-                    $ticket = new LotteryTicket();
-                    $ticket->setLottery($lottery);
-                    $ticket->setContributor($contributor);
-                    $ticket->setCounterpart($counterpart);
-                    $ticket->setNumber($this->generateTicketNumber());
-                    $ticket->setCreation(new \DateTime());
+        $ticketsToGenerate = (int) $counterpart->getLotteryTickets() * $quantity;
+        if ($ticketsToGenerate <= 0) {
+            return;
+        }
 
-                    $this->entityManager->persist($ticket);
-                    $tickets[] = $ticket;
-                }
+        foreach ($contributor->getCrowdfunding()?->getLotteries() ?? [] as $lottery) {
+            if (!$this->isOpen($lottery)) {
+                continue;
+            }
+
+            for ($i = 0; $i < $ticketsToGenerate; ++$i) {
+                $ticket = new LotteryTicket();
+                $ticket->setLottery($lottery);
+                $ticket->setContributor($contributor);
+                $ticket->setCounterpart($counterpart);
+                $ticket->setNumber($this->generateTicketNumber());
+                $ticket->setCreation(new \DateTime());
+
+                $this->entityManager->persist($ticket);
             }
         }
 
         $this->entityManager->flush();
+    }
+
+    // A lottery switched off, past its draw date or with a prize already drawn takes no more tickets
+    private function isOpen(Lottery $lottery): bool
+    {
+        if (!$lottery->isActive() || (null !== $lottery->getDrawDate() && $lottery->getDrawDate() <= new \DateTime())) {
+            return false;
+        }
+
+        foreach ($lottery->getPrizes() as $prize) {
+            if (null !== $prize->getWinningTicket()) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     // Generates a unique ticket number - Format: XX-YYYY-ZZZ (2 letters, 4 numbers, 3 letters)

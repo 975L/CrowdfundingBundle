@@ -148,10 +148,21 @@ class CrowdfundingControllerTest extends TestCase
         $this->createController()->display(new Request(), new Crowdfunding());
     }
 
+    // The preview hands its campaign to the blocks of the page, which then read it no second time
+    public function testThePreviewKeepsTheCampaignOnTheRequest(): void
+    {
+        $request = new Request();
+        $crowdfunding = new Crowdfunding();
+
+        $this->createController(granted: true)->preview($request, $crowdfunding);
+
+        $this->assertSame($crowdfunding, $request->attributes->get('crowdfunding'));
+    }
+
     // The preview reads that very campaign, and is the one screen a hidden campaign is readable on
     public function testThePreviewRendersAHiddenCampaignAsAPreview(): void
     {
-        $response = $this->createController(granted: true)->preview(new Crowdfunding());
+        $response = $this->createController(granted: true)->preview(new Request(), new Crowdfunding());
 
         $this->assertSame(200, $response->getStatusCode());
         $this->assertSame('@c975LCrowdfunding/crowdfunding/display.html.twig', $response->getContent());
@@ -162,7 +173,7 @@ class CrowdfundingControllerTest extends TestCase
     {
         $blockRenderContext = new BlockRenderContext();
 
-        $response = $this->createController(blockRenderContext: $blockRenderContext, granted: true)->preview(new Crowdfunding());
+        $response = $this->createController(blockRenderContext: $blockRenderContext, granted: true)->preview(new Request(), new Crowdfunding());
 
         $this->assertTrue($response->headers->getCacheControlDirective('private'));
         $this->assertTrue($blockRenderContext->isCacheDisabled());
@@ -173,7 +184,7 @@ class CrowdfundingControllerTest extends TestCase
     {
         $this->expectException(NotFoundHttpException::class);
 
-        $this->createController(granted: true)->preview(new Crowdfunding()->setIsDeleted(true));
+        $this->createController(granted: true)->preview(new Request(), new Crowdfunding()->setIsDeleted(true));
     }
 
     // The preview is an editor's screen: a visitor reaching that url is refused rather than served the campaign the public route hides
@@ -181,7 +192,7 @@ class CrowdfundingControllerTest extends TestCase
     {
         $this->expectException(AccessDeniedException::class);
 
-        $this->createController()->preview(new Crowdfunding());
+        $this->createController()->preview(new Request(), new Crowdfunding());
     }
 
     // Both are GET routes a visitor reaches by their own address, and the campaign is resolved by its slug rather than by its id

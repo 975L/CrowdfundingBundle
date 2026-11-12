@@ -14,8 +14,8 @@ use c975L\ConfigBundle\Contract\UserInterface;
 use c975L\CrowdfundingBundle\Entity\LotteryPrize;
 use c975L\CrowdfundingBundle\Listener\LotteryPrizeListener;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Event\PreFlushEventArgs;
 use Doctrine\ORM\Event\PrePersistEventArgs;
+use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\Persistence\ObjectManager;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -23,11 +23,11 @@ use Symfony\Bundle\SecurityBundle\Security;
 class LotteryPrizeListenerTest extends TestCase
 {
     // A DATETIME_MUTABLE column: an immutable stamp is refused by Doctrine at flush, and a prize is saved with the lottery it hangs from
-    public function testPreFlushStampsTheModificationWithAMutableDate(): void
+    public function testPreUpdateStampsTheModificationWithAMutableDate(): void
     {
         $prize = new LotteryPrize();
 
-        $this->createListener()->preFlush($prize, $this->createPreFlushArgs());
+        $this->createListener()->preUpdate($prize, $this->updateArgs($prize, ['title' => ['a', 'b']]));
 
         $this->assertInstanceOf(\DateTime::class, $prize->getModification());
     }
@@ -41,29 +41,24 @@ class LotteryPrizeListenerTest extends TestCase
         $this->assertInstanceOf(\DateTime::class, $prize->getCreation());
     }
 
-    public function testPreFlushRecordsWhoEditedThePrize(): void
+    public function testPreUpdateRecordsWhoEditedThePrize(): void
     {
         $user = $this->createStub(UserInterface::class);
         $prize = new LotteryPrize();
 
-        $this->createListener($user)->preFlush($prize, $this->createPreFlushArgs());
+        $this->createListener($user)->preUpdate($prize, $this->updateArgs($prize, ['title' => ['a', 'b']]));
 
         $this->assertSame($user, $prize->getUser());
     }
 
     // Nobody logged in: a prize written from the CLI keeps no editor rather than being handed something it cannot store
-    public function testPreFlushLeavesTheUserNullWhenNobodyIsLoggedIn(): void
+    public function testPreUpdateLeavesTheUserNullWhenNobodyIsLoggedIn(): void
     {
         $prize = new LotteryPrize();
 
-        $this->createListener()->preFlush($prize, $this->createPreFlushArgs());
+        $this->createListener()->preUpdate($prize, $this->updateArgs($prize, ['title' => ['a', 'b']]));
 
         $this->assertNull($prize->getUser());
-    }
-
-    private function createPreFlushArgs(): PreFlushEventArgs
-    {
-        return new PreFlushEventArgs($this->createStub(EntityManagerInterface::class));
     }
 
     private function createListener(?UserInterface $user = null): LotteryPrizeListener
@@ -71,6 +66,13 @@ class LotteryPrizeListenerTest extends TestCase
         $security = $this->createStub(Security::class);
         $security->method('getUser')->willReturn($user);
 
-        return new LotteryPrizeListener($security, $this->createStub(EntityManagerInterface::class));
+        return new LotteryPrizeListener($security);
+    }
+
+    // The change set is passed by reference, so it has to be a variable
+    /** @param array<string, array{mixed, mixed}> $changeSet */
+    private function updateArgs(object $entity, array $changeSet = []): PreUpdateEventArgs
+    {
+        return new PreUpdateEventArgs($entity, $this->createStub(EntityManagerInterface::class), $changeSet);
     }
 }

@@ -49,7 +49,7 @@ class CrowdfundingContributionHandler
         );
     }
 
-    // The campaign the counterparts belong to, read off the copy the basket froze: a contribution never spans two campaigns
+    // The campaign of the first counterpart, read off the copy the basket froze - a basket spanning two campaigns is titled after the first
     private function campaignTitle(array $counterparts): string
     {
         foreach ($counterparts as $counterpart) {

@@ -17,6 +17,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CrowdfundingContributorRepository::class)]
 #[ORM\Table(name: 'crowdfunding_contributor')]
@@ -29,16 +30,20 @@ class CrowdfundingContributor implements \Stringable
     private ?int $id = null;
 
     #[ORM\Column(length: 50, nullable: true)]
+    #[Assert\Length(max: 50)]
     private ?string $name = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\Length(max: 255)]
     private ?string $message = null;
 
     #[ORM\Column(length: 100)]
+    #[Assert\Length(max: 100)]
     private ?string $email = null;
 
     // The language the contribution was made in: a lottery email goes out from a draw an admin clicked, and this row is the only thing that remembers what language its contributor read the campaign in
     #[ORM\Column(length: 5, nullable: true)]
+    #[Assert\Length(max: 5)]
     private ?string $locale = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]

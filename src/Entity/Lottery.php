@@ -34,6 +34,7 @@ class Lottery
     private ?Crowdfunding $crowdfunding = null;
 
     #[ORM\Column(length: 13, unique: true)]
+    #[Assert\Length(max: 13)]
     private ?string $identifier = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]

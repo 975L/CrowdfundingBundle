@@ -1,5 +1,11 @@
 # Upgrade
 
+## v1.11.0
+
+**`CrowdfundingVideo::getYoutubeUrl()`/`setYoutubeUrl()` are now `getVideoUrl()`/`setVideoUrl()`**, and the form field `videoUrl`: nothing to migrate, the column is still `youtube_url`. A site overriding `components/Crowdfunding/Video.html.twig` frames `video.videoEmbedUrl`.
+
+**`CrowdfundingBasketItemProvider` implements `RefundableBasketItemProviderInterface`** and takes `CrowdfundingContributorRepository`, `LotteryTicketRepository` and `LotteryPrizeRepository`; the listeners run on `prePersist`/`preUpdate` and no longer take the entity manager (`CrowdfundingListener` excepted), `CrowdfundingController::preview()` takes the request. A new counterpart's `limitedQuantity` defaults to `null` (unlimited). Requires `c975l/core-bundle` ^1.90 and `c975l/payment-bundle` ^6.26.
+
 ## v1.9.0
 
 `LotteryController::drawPrize()` takes the request and refuses a draw without the token `DrawButton` carries: a site overriding that template or `lottery.js` sends `data-token` on as the `X-CSRF-Token` header. `CrowdfundingBasketItemProvider` takes `CrowdfundingRepository` and a logger. Requires `c975l/core-bundle` ^1.85.0, for the `c975l.rich` sanitizer, and `c975l/payment-bundle` ^6.23.0, whose transaction around `onBasketPaid()` the counts written straight to the database rely on.

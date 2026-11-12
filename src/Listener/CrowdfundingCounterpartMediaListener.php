@@ -13,24 +13,32 @@ namespace c975L\CrowdfundingBundle\Listener;
 use c975L\CrowdfundingBundle\Entity\CrowdfundingCounterpartMedia;
 use c975L\CrowdfundingBundle\Listener\Traits\UserTrait;
 use Doctrine\Bundle\DoctrineBundle\Attribute\AsEntityListener;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Event\PreFlushEventArgs;
+use Doctrine\ORM\Event\PrePersistEventArgs;
+use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Events;
 use Symfony\Bundle\SecurityBundle\Security;
 
-#[AsEntityListener(event: Events::preFlush, method: 'preFlush', entity: CrowdfundingCounterpartMedia::class)]
+// Signs a counterpart's picture on a write or a real edit only, never on a flush that leaves it unchanged
+#[AsEntityListener(event: Events::prePersist, method: 'prePersist', entity: CrowdfundingCounterpartMedia::class)]
+#[AsEntityListener(event: Events::preUpdate, method: 'preUpdate', entity: CrowdfundingCounterpartMedia::class)]
 class CrowdfundingCounterpartMediaListener
 {
     use UserTrait;
 
     public function __construct(
         private readonly Security $security,
-        private readonly EntityManagerInterface $entityManager,
     ) {
     }
 
-    public function preFlush(CrowdfundingCounterpartMedia $entity, PreFlushEventArgs $event): void
+    // A new picture is signed by the signed-in account
+    public function prePersist(CrowdfundingCounterpartMedia $entity, PrePersistEventArgs $event): void
     {
-        $this->setUser($entity);
+        $this->stampUser($entity, false);
+    }
+
+    // An edited picture keeps the author it was given
+    public function preUpdate(CrowdfundingCounterpartMedia $entity, PreUpdateEventArgs $event): void
+    {
+        $this->stampUser($entity, false);
     }
 }

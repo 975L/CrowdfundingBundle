@@ -3,6 +3,7 @@
 namespace c975L\CrowdfundingBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'crowdfunding_contributor_counterpart')]
@@ -22,6 +23,7 @@ class CrowdfundingContributorCounterpart
     private ?CrowdfundingCounterpart $counterpart = null;
 
     #[ORM\Column(type: 'smallint')]
+    #[Assert\Positive]
     private int $quantity = 0;
 
     public function getId(): ?int

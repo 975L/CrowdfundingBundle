@@ -62,6 +62,16 @@ class MediaTypeUploadLimitsTest extends FormFieldsTestCase
         }
     }
 
+    // AVIF is refused at upload everywhere, a picture stored before still being read (see Media::getMimeType())
+    public function testThePicturesRefuseAvif(): void
+    {
+        foreach ([new CrowdfundingMediaType(), new CrowdfundingCounterpartMediaType()] as $type) {
+            $constraint = $this->buildFields($type)['file']['options']['constraints'][0];
+
+            $this->assertNotContains('image/avif', $constraint->mimeTypes);
+        }
+    }
+
     // Three container formats and nothing else: a browser plays them all, and anything else uploaded would need transcoding the site cannot do
     public function testTheVideosOnlyAcceptWhatABrowserPlays(): void
     {

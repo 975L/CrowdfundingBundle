@@ -42,19 +42,22 @@ class CrowdfundingRepositoryTest extends TestCase
         $this->assertStringContainsString('c.isDeleted = false', $repository->dql);
     }
 
-    // Seven collections on one page: without them the campaign page issued a query per counterpart, per news and per contributor
-    public function testFindOneBySlugFetchesEverythingTheCampaignPageDraws(): void
+    // One collection fetched with the campaign: joining the five of them multiplied their rows by each other, a million of them for a campaign that works
+    public function testFindOneBySlugFetchesTheCounterpartsOnly(): void
     {
         $repository = $this->createRepository();
 
-        $repository->findOneBySlug('sauver-les-chats');
+        $repository->findOneBySlug('catalog');
 
-        foreach (['c.medias cm', 'c.counterparts cc', 'cc.media ccm', 'c.videos v', 'c.news cn', 'c.contributors cct', 'c.lotteries cl'] as $join) {
-            $this->assertStringContainsString('LEFT JOIN ' . $join, $repository->dql, sprintf('The campaign page draws %s, which is no longer fetched with it.', $join));
+        $this->assertStringContainsString('SELECT c, cc, ccm', $repository->dql);
+        $this->assertStringContainsString('LEFT JOIN c.counterparts cc', $repository->dql);
+        $this->assertStringContainsString('LEFT JOIN cc.media ccm', $repository->dql);
+        foreach (['c.medias', 'c.videos', 'c.news', 'c.contributors', 'c.lotteries'] as $join) {
+            $this->assertStringNotContainsString($join, $repository->dql);
         }
 
         $this->assertStringContainsString('WHERE c.slug = :slug', $repository->dql);
-        $this->assertSame('sauver-les-chats', $repository->parameter('slug'));
+        $this->assertSame('catalog', $repository->parameter('slug'));
     }
 
     // The back office reaches a campaign by its id, and draws the same page
@@ -74,13 +77,14 @@ class CrowdfundingRepositoryTest extends TestCase
         $this->assertNull($this->createRepository()->findOneBySlug('inconnu'));
     }
 
-    // The front-end "Edit this block" button asks for every block of a page at once: one query, joined on the blocks, rather than one per hovered block
+    // The front-end "Edit this block" button asks for every block of a page at once: one query filtered on the blocks, the campaign alone selected so its blocks collection is never left half-filled
     public function testFindByBlockIdsJoinsTheBlocksAndFiltersOnThem(): void
     {
         $repository = $this->createRepository();
 
         $repository->findByBlockIds([12, 13]);
 
+        $this->assertStringContainsString('SELECT DISTINCT c FROM', $repository->dql);
         $this->assertStringContainsString('INNER JOIN c.blocks b', $repository->dql);
         $this->assertStringContainsString('WHERE b.id IN (:blockIds)', $repository->dql);
         $this->assertSame([12, 13], $repository->parameter('blockIds'));

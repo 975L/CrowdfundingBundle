@@ -95,6 +95,32 @@ class CrowdfundingCountsOnADatabaseTest extends TestCase
         $this->assertSame(2000, (int) $this->entityManager->getConnection()->fetchOne('SELECT amount_achieved FROM crowdfunding_crowdfunding'));
     }
 
+    // A refund takes its amount back off the total, never below zero
+    public function testARefundTakesTheAmountBackNeverBelowZero(): void
+    {
+        $this->entityManager->getConnection()->insert('crowdfunding_crowdfunding', ['id' => 7, 'amount_achieved' => 2000]);
+        $campaign = new Crowdfunding();
+        new \ReflectionProperty(Crowdfunding::class, 'id')->setValue($campaign, 7);
+
+        $this->campaigns->releaseAchieved($campaign, 1500);
+        $this->assertSame(500, (int) $this->entityManager->getConnection()->fetchOne('SELECT amount_achieved FROM crowdfunding_crowdfunding'));
+
+        $this->campaigns->releaseAchieved($campaign, 1500);
+        $this->assertSame(0, (int) $this->entityManager->getConnection()->fetchOne('SELECT amount_achieved FROM crowdfunding_crowdfunding'));
+    }
+
+    // A refund gives its quantity back to the run, never below zero
+    public function testARefundGivesTheRunBackNeverBelowZero(): void
+    {
+        $counterpart = $this->storedCounterpart(5, limited: 3, ordered: 3);
+
+        $this->counterparts->releaseOrdered($counterpart, 2);
+        $this->assertSame(1, $this->ordered());
+
+        $this->counterparts->releaseOrdered($counterpart, 2);
+        $this->assertSame(0, $this->ordered());
+    }
+
     private function storedCounterpart(int $id, ?int $limited, ?int $ordered): CrowdfundingCounterpart
     {
         $this->entityManager->getConnection()->insert('crowdfunding_counterpart', ['id' => $id, 'title' => 'Tier ' . $id, 'limited_quantity' => $limited, 'ordered_quantity' => $ordered]);

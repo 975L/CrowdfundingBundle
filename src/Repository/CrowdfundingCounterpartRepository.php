@@ -12,6 +12,7 @@ namespace c975L\CrowdfundingBundle\Repository;
 
 use c975L\CrowdfundingBundle\Entity\CrowdfundingCounterpart;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\ParameterType;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -56,6 +57,21 @@ class CrowdfundingCounterpartRepository extends ServiceEntityRepository
         $this->getEntityManager()->getConnection()->executeStatement(
             'UPDATE crowdfunding_counterpart SET ordered_quantity = COALESCE(ordered_quantity, 0) + :quantity WHERE id = :id',
             ['id' => $counterpart->getId(), 'quantity' => $quantity]
+        );
+    }
+
+    // Gives a refunded order back to the run in one statement, never below zero
+    public function releaseOrdered(CrowdfundingCounterpart $counterpart, int $quantity): void
+    {
+        if ($quantity <= 0) {
+            return;
+        }
+
+        $this->getEntityManager()->getConnection()->executeStatement(
+            'UPDATE crowdfunding_counterpart SET ordered_quantity = CASE WHEN COALESCE(ordered_quantity, 0) > :quantity THEN ordered_quantity - :quantity ELSE 0 END WHERE id = :id',
+            ['id' => $counterpart->getId(), 'quantity' => $quantity],
+            // Bound as integers: compared, not only added, a value bound as text never reads greater than a number
+            ['id' => ParameterType::INTEGER, 'quantity' => ParameterType::INTEGER]
         );
     }
 

@@ -212,7 +212,7 @@
             </trans-unit>
             <trans-unit id="vEi1b6q">
                 <source>description.guided_step_crowdfunding_draw_video_youtube</source>
-                <target>For a file too heavy: publish it on YouTube, then paste its identifier, what follows v= in its address, into the campaign's videos, in the "Media" section. It is the only one of the two fields taking one.</target>
+                <target>For a file too heavy: publish it on a video platform (YouTube, Vimeo, Dailymotion…), then paste its address into the campaign's videos, in the "Media" section. It is the only one of the two fields taking one.</target>
             </trans-unit>
             <trans-unit id="13LRffH">
                 <source>description.guided_step_crowdfunding_lottery_add</source>
@@ -924,7 +924,7 @@
             </trans-unit>
             <trans-unit id="wmjl5ST">
                 <source>label.guided_step_crowdfunding_draw_video_youtube</source>
-                <target>Or go through YouTube</target>
+                <target>Or go through a video platform</target>
             </trans-unit>
             <trans-unit id="ElxQNB0">
                 <source>label.guided_step_crowdfunding_lottery_add</source>
@@ -1406,6 +1406,14 @@
                 <source>label.use_for</source>
                 <target>Use for</target>
             </trans-unit>
+            <trans-unit id="4aBckcp">
+                <source>label.video_url</source>
+                <target>Video address</target>
+            </trans-unit>
+            <trans-unit id="ruhhHj3">
+                <source>label.video_url_unknown</source>
+                <target>This address belongs to no recognised video platform (YouTube, Vimeo, Dailymotion, TikTok).</target>
+            </trans-unit>
             <trans-unit id="eRXVDgZ">
                 <source>label.videos</source>
                 <target>Videos</target>
@@ -1424,7 +1432,7 @@
             </trans-unit>
             <trans-unit id="7jzpD3i">
                 <source>label.youtube_or_upload</source>
-                <target>EITHER a Youtube ID OR a video file below</target>
+                <target>EITHER the video's address on a platform (YouTube, Vimeo, Dailymotion…) OR a video file below</target>
             </trans-unit>
             <trans-unit id="1fbQEIp">
                 <source>text.counterparts_ended</source>

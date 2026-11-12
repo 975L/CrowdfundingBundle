@@ -14,6 +14,7 @@ use c975L\CrowdfundingBundle\Repository\LotteryTicketRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: LotteryTicketRepository::class)]
 #[ORM\Table(name: 'crowdfunding_lottery_ticket')]
@@ -26,6 +27,7 @@ class LotteryTicket implements \Stringable
     private ?int $id = null;
 
     #[ORM\Column(length: 16)]
+    #[Assert\Length(max: 16)]
     private ?string $number = null;
 
     #[ORM\ManyToOne(targetEntity: Lottery::class, inversedBy: 'tickets')]

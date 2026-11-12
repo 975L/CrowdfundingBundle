@@ -33,10 +33,14 @@ class CrowdfundingNewsType extends AbstractType
 
         $builder
             ->add('title', TextType::class, [
+                // An emptied field reaches the entity's NotBlank rather than a setter refusing null
+                'empty_data' => '',
                 'label' => 'label.title',
                 'translation_domain' => 'crowdfunding',
             ])
             ->add('content', TextareaType::class, [
+                // An emptied field reaches the entity's NotBlank rather than a setter refusing null
+                'empty_data' => '',
                 'label' => 'label.content',
                 'translation_domain' => 'crowdfunding',
                 // Opt-in marker read by the block form theme, which is what puts Donovan under a plain textarea

@@ -17,6 +17,7 @@ use c975L\CrowdfundingBundle\Entity\CrowdfundingMedia;
 use c975L\CrowdfundingBundle\Listener\CrowdfundingCacheInvalidationListener;
 use c975L\CrowdfundingBundle\Service\CrowdfundingBlockCacheInvalidator;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Event\PostFlushEventArgs;
 use Doctrine\ORM\Event\PostPersistEventArgs;
 use Doctrine\ORM\Event\PostUpdateEventArgs;
 use Doctrine\ORM\Event\PreRemoveEventArgs;
@@ -35,12 +36,12 @@ class CrowdfundingCacheInvalidationListenerTest extends TestCase
         ];
     }
 
-    // Every row the slider's render is drawn from drops the tag, whichever of the three events wrote it - the campaign and its plates, and nothing else
+    // Every row the slider's render is drawn from drops the tag, whichever of the three events wrote it - once, after the flush, never before the commit
     #[DataProvider('rowsTheCampaignIsDrawnFrom')]
-    public function testEachRowTheRenderReadsDropsTheCampaignTag(object $entity): void
+    public function testEachRowTheRenderReadsDropsTheCampaignTagAfterTheFlush(object $entity): void
     {
         $cache = $this->createMock(TagAwareCacheInterface::class);
-        $cache->expects($this->exactly(3))
+        $cache->expects($this->once())
             ->method('invalidateTags')
             ->with([CrowdfundingBlockCacheInvalidator::CACHE_TAG_CROWDFUNDING])
         ;
@@ -51,6 +52,8 @@ class CrowdfundingCacheInvalidationListenerTest extends TestCase
         $listener->postPersist(new PostPersistEventArgs($entity, $entityManager));
         $listener->postUpdate(new PostUpdateEventArgs($entity, $entityManager));
         $listener->preRemove(new PreRemoveEventArgs($entity, $entityManager));
+        $listener->postFlush(new PostFlushEventArgs($entityManager));
+        $listener->postFlush(new PostFlushEventArgs($entityManager));
     }
 
     /** @return list<array{0: object}> */
@@ -69,8 +72,8 @@ class CrowdfundingCacheInvalidationListenerTest extends TestCase
         $cache = $this->createMock(TagAwareCacheInterface::class);
         $cache->expects($this->never())->method('invalidateTags');
 
-        new CrowdfundingCacheInvalidationListener(new CrowdfundingBlockCacheInvalidator($cache))
-            ->postUpdate(new PostUpdateEventArgs($entity, $this->createStub(EntityManagerInterface::class)))
-        ;
+        $listener = new CrowdfundingCacheInvalidationListener(new CrowdfundingBlockCacheInvalidator($cache));
+        $listener->postUpdate(new PostUpdateEventArgs($entity, $this->createStub(EntityManagerInterface::class)));
+        $listener->postFlush(new PostFlushEventArgs($this->createStub(EntityManagerInterface::class)));
     }
 }

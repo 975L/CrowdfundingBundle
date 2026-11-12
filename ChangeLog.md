@@ -1,5 +1,33 @@
 # Changelog
 
+## v1.11.0
+
+Refunds taken back, test baskets and video on any platform
+
+- `CrowdfundingVideo::$videoUrl` replaces `$youtubeUrl`: the video's address on any platform UiBundle's `VideoPlatform` declares, its column unchanged (11/11/2026) [BC-Break]
+- A bare YouTube id saved before is still read as that video (11/11/2026)
+- An address of no declared platform is refused (11/11/2026)
+- `CrowdfundingVideo::getVideoEmbedUrl()`: the campaign video framed through its platform's privacy-respecting embed, an address of no declared platform never framed (11/11/2026)
+- Guided project and help texts name any video platform (11/11/2026)
+- `CrowdfundingBasketItemProvider` implements `RefundableBasketItemProviderInterface`: a refund takes back the amount, the run, the contributor and its undrawn tickets (12/11/2026) [BC-Break]
+- A test basket counts nothing: no amount, no run, no contributor, no ticket, no e-mail (12/11/2026)
+- The amount counted is the frozen line total minus its share of a promotional code (12/11/2026)
+- One contributor per campaign of a basket (12/11/2026)
+- A contribution worth nothing writes no public contributor, message nor ticket (12/11/2026)
+- The contribution thank-you e-mail is sent again (12/11/2026)
+- Signature and message cut to their columns, so a paid order is always delivered (12/11/2026)
+- Tickets only for lotteries still active, not past their draw date and with no prize drawn (12/11/2026)
+- Listeners on `prePersist`/`preUpdate` instead of `preFlush`: a contributor no longer becomes a campaign's author (12/11/2026) [BC-Break]
+- A new counterpart is unlimited by default, the demo thank-you tier included (12/11/2026)
+- The campaign page fetch-joins its counterparts only, contributors counted `EXTRA_LAZY`, the blocks reusing the controller's campaign (12/11/2026)
+- `findByBlockIds()` selects the campaigns alone, their blocks never half-loaded (12/11/2026)
+- Block cache invalidated on `postFlush`, and by the amount's bulk updates (12/11/2026)
+- String columns carry their `Length`, amounts and quantities their bound, emptied text fields send `''` (12/11/2026)
+- The counterpart currency field no longer overrides the saved value (12/11/2026)
+- AVIF refused at upload, an AVIF stored before still served as `image/avif` (12/11/2026)
+- `CodeRulesTest` replays the audit's rules (12/11/2026)
+- `c975l/core-bundle` required in ^1.90 and `c975l/payment-bundle` in ^6.26 (12/11/2026)
+
 ## v1.10.0
 
 Trash and delete confirmations name the campaign

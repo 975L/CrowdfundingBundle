@@ -32,6 +32,7 @@ class MediaTest extends TestCase
         yield 'jpg' => ['poster.jpg', 'image/jpeg'];
         yield 'jpeg' => ['poster.jpeg', 'image/jpeg'];
         yield 'webp' => ['poster.webp', 'image/webp'];
+        yield 'avif stored before uploads refused it' => ['poster.avif', 'image/avif'];
         yield 'mp4' => ['draw.mp4', 'video/mp4'];
         yield 'pdf' => ['budget.pdf', 'application/pdf'];
         yield 'uppercase extension' => ['POSTER.PNG', 'image/png'];

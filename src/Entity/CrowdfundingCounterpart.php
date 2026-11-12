@@ -37,20 +37,26 @@ class CrowdfundingCounterpart implements \Stringable
     // Required on the entity and not only on the form: a row added to the campaign reaches the server without the browser's own check, and the slug is written off this title when it is saved (see CrowdfundingCounterpartListener)
     #[ORM\Column(length: 50)]
     #[Assert\NotBlank]
+    #[Assert\Length(max: 50)]
     private ?string $title = null;
 
     #[ORM\Column(length: 50)]
+    #[Assert\Length(max: 50)]
     private ?string $slug = null;
 
     // NotNull and not NotBlank: a counterpart offered for nothing is a thank-you, not an error
     #[ORM\Column]
     #[Assert\NotNull]
+    #[Assert\PositiveOrZero]
     private ?int $price = null;
 
+    // The run offered (null = unlimited, 0 = withdrawn): a counterpart created in the back office is on sale until its editor caps it
     #[ORM\Column(nullable: true, type: 'smallint')]
-    private ?int $limitedQuantity = 0;
+    #[Assert\PositiveOrZero]
+    private ?int $limitedQuantity = null;
 
     #[ORM\Column(nullable: true, type: 'smallint')]
+    #[Assert\PositiveOrZero]
     private ?int $orderedQuantity = null;
 
     // Same NOT NULL column as the title, which a form submitted without it answers with a 500 rather than with a field to fill
@@ -59,9 +65,11 @@ class CrowdfundingCounterpart implements \Stringable
     private ?string $description = null;
 
     #[ORM\Column(length: 100, nullable: true)]
+    #[Assert\Length(max: 100)]
     private ?string $expectedDelivery = null;
 
     #[ORM\Column(length: 3)]
+    #[Assert\Length(max: 3)]
     private string $currency = 'eur';
 
     #[ORM\Column(type: 'boolean')]

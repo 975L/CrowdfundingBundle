@@ -26,7 +26,8 @@ What this bundle owns is what happens on either side of that payment, in `Servic
 | `shipsParcels()` | `true` when a running, visible campaign offers a counterpart with `requiresShipping` (`Contract\ShippingBasketItemProviderInterface`), so PaymentBundle warns about an empty delivery grid only then |
 | `validateCheckout()` | the same rules on the whole basket, plus the quantity against what the run has left |
 | `onBasketValidated()` | hands the contributor's name and message to PaymentBundle, which keeps them **on the basket** |
-| `onBasketPaid()` | writes the `CrowdfundingContributor`, counts `orderedQuantity` and `amountAchieved` in the database, draws the lottery tickets |
+| `onBasketPaid()` | counts `orderedQuantity` and `amountAchieved` in the database (the frozen line `total` minus its share of a promotional code, `CrowdfundingContributionAmount`), writes one `CrowdfundingContributor` per campaign of the basket (none for a contribution worth 0), draws the lottery tickets of the open lotteries, sends the `crowdfunding_contribution` thank-you; a test basket (`isTestMode()`) counts nothing at all |
+| `onBasketRefunded()` | (`RefundableBasketItemProviderInterface`) takes back what the payment counted (`releaseAchieved()`, `releaseOrdered()`, floored at 0), removes the contributors and their undrawn tickets; a contributor holding a drawn ticket leaves the list, keeps its row and is logged |
 
 **Nothing travels in the session.** The webhook confirms a payment on a request of its own, carrying no session of the contributor: what `onBasketValidated()` returns is given back to `onBasketPaid()` by PaymentBundle. A contributor who never came back to the site is registered all the same.
 
@@ -47,7 +48,7 @@ What this bundle owns is what happens on either side of that payment, in `Servic
 
 | Field | Meaning |
 | --- | --- |
-| `limitedQuantity` | the run; `0` withdraws it from the page without deleting what was ordered, `null` is unlimited |
+| `limitedQuantity` | the run; `null` (the default) is unlimited, `0` withdraws it from the page without deleting what was ordered |
 | `orderedQuantity` | what has been taken, counted at `onBasketPaid()` and never typed by an admin, the form's field being disabled |
 | `lotteryTickets` | how many lottery tickets one unit earns, held between 0 and 10 |
 
@@ -166,7 +167,7 @@ On a site declaring several languages, `crowdfunding_index_localized`, `crowdfun
 - **Labels are resolved in the `crowdfunding` domain**, this bundle's own. It does not depend on ShopBundle, and a key read in the `shop` domain shows raw on a site running a campaign without a shop.
 - **Nothing reads "the first media".** The opening image is `getHeroes()|first` and the slider is `getSlides()`, each filed under its own kind: a template falling back on `medias|first` opens the page on whichever plate an editor happened to sort first, and puts the same image in both places.
 - **A counterpart already subscribed to, and a draw a ticket was sold on, cannot be removed from the form.** The campaign's five collections carry `orphanRemoval`, so taking one off the form is a DELETE; `CrowdfundingCrudController::updateEntity()` puts back a counterpart whose `getContributors()` is not empty and a lottery whose `getTickets()` is not empty, saying so in a flash. The counterpart would be refused by the database over `crowdfunding_contributor_counterpart`; the lottery would not be refused at all, cascading its own removal to its tickets and its drawn winner.
-- **`user` is not an owner to rely on.** `Entity\Traits\UserTrait` maps it on a campaign, a counterpart, a lottery and a prize as `ON DELETE SET NULL`, and the listeners rewrite it on every change: it holds who last touched the row, and is null once that account is deleted.
+- **`user` is not an owner to rely on.** `Entity\Traits\UserTrait` maps it on a campaign, a counterpart, a lottery and a prize as `ON DELETE SET NULL`, and the listeners write it on `prePersist` and on a `preUpdate` that changed more than the counters a contribution writes (never on `preFlush`): it holds who last edited the row, and is null once that account is deleted.
 - **Between the tags of a component, every `|trans` names its domain.** What a template writes inside `<twig:…>…</twig:…>` is compiled as an embedded template, which the file's `trans_default_domain` does not reach, and the key prints raw; `TranslationDomainTest` holds the rule.
 
 ## Guided projects and procedures

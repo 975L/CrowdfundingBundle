@@ -213,8 +213,10 @@ class TranslationDomainTest extends TestCase
     private function phpKeys(string $contents): array
     {
         preg_match_all("/(?:trans|\\bt)\\(\\s*['\"]([a-zA-Z0-9_.]+)['\"]\\s*,\\s*\\[[^\\]]*\\]\\s*,\\s*['\"]crowdfunding['\"]\\s*\\)/", $contents, $matches);
+        // A violation an entity builds itself, its message translated in this domain
+        preg_match_all("/buildViolation\\(\\s*'([a-zA-Z0-9_.]+)'\\s*\\)\\s*->setTranslationDomain\\(\\s*'crowdfunding'\\s*\\)/", $contents, $violations);
 
-        return $matches[1];
+        return [...$matches[1], ...$violations[1]];
     }
 
     // The subject prefix reads its own word in PaymentBundle's catalogue, the bundle that declares the "shop-name" key beside it

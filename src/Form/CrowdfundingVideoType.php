@@ -22,8 +22,8 @@ class CrowdfundingVideoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('youtubeUrl', null, [
-                'label' => 'YouTube URL',
+            ->add('videoUrl', null, [
+                'label' => 'label.video_url',
                 'help' => 'label.youtube_or_upload',
                 'required' => false,
             ])

@@ -91,6 +91,9 @@ class CrowdfundingController extends AbstractController
         #[MapEntity(expr: 'repository.findOneBySlug(slug)')]
         Crowdfunding $crowdfunding,
     ): Response {
+        // Kept on the request for the blocks of the page, which would otherwise read the campaign a second time (see CrowdfundingBlockExtension::getCampaign())
+        $request->attributes->set('crowdfunding', $crowdfunding);
+
         // A trashed campaign is gone rather than missing, and a search engine acts on a 410 far faster than on the 404 the same url would otherwise answer - for as long as the campaign can still be restored, a Redirect taking over once it is deleted for good (see CrowdfundingCrudController::deletePermanently())
         if ($crowdfunding->isDeleted()) {
             throw new GoneHttpException();
@@ -157,10 +160,12 @@ class CrowdfundingController extends AbstractController
         priority: 1
     )]
     public function preview(
+        Request $request,
         #[MapEntity(expr: 'repository.findOneBySlug(slug)')]
         Crowdfunding $crowdfunding,
     ): Response {
         $this->denyAccessUnlessGranted($this->configService->get('site-role-editor'));
+        $request->attributes->set('crowdfunding', $crowdfunding);
 
         // A preview shows what was just saved, and its html is not the public one - said before anything is rendered, the page being composed of cacheable blocks
         $this->blockRenderContext->disableCache();

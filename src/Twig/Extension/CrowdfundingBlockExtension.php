@@ -49,6 +49,12 @@ class CrowdfundingBlockExtension implements ResetInterface
             return null;
         }
 
+        // The campaign the controller already read, when it is the one the route names
+        $current = $this->requestStack->getCurrentRequest()?->attributes->get('crowdfunding');
+        if ($current instanceof Crowdfunding && $slug === $current->getSlug()) {
+            return $current;
+        }
+
         return $this->bySlug[$slug] ??= $this->crowdfundingRepository->findOneBySlug($slug);
     }
 

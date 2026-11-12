@@ -14,40 +14,59 @@ use c975L\CrowdfundingBundle\Entity\Crowdfunding;
 use c975L\CrowdfundingBundle\Entity\CrowdfundingMedia;
 use c975L\CrowdfundingBundle\Service\CrowdfundingBlockCacheInvalidator;
 use Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener;
+use Doctrine\ORM\Event\PostFlushEventArgs;
 use Doctrine\ORM\Event\PostPersistEventArgs;
 use Doctrine\ORM\Event\PostUpdateEventArgs;
 use Doctrine\ORM\Event\PreRemoveEventArgs;
 use Doctrine\ORM\Events;
 
-// Drops the cached renders of this bundle's blocks whenever what they read changes - the campaign itself and its medias, which is all "crowdfunding_slider" draws and the only kind of this bundle whose render is cached (the two others are "cacheable: false", see config/services.yaml). A tier or a contribution is left out on purpose: no cache entry holds either, and a kind reading them would have to be added here along with its resolver. postPersist as much as postUpdate, a plate added to a cached campaign being an INSERT
+// Drops the cached renders of this bundle's blocks whenever what they read changes - the campaign itself and its medias, which is all "crowdfunding_slider" draws and the only kind of this bundle whose render is cached (the two others are "cacheable: false", see config/services.yaml). A tier or a contribution is left out on purpose: no cache entry holds either. The writes are only noted, the tag dropped once the flush is over: dropped before the commit, a concurrent request would cache the old state again
 #[AsDoctrineListener(event: Events::postPersist)]
 #[AsDoctrineListener(event: Events::postUpdate)]
 #[AsDoctrineListener(event: Events::preRemove)]
+#[AsDoctrineListener(event: Events::postFlush)]
 class CrowdfundingCacheInvalidationListener
 {
+    private bool $pending = false;
+
     public function __construct(private readonly CrowdfundingBlockCacheInvalidator $invalidator)
     {
     }
 
+    // An inserted row is noted
     public function postPersist(PostPersistEventArgs $args): void
     {
-        $this->invalidate($args->getObject());
+        $this->note($args->getObject());
     }
 
+    // An updated row is noted
     public function postUpdate(PostUpdateEventArgs $args): void
     {
-        $this->invalidate($args->getObject());
+        $this->note($args->getObject());
     }
 
+    // A removed row is noted
     public function preRemove(PreRemoveEventArgs $args): void
     {
-        $this->invalidate($args->getObject());
+        $this->note($args->getObject());
     }
 
-    private function invalidate(object $entity): void
+    // The tag dropped once, after the flush that wrote what it covers
+    public function postFlush(PostFlushEventArgs $args): void
+    {
+        if (!$this->pending) {
+            return;
+        }
+
+        $this->pending = false;
+        $this->invalidator->invalidateCrowdfunding();
+    }
+
+    // Whether the row is one the cached render reads
+    private function note(object $entity): void
     {
         if ($entity instanceof Crowdfunding || $entity instanceof CrowdfundingMedia) {
-            $this->invalidator->invalidateCrowdfunding();
+            $this->pending = true;
         }
     }
 }

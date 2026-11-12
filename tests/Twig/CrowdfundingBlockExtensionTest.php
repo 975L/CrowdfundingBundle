@@ -116,6 +116,21 @@ class CrowdfundingBlockExtensionTest extends TestCase
         $this->assertNull($this->extension()->getCampaign());
     }
 
+    // The campaign the controller already read is the one the blocks show, never read a second time
+    public function testTheCampaignTheControllerReadIsReused(): void
+    {
+        $repository = $this->createMock(CrowdfundingRepository::class);
+        $repository->expects($this->never())->method('findOneBySlug');
+
+        $crowdfunding = new Crowdfunding()->setSlug('catalog');
+        $request = new Request();
+        $request->attributes->set('_route', 'crowdfunding_display');
+        $request->attributes->set('slug', 'catalog');
+        $request->attributes->set('crowdfunding', $crowdfunding);
+
+        $this->assertSame($crowdfunding, $this->extension($repository, new RequestStack([$request]))->getCampaign());
+    }
+
     private function extension(?CrowdfundingRepository $repository = null, ?RequestStack $stack = null, ?CrowdfundingTranslator $translator = null): CrowdfundingBlockExtension
     {
         return new CrowdfundingBlockExtension(

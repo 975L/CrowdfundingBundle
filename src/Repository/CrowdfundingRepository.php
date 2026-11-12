@@ -11,7 +11,9 @@
 namespace c975L\CrowdfundingBundle\Repository;
 
 use c975L\CrowdfundingBundle\Entity\Crowdfunding;
+use c975L\CrowdfundingBundle\Service\CrowdfundingBlockCacheInvalidator;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
@@ -21,8 +23,10 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class CrowdfundingRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
-    {
+    public function __construct(
+        ManagerRegistry $registry,
+        private readonly ?CrowdfundingBlockCacheInvalidator $cacheInvalidator = null,
+    ) {
         parent::__construct($registry, Crowdfunding::class);
     }
 
@@ -76,18 +80,13 @@ class CrowdfundingRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    // Finds a crowdfunding by id with joined data
+    // Finds a crowdfunding by id with its counterparts - one collection only, the others read lazily so the rows are not multiplied by each other
     public function findOneById(int $id): ?Crowdfunding
     {
         return $this->createQueryBuilder('c')
-            ->select('c, cm, cc, ccm, v, cn, cct')
-            ->leftJoin('c.medias', 'cm')
+            ->select('c, cc, ccm')
             ->leftJoin('c.counterparts', 'cc')
             ->leftJoin('cc.media', 'ccm')
-            ->leftJoin('c.videos', 'v')
-            ->leftJoin('c.news', 'cn')
-            ->leftJoin('c.contributors', 'cct')
-            ->leftJoin('c.lotteries', 'cl')
             ->where('c.id = :id')
             ->setParameter('id', $id)
             ->getQuery()
@@ -107,8 +106,10 @@ class CrowdfundingRepository extends ServiceEntityRepository
             return [];
         }
 
+        // The campaign alone, its blocks read whole afterwards: a fetch-join filtered on them would leave the collection holding those blocks only, for the rest of the request
         return $this->createQueryBuilder('c')
-            ->select('c, b')
+            ->select('c')
+            ->distinct()
             ->innerJoin('c.blocks', 'b')
             ->andWhere('b.id IN (:blockIds)')
             ->setParameter('blockIds', $blockIds)
@@ -117,18 +118,13 @@ class CrowdfundingRepository extends ServiceEntityRepository
         ;
     }
 
-    // Finds a crowdfunding by slug with joined data
+    // Finds a crowdfunding by slug with its counterparts - one collection only, the others read lazily so the rows are not multiplied by each other
     public function findOneBySlug(string $slug): ?Crowdfunding
     {
         return $this->createQueryBuilder('c')
-            ->select('c, cm, cc, ccm, v, cn, cct')
-            ->leftJoin('c.medias', 'cm')
+            ->select('c, cc, ccm')
             ->leftJoin('c.counterparts', 'cc')
             ->leftJoin('cc.media', 'ccm')
-            ->leftJoin('c.videos', 'v')
-            ->leftJoin('c.news', 'cn')
-            ->leftJoin('c.contributors', 'cct')
-            ->leftJoin('c.lotteries', 'cl')
             ->where('c.slug = :slug')
             ->setParameter('slug', $slug)
             ->getQuery()
@@ -136,12 +132,25 @@ class CrowdfundingRepository extends ServiceEntityRepository
         ;
     }
 
-    // Adds what a contribution brought to the campaign in one statement, two of them settling at the same second both reading the same total
+    // Adds what a contribution brought to the campaign in one statement, two of them settling at the same second both reading the same total - the cached renders showing it dropped, no flush of the campaign following
     public function addAchieved(Crowdfunding $crowdfunding, int $amount): void
     {
         $this->getEntityManager()->getConnection()->executeStatement(
             'UPDATE crowdfunding_crowdfunding SET amount_achieved = COALESCE(amount_achieved, 0) + :amount WHERE id = :id',
             ['id' => $crowdfunding->getId(), 'amount' => $amount]
         );
+        $this->cacheInvalidator?->invalidateCrowdfunding();
+    }
+
+    // Takes a refunded contribution back off the campaign in one statement, never below zero
+    public function releaseAchieved(Crowdfunding $crowdfunding, int $amount): void
+    {
+        $this->getEntityManager()->getConnection()->executeStatement(
+            'UPDATE crowdfunding_crowdfunding SET amount_achieved = CASE WHEN COALESCE(amount_achieved, 0) > :amount THEN amount_achieved - :amount ELSE 0 END WHERE id = :id',
+            ['id' => $crowdfunding->getId(), 'amount' => $amount],
+            // Bound as integers: compared, not only added, a value bound as text never reads greater than a number
+            ['id' => ParameterType::INTEGER, 'amount' => ParameterType::INTEGER]
+        );
+        $this->cacheInvalidator?->invalidateCrowdfunding();
     }
 }

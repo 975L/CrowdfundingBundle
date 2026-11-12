@@ -10,13 +10,18 @@
 
 namespace c975L\CrowdfundingBundle\Service;
 
+use c975L\CrowdfundingBundle\Entity\Crowdfunding;
 use c975L\CrowdfundingBundle\Entity\CrowdfundingContributor;
 use c975L\CrowdfundingBundle\Entity\CrowdfundingContributorCounterpart;
 use c975L\CrowdfundingBundle\Entity\CrowdfundingCounterpart;
+use c975L\CrowdfundingBundle\Message\CrowdfundingContributionMessage;
 use c975L\CrowdfundingBundle\Message\LotteryTicketsMessage;
+use c975L\CrowdfundingBundle\Repository\CrowdfundingContributorRepository;
 use c975L\CrowdfundingBundle\Repository\CrowdfundingCounterpartRepository;
 use c975L\CrowdfundingBundle\Repository\CrowdfundingRepository;
-use c975L\PaymentBundle\Contract\BasketItemProviderInterface;
+use c975L\CrowdfundingBundle\Repository\LotteryPrizeRepository;
+use c975L\CrowdfundingBundle\Repository\LotteryTicketRepository;
+use c975L\PaymentBundle\Contract\RefundableBasketItemProviderInterface;
 use c975L\PaymentBundle\Contract\ShippingBasketItemProviderInterface;
 use c975L\PaymentBundle\Entity\Basket;
 use Doctrine\ORM\EntityManagerInterface;
@@ -25,7 +30,7 @@ use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 // Plugs counterparts into PaymentBundle's checkout, and owns the crowdfunding-specific parts of that flow
-class CrowdfundingBasketItemProvider implements BasketItemProviderInterface, ShippingBasketItemProviderInterface
+class CrowdfundingBasketItemProvider implements RefundableBasketItemProviderInterface, ShippingBasketItemProviderInterface
 {
     public function __construct(
         private readonly CrowdfundingCounterpartServiceInterface $crowdfundingCounterpartService,
@@ -36,6 +41,9 @@ class CrowdfundingBasketItemProvider implements BasketItemProviderInterface, Shi
         private readonly CrowdfundingCounterpartRepository $crowdfundingCounterpartRepository,
         private readonly CrowdfundingRepository $crowdfundingRepository,
         private readonly LoggerInterface $logger,
+        private readonly CrowdfundingContributorRepository $crowdfundingContributorRepository,
+        private readonly LotteryTicketRepository $lotteryTicketRepository,
+        private readonly LotteryPrizeRepository $lotteryPrizeRepository,
     ) {
     }
 
@@ -156,80 +164,172 @@ class CrowdfundingBasketItemProvider implements BasketItemProviderInterface, Shi
             }
         }
 
+        // Cut to the columns' lengths here, a value too long otherwise failing the delivery of a paid order
         return [
-            'name' => $requestData['coordinates']['contributorName'] ?? null,
-            'message' => $requestData['coordinates']['contributorMessage'] ?? null,
+            'name' => self::cut($requestData['coordinates']['contributorName'] ?? null, 50),
+            'message' => self::cut($requestData['coordinates']['contributorMessage'] ?? null, 255),
             'email' => $basket->getEmail(),
             'counterparts' => $counterpartsArray,
         ];
     }
 
-    // Registers the contributor and counterparts, bumps orderedQuantity and generates lottery tickets
+    // Counts the runs and the campaigns' totals, registers one contributor per campaign with its counterparts and tickets, then thanks the contributor - a test basket counting nothing real
     public function onBasketPaid(Basket $basket, array $itemsOfThisKind, array $checkoutData): void
     {
-        foreach ($itemsOfThisKind as $id => $itemContent) {
-            $counterpart = $this->crowdfundingCounterpartService->findOneById($id);
-            if (null === $counterpart) {
-                continue;
-            }
-            $this->countOrdered($basket, $counterpart, (int) $itemContent['quantity']);
-        }
-
-        // What onBasketValidated() handed over, kept on the basket by PaymentBundle - already this basket's own, so there is nothing to match it against
-        $contributorData = $checkoutData;
-        if ([] === $contributorData) {
+        if ($basket->isTestMode()) {
             return;
         }
 
+        $contributors = [];
+        foreach ($this->groupByCampaign($basket, $itemsOfThisKind) as $group) {
+            if ($group['amount'] > 0) {
+                $this->crowdfundingRepository->addAchieved($group['crowdfunding'], $group['amount']);
+                $group['crowdfunding']->setModification(new \DateTime());
+            }
+
+            // What onBasketValidated() handed over, kept on the basket by PaymentBundle - an order placed before it existed, or one given for nothing, writes no public contributor
+            if ([] !== $checkoutData && $group['amount'] > 0) {
+                $contributors[] = $this->registerContributor($basket, $group, $checkoutData);
+            }
+        }
+
+        $this->entityManager->flush();
+
+        // After the flush, and only then: the contributor's id is assigned by the database, and the message declares it an int
+        foreach ($contributors as $contributor) {
+            $this->messageBus->dispatch(new LotteryTicketsMessage((int) $contributor->getId()));
+        }
+        if ([] !== $itemsOfThisKind) {
+            $this->messageBus->dispatch(new CrowdfundingContributionMessage((int) $basket->getId()));
+        }
+    }
+
+    // A full refund takes back what the payment handed over: the campaigns' totals and the runs it counted, the contributors it listed and their undrawn tickets - a test basket having counted none
+    public function onBasketRefunded(Basket $basket, array $itemsOfThisKind): void
+    {
+        if ($basket->isTestMode()) {
+            return;
+        }
+
+        foreach ($this->groupByCampaign($basket, $itemsOfThisKind, false) as $group) {
+            if ($group['amount'] > 0) {
+                $this->crowdfundingRepository->releaseAchieved($group['crowdfunding'], $group['amount']);
+                $group['crowdfunding']->setModification(new \DateTime());
+            }
+            foreach ($group['lines'] as [$counterpart, $quantity]) {
+                $this->crowdfundingCounterpartRepository->releaseOrdered($counterpart, $quantity);
+                $counterpart->setModification(new \DateTime());
+            }
+        }
+
+        foreach ($this->crowdfundingContributorRepository->findBy(['basket' => $basket]) as $contributor) {
+            $this->removeContributor($basket, $contributor);
+        }
+
+        $this->entityManager->flush();
+    }
+
+    // The basket's lines gathered by campaign, each with what it brought - a counterpart deleted since counting nothing. Counted against its run on payment only
+    /** @return array<int, array{crowdfunding: Crowdfunding, amount: int, lines: list<array{CrowdfundingCounterpart, int, int}>}> */
+    private function groupByCampaign(Basket $basket, array $itemsOfThisKind, bool $countRuns = true): array
+    {
+        $groups = [];
+        foreach ($itemsOfThisKind as $id => $line) {
+            $counterpart = $this->crowdfundingCounterpartService->findOneById((int) $id);
+            $crowdfunding = $counterpart?->getCrowdfunding();
+            if (null === $crowdfunding) {
+                continue;
+            }
+
+            $quantity = (int) ($line['quantity'] ?? 0);
+            if ($countRuns) {
+                $this->countOrdered($basket, $counterpart, $quantity);
+            }
+
+            // A line frozen before the basket stored its total is read at the price it was sold
+            $line['total'] ??= (int) $counterpart->getPrice() * $quantity;
+            $amount = CrowdfundingContributionAmount::ofLine($basket, $line);
+            $key = spl_object_id($crowdfunding);
+            $groups[$key] ??= ['crowdfunding' => $crowdfunding, 'amount' => 0, 'lines' => []];
+            $groups[$key]['amount'] += $amount;
+            $groups[$key]['lines'][] = [$counterpart, $quantity, $amount];
+        }
+
+        return $groups;
+    }
+
+    // One contributor for one campaign, listing its counterparts - tickets drawn for the lines actually paid for
+    /** @param array{crowdfunding: Crowdfunding, amount: int, lines: list<array{CrowdfundingCounterpart, int, int}>} $group */
+    private function registerContributor(Basket $basket, array $group, array $checkoutData): CrowdfundingContributor
+    {
         $contributor = new CrowdfundingContributor();
-        $contributor->setName(empty($contributorData['name']) ? null : $contributorData['name']);
-        $contributor->setMessage(empty($contributorData['message']) ? null : $contributorData['message']);
-        $contributor->setEmail($contributorData['email']);
+        $contributor->setName(self::cut($checkoutData['name'] ?? null, 50));
+        $contributor->setMessage(self::cut($checkoutData['message'] ?? null, 255));
+        $contributor->setEmail((string) ($checkoutData['email'] ?? $basket->getEmail()));
         // The language the order was placed in, which is the only thing that will still say it when the lottery is drawn months later
         $contributor->setLocale($basket->getLocale());
         $contributor->setCreation(new \DateTime());
         $contributor->setModification(new \DateTime());
         $contributor->setBasket($basket);
-
+        $group['crowdfunding']->addContributor($contributor);
         $this->entityManager->persist($contributor);
 
-        foreach ($contributorData['counterparts'] as $id => $quantity) {
-            $counterpart = $this->crowdfundingCounterpartService->findOneById($id);
-            if (!$counterpart) {
-                continue;
-            }
-
+        foreach ($group['lines'] as [$counterpart, $quantity, $amount]) {
             $contributorCounterpart = new CrowdfundingContributorCounterpart();
             $contributorCounterpart->setContributor($contributor);
             $contributorCounterpart->setCounterpart($counterpart);
             $contributorCounterpart->setQuantity($quantity);
-
             $this->entityManager->persist($contributorCounterpart);
 
-            $crowdfunding = $counterpart->getCrowdfunding();
-            if ($crowdfunding) {
-                // Added in the database: two contributions settling at the same second both read the same total, and one of them would vanish from the campaign's bar
-                $this->crowdfundingRepository->addAchieved($crowdfunding, $counterpart->getPrice() * $quantity);
-                $crowdfunding->setModification(new \DateTime());
-                $crowdfunding->addContributor($contributor);
-
-                $contributor->setCrowdfunding($crowdfunding);
-
-                $this->entityManager->persist($crowdfunding);
+            if ($amount > 0) {
+                $this->lotteryService->generateTicketsForContributor($contributor, $counterpart, $quantity);
             }
-
-            $this->lotteryService->generateTicketsForContributor($contributor, $counterpart, $quantity);
         }
 
-        $this->entityManager->flush();
+        return $contributor;
+    }
 
-        // After the flush, and only then: the contributor's id is assigned by the database, and the message declares it an int - dispatched before, a basket holding no counterpart at all handed the bus a null
-        $this->messageBus->dispatch(new LotteryTicketsMessage($contributor->getId()));
+    // A refunded contributor leaves the list with its undrawn tickets; one holding a ticket already drawn keeps that ticket, so the row stays out of the list and the shop is told
+    private function removeContributor(Basket $basket, CrowdfundingContributor $contributor): void
+    {
+        $tickets = $this->lotteryTicketRepository->findBy(['contributor' => $contributor]);
+        $won = [] === $tickets ? [] : array_map(static fn ($prize) => $prize->getWinningTicket(), $this->lotteryPrizeRepository->findBy(['winningTicket' => $tickets]));
+
+        foreach ($tickets as $ticket) {
+            if (!\in_array($ticket, $won, true)) {
+                $this->entityManager->remove($ticket);
+            }
+        }
+
+        $contributor->getCrowdfunding()?->removeContributor($contributor);
+        if ([] === $won) {
+            $this->entityManager->remove($contributor);
+
+            return;
+        }
+
+        $this->logger->warning('Basket {number} refunded: contributor {id} holds a ticket already drawn, kept out of the list', ['number' => $basket->getNumber(), 'id' => $contributor->getId()]);
+    }
+
+    // A text the contributor typed, trimmed and cut to its column, null when empty or not a text
+    private static function cut(mixed $value, int $length): ?string
+    {
+        if (!\is_string($value)) {
+            return null;
+        }
+
+        $value = mb_substr(trim($value), 0, $length);
+
+        return '' === $value ? null : $value;
     }
 
     // The database says whether the run still held this order, two payments at the same second both reading the same count. The customer has paid, so a refusal takes nothing back: the count goes past the run and stays true, which is what the dashboard reads (see CrowdfundingAlertProvider), and the shop is told. Dated so a run counted here still invalidates the pages showing it
     private function countOrdered(Basket $basket, CrowdfundingCounterpart $counterpart, int $quantity): void
     {
+        if ($quantity <= 0) {
+            return;
+        }
+
         $counterpart->setModification(new \DateTime());
 
         if ($this->crowdfundingCounterpartRepository->claimOrdered($counterpart, $quantity)) {
