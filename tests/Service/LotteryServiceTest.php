@@ -91,11 +91,11 @@ class LotteryServiceTest extends TestCase
     {
         $crowdfunding = new Crowdfunding();
         $crowdfunding->addLottery(new Lottery()->setIsActive(false));
-        $crowdfunding->addLottery(new Lottery()->setDrawDate(new \DateTime('-1 day')));
+        $crowdfunding->addLottery(new Lottery()->setDrawDate(new \DateTimeImmutable('-1 day')));
         $drawn = $this->createLottery([1]);
         $drawn->getPrizes()->first()->setWinningTicket($this->createTicket('AA-0001-BBB'));
         $crowdfunding->addLottery($drawn);
-        $open = new Lottery()->setDrawDate(new \DateTime('+1 month'));
+        $open = new Lottery()->setDrawDate(new \DateTimeImmutable('+1 month'));
         $crowdfunding->addLottery($open);
 
         $persisted = [];
@@ -128,7 +128,7 @@ class LotteryServiceTest extends TestCase
         $this->assertSame($contributor, $ticket->getContributor());
         $this->assertSame($counterpart, $ticket->getCounterpart());
         $this->assertSame($contributor->getCrowdfunding()->getLotteries()[0], $ticket->getLottery());
-        $this->assertInstanceOf(\DateTime::class, $ticket->getCreation());
+        $this->assertInstanceOf(\DateTimeImmutable::class, $ticket->getCreation());
     }
 
     // The rank comes off the url, where nothing says the lottery has a prize of that rank: first() answers false on an empty collection, and reading the prize on it was a fatal error on the drawing endpoint
@@ -168,7 +168,7 @@ class LotteryServiceTest extends TestCase
 
         $this->assertSame($ticket, $winner);
         $this->assertSame($ticket, $lottery->getPrizes()[0]->getWinningTicket());
-        $this->assertInstanceOf(\DateTime::class, $lottery->getPrizes()[0]->getDrawDate());
+        $this->assertInstanceOf(\DateTimeImmutable::class, $lottery->getPrizes()[0]->getDrawDate());
     }
 
     // The winner is written before the email is asked for, and the message carries the prize the mail is built from

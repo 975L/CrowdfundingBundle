@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.12.0
+
+[BC-Break] Crowdfunding, news, counterparts, contributors and lottery dates stored as immutable dates
+
+- [BC-Break] Every date column is `datetime_immutable` or `date_immutable`, its getter returning `\DateTimeImmutable` (17/11/2026)
+- Date setters still accept any `\DateTimeInterface`, stored immutable (17/11/2026)
+- Date query parameters and date form fields immutable too (17/11/2026)
+
 ## v1.11.1
 
 CI replay runs the other PHP versions in parallel

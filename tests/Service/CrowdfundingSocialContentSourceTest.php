@@ -27,8 +27,8 @@ class CrowdfundingSocialContentSourceTest extends TestCase
     private function createCrowdfunding(int $id, ?string $endDate = '+10 days', bool $hidden = false, ?string $beginDate = '-10 days'): Crowdfunding
     {
         $crowdfunding = new Crowdfunding()->setTitle('Album ' . $id)->setSlug('album-' . $id)->setDescription('<p>Le tome 2</p>')->setAuthorName('Laurent')->setHidden($hidden);
-        $crowdfunding->setBeginDate(null === $beginDate ? null : new \DateTime($beginDate));
-        $crowdfunding->setEndDate(null === $endDate ? null : new \DateTime($endDate));
+        $crowdfunding->setBeginDate(null === $beginDate ? null : new \DateTimeImmutable($beginDate));
+        $crowdfunding->setEndDate(null === $endDate ? null : new \DateTimeImmutable($endDate));
         $crowdfunding->addMedia(new CrowdfundingMedia()->setKind(CrowdfundingMedia::KIND_COVER)->setName('medias/crowdfunding/crowdfundings/album-' . $id . '.webp'));
         new \ReflectionProperty(Crowdfunding::class, 'id')->setValue($crowdfunding, $id);
 

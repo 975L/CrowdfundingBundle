@@ -62,7 +62,7 @@ class CrowdfundingStatusProvider implements StatusProviderInterface
             return null;
         }
 
-        $date = new \DateTime((string) $oldest);
+        $date = new \DateTimeImmutable((string) $oldest);
 
         return $date->format('Y-m-d');
     }
@@ -75,6 +75,6 @@ class CrowdfundingStatusProvider implements StatusProviderInterface
             ->andWhere('l.isActive = true')
             ->andWhere('l.drawDate IS NOT NULL')
             ->andWhere('l.drawDate < :now')
-            ->setParameter('now', new \DateTime());
+            ->setParameter('now', new \DateTimeImmutable());
     }
 }

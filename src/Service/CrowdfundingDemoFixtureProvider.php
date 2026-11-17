@@ -68,7 +68,7 @@ class CrowdfundingDemoFixtureProvider implements DemoFixtureLinkerInterface, Dem
 
     public function getDemoFixtures(): iterable
     {
-        $creation = new \DateTime(self::CREATION);
+        $creation = new \DateTimeImmutable(self::CREATION);
         $crowdfunding = $this->crowdfunding($creation);
 
         $counterparts = [];
@@ -91,7 +91,7 @@ class CrowdfundingDemoFixtureProvider implements DemoFixtureLinkerInterface, Dem
         $news = new CrowdfundingNews()
             ->setTitle($this->text('news_title'))
             ->setContent('<div>' . $this->text('news_content') . '</div>')
-            ->setPublishedDate(new \DateTime(self::NEWS))
+            ->setPublishedDate(new \DateTimeImmutable(self::NEWS))
             ->setCreation($creation)
             ->setModification($creation);
         $this->stage($news, CrowdfundingTranslator::OWNER_NEWS, ['title' => 'news_title'], ['content' => 'news_content']);
@@ -122,7 +122,7 @@ class CrowdfundingDemoFixtureProvider implements DemoFixtureLinkerInterface, Dem
         }
     }
 
-    private function crowdfunding(\DateTime $creation): Crowdfunding
+    private function crowdfunding(\DateTimeImmutable $creation): Crowdfunding
     {
         $crowdfunding = new Crowdfunding()
             ->setTitle($this->text('crowdfunding_title'))
@@ -134,8 +134,8 @@ class CrowdfundingDemoFixtureProvider implements DemoFixtureLinkerInterface, Dem
             ->setAuthorWebsite(null)
             ->setAmountGoal(self::GOAL)
             ->setCurrency('EUR')
-            ->setBeginDate(new \DateTime(self::BEGIN))
-            ->setEndDate(new \DateTime(self::END))
+            ->setBeginDate(new \DateTimeImmutable(self::BEGIN))
+            ->setEndDate(new \DateTimeImmutable(self::END))
             ->setPosition(1)
             ->setHidden(false)
             ->setCreation($creation)
@@ -179,7 +179,7 @@ class CrowdfundingDemoFixtureProvider implements DemoFixtureLinkerInterface, Dem
     }
 
     // One lottery, drawn when the campaign closes, with a single prize: without it the lottery screens open on nothing, and the "crowdfunding-draw-video" guided project had no lottery to attach its video to
-    private function lottery(\DateTime $creation): Lottery
+    private function lottery(\DateTimeImmutable $creation): Lottery
     {
         $prize = new LotteryPrize()
             ->setTitle($this->text('prize_title'))
@@ -190,13 +190,13 @@ class CrowdfundingDemoFixtureProvider implements DemoFixtureLinkerInterface, Dem
         $this->stage($prize, CrowdfundingTranslator::OWNER_PRIZE, ['title' => 'prize_title', 'description' => 'prize_description'], []);
 
         return new Lottery()
-            ->setDrawDate(new \DateTime(self::END))
+            ->setDrawDate(new \DateTimeImmutable(self::END))
             ->addPrize($prize)
             ->setCreation($creation)
             ->setModification($creation);
     }
 
-    private function counterpart(string $slug, string $title, string $description, int $price, ?int $limited, bool $shipped, \DateTime $creation): CrowdfundingCounterpart
+    private function counterpart(string $slug, string $title, string $description, int $price, ?int $limited, bool $shipped, \DateTimeImmutable $creation): CrowdfundingCounterpart
     {
         $counterpart = new CrowdfundingCounterpart()
             ->setTitle($this->text($title))
@@ -217,7 +217,7 @@ class CrowdfundingDemoFixtureProvider implements DemoFixtureLinkerInterface, Dem
 
     private function contributor(Crowdfunding $crowdfunding, CrowdfundingCounterpart $counterpart, string $name, string $email, ?string $message, int $quantity, int $days): CrowdfundingContributor
     {
-        $date = new \DateTime(self::BEGIN)->modify('+' . $days . ' days')->setTime(18, 30);
+        $date = new \DateTimeImmutable(self::BEGIN)->modify('+' . $days . ' days')->setTime(18, 30);
 
         return new CrowdfundingContributor()
             ->setName($name)

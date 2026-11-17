@@ -28,9 +28,9 @@ class CrowdfundingNewsTest extends TestCase
     // Three separate dates: a news is dated by its publication on the page, and by its creation and its edit in the back office
     public function testANewsCarriesItsThreeDatesSeparately(): void
     {
-        $published = new \DateTime('2026-06-08 09:00:00');
-        $created = new \DateTime('2026-06-07 18:00:00');
-        $modified = new \DateTime('2026-06-09 11:00:00');
+        $published = new \DateTimeImmutable('2026-06-08 09:00:00');
+        $created = new \DateTimeImmutable('2026-06-07 18:00:00');
+        $modified = new \DateTimeImmutable('2026-06-09 11:00:00');
 
         $news = new CrowdfundingNews()
             ->setPublishedDate($published)
@@ -38,9 +38,9 @@ class CrowdfundingNewsTest extends TestCase
             ->setModification($modified)
         ;
 
-        $this->assertSame($published, $news->getPublishedDate());
-        $this->assertSame($created, $news->getCreation());
-        $this->assertSame($modified, $news->getModification());
+        $this->assertEquals($published, $news->getPublishedDate());
+        $this->assertEquals($created, $news->getCreation());
+        $this->assertEquals($modified, $news->getModification());
     }
 
     // Doctrine writes the owning side, and the collection's own adder is what sets it: assigned directly, the news would be saved with a null campaign

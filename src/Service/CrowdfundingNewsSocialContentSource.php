@@ -48,7 +48,7 @@ class CrowdfundingNewsSocialContentSource implements BrowsableSocialContentSourc
     // The fresh news of the running campaigns still free, the most recent first - their campaign, joined and filtered by the query, is not read again. News have no groups, so the scopes are ignored
     public function findContents(array $excludedIds, array $scopeIds, int $limit): array
     {
-        $fresh = new \DateTime(sprintf('-%d days', self::FRESH_DAYS))->setTime(0, 0);
+        $fresh = new \DateTimeImmutable(sprintf('-%d days', self::FRESH_DAYS))->setTime(0, 0);
         $contents = [];
         foreach ($this->newsRepository->findFreshLatest($excludedIds, $fresh, $limit) as $news) {
             $crowdfunding = $news->getCrowdfunding();

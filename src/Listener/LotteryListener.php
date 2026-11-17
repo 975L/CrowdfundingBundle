@@ -42,10 +42,10 @@ class LotteryListener
         $entity->setIsActive(true);
         // A date the row already carries is kept, so a frozen demo dataset or an import keeps its own
         if (null === $entity->getCreation()) {
-            $entity->setCreation(new \DateTime());
+            $entity->setCreation(new \DateTimeImmutable());
         }
         if (null === $entity->getModification()) {
-            $entity->setModification(new \DateTime());
+            $entity->setModification(new \DateTimeImmutable());
         }
         $this->stampUser($entity, false);
     }
@@ -53,7 +53,7 @@ class LotteryListener
     // Doctrine only calls it on a real change set, and recomputes it afterwards
     public function preUpdate(Lottery $entity, PreUpdateEventArgs $event): void
     {
-        $entity->setModification(new \DateTime());
+        $entity->setModification(new \DateTimeImmutable());
         $this->stampUser($entity, true);
     }
 }

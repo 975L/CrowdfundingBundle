@@ -49,10 +49,10 @@ class CrowdfundingCounterpartListener
         $entity->setSlug($this->slugger->slug((string) $entity->getTitle())->lower());
         // A date the row already carries is kept, so a frozen demo dataset or an import keeps its own
         if (null === $entity->getCreation()) {
-            $entity->setCreation(new \DateTime());
+            $entity->setCreation(new \DateTimeImmutable());
         }
         if (null === $entity->getModification()) {
-            $entity->setModification(new \DateTime());
+            $entity->setModification(new \DateTimeImmutable());
         }
         $this->stampUser($entity, false);
     }
@@ -65,7 +65,7 @@ class CrowdfundingCounterpartListener
         }
 
         $entity->setSlug($this->slugger->slug((string) $entity->getTitle())->lower());
-        $entity->setModification(new \DateTime());
+        $entity->setModification(new \DateTimeImmutable());
         $this->stampUser($entity, true);
     }
 }

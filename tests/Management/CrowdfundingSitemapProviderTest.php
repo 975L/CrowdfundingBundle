@@ -28,8 +28,8 @@ class CrowdfundingSitemapProviderTest extends TestCase
     {
         $crowdfunding = new Crowdfunding();
         new \ReflectionProperty(Crowdfunding::class, 'slug')->setValue($crowdfunding, $slug);
-        new \ReflectionProperty(Crowdfunding::class, 'modification')->setValue($crowdfunding, null === $modification ? null : new \DateTime($modification));
-        $crowdfunding->setEndDate(null === $endDate ? null : new \DateTime($endDate));
+        new \ReflectionProperty(Crowdfunding::class, 'modification')->setValue($crowdfunding, null === $modification ? null : new \DateTimeImmutable($modification));
+        $crowdfunding->setEndDate(null === $endDate ? null : new \DateTimeImmutable($endDate));
 
         return $crowdfunding;
     }
@@ -131,7 +131,7 @@ class CrowdfundingSitemapProviderTest extends TestCase
     public function testGetUrlsFallsBackToTheCreationDate(): void
     {
         $crowdfunding = $this->createCrowdfunding('un-projet', modification: null);
-        $crowdfunding->setCreation(new \DateTime('2026-02-01'));
+        $crowdfunding->setCreation(new \DateTimeImmutable('2026-02-01'));
 
         $this->assertSame('2026-02-01', $this->createProvider('https://example.com', [$crowdfunding])->getUrls()[1]['lastmod']);
     }

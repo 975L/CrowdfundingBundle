@@ -35,7 +35,7 @@ class CrowdfundingCounterpartRepositoryTest extends TestCase
         $this->assertStringContainsString('cf.hidden = false', $repository->dql);
         $this->assertStringContainsString('cf.isDeleted = false', $repository->dql);
         $this->assertStringContainsString('cf.endDate IS NULL OR cf.endDate >= :today', $repository->dql);
-        $this->assertEquals(new \DateTime('today'), $repository->parameter('today'));
+        $this->assertEquals(new \DateTimeImmutable('today'), $repository->parameter('today'));
     }
 
     // One row is enough to answer

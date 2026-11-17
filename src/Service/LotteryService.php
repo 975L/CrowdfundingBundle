@@ -40,7 +40,7 @@ class LotteryService implements LotteryServiceInterface
                 $ticket->setContributor($contributor);
                 $ticket->setCounterpart($counterpart);
                 $ticket->setNumber($this->generateTicketNumber());
-                $ticket->setCreation(new \DateTime());
+                $ticket->setCreation(new \DateTimeImmutable());
 
                 $this->entityManager->persist($ticket);
             }
@@ -52,7 +52,7 @@ class LotteryService implements LotteryServiceInterface
     // A lottery switched off, past its draw date or with a prize already drawn takes no more tickets
     private function isOpen(Lottery $lottery): bool
     {
-        if (!$lottery->isActive() || (null !== $lottery->getDrawDate() && $lottery->getDrawDate() <= new \DateTime())) {
+        if (!$lottery->isActive() || (null !== $lottery->getDrawDate() && $lottery->getDrawDate() <= new \DateTimeImmutable())) {
             return false;
         }
 
@@ -137,7 +137,7 @@ class LotteryService implements LotteryServiceInterface
 
         // Defines the winning ticket for the prize
         $prize->setWinningTicket($winningTicket);
-        $prize->setDrawDate(new \DateTime());
+        $prize->setDrawDate(new \DateTimeImmutable());
         $this->entityManager->flush();
 
         // Sends email to the winner

@@ -19,8 +19,8 @@ class CrowdfundingFundingExtensionTest extends TestCase
     private function createCampaign(string $begin, string $end, int $achieved = 0, int $goal = 100000): Crowdfunding
     {
         return new Crowdfunding()
-            ->setBeginDate(new \DateTime($begin))
-            ->setEndDate(new \DateTime($end))
+            ->setBeginDate(new \DateTimeImmutable($begin))
+            ->setEndDate(new \DateTimeImmutable($end))
             ->setAmountAchieved($achieved)
             ->setAmountGoal($goal)
         ;

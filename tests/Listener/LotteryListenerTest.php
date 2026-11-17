@@ -64,17 +64,17 @@ class LotteryListenerTest extends TestCase
 
         $this->createListener()->prePersist($lottery, $this->createPrePersistArgs($lottery));
 
-        $this->assertInstanceOf(\DateTime::class, $lottery->getCreation());
+        $this->assertInstanceOf(\DateTimeImmutable::class, $lottery->getCreation());
     }
 
-    // A DATETIME_MUTABLE column: an immutable stamp is refused by Doctrine at flush
+    // An immutable date: a mutable stamp is refused by Doctrine at flush
     public function testPreUpdateStampsTheModificationWithAMutableDate(): void
     {
         $lottery = new Lottery();
 
         $this->createListener()->preUpdate($lottery, $this->updateArgs($lottery, ['title' => ['a', 'b']]));
 
-        $this->assertInstanceOf(\DateTime::class, $lottery->getModification());
+        $this->assertInstanceOf(\DateTimeImmutable::class, $lottery->getModification());
     }
 
     public function testPreUpdateRecordsWhoEditedTheLottery(): void

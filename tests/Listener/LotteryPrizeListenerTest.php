@@ -22,14 +22,14 @@ use Symfony\Bundle\SecurityBundle\Security;
 
 class LotteryPrizeListenerTest extends TestCase
 {
-    // A DATETIME_MUTABLE column: an immutable stamp is refused by Doctrine at flush, and a prize is saved with the lottery it hangs from
+    // An immutable date: a mutable stamp is refused by Doctrine at flush, and a prize is saved with the lottery it hangs from
     public function testPreUpdateStampsTheModificationWithAMutableDate(): void
     {
         $prize = new LotteryPrize();
 
         $this->createListener()->preUpdate($prize, $this->updateArgs($prize, ['title' => ['a', 'b']]));
 
-        $this->assertInstanceOf(\DateTime::class, $prize->getModification());
+        $this->assertInstanceOf(\DateTimeImmutable::class, $prize->getModification());
     }
 
     public function testPrePersistStampsTheCreationWithAMutableDate(): void
@@ -38,7 +38,7 @@ class LotteryPrizeListenerTest extends TestCase
 
         $this->createListener()->prePersist($prize, new PrePersistEventArgs($prize, $this->createStub(ObjectManager::class)));
 
-        $this->assertInstanceOf(\DateTime::class, $prize->getCreation());
+        $this->assertInstanceOf(\DateTimeImmutable::class, $prize->getCreation());
     }
 
     public function testPreUpdateRecordsWhoEditedThePrize(): void

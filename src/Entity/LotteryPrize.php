@@ -47,14 +47,14 @@ class LotteryPrize
     #[ORM\JoinColumn(nullable: true)]
     private ?LotteryTicket $winningTicket = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $drawDate = null;
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
+    private ?\DateTimeImmutable $drawDate = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $creation = null;
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
+    private ?\DateTimeImmutable $creation = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $modification = null;
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
+    private ?\DateTimeImmutable $modification = null;
 
     // What this row says in the language being rendered, laid over the texts below and stored nowhere on the row: unmapped on purpose, Doctrine computing its changeset from the mapped properties and never from these getters, so a screen rendered in English cannot write English over the text the row was written in (see CrowdfundingTranslator, the only thing that sets it)
     /** @var array<string, string|null>|null */
@@ -126,38 +126,38 @@ class LotteryPrize
         return $this;
     }
 
-    public function getDrawDate(): ?\DateTimeInterface
+    public function getDrawDate(): ?\DateTimeImmutable
     {
         return $this->drawDate;
     }
 
     public function setDrawDate(?\DateTimeInterface $drawDate): self
     {
-        $this->drawDate = $drawDate;
+        $this->drawDate = null === $drawDate ? null : \DateTimeImmutable::createFromInterface($drawDate);
 
         return $this;
     }
 
-    public function getCreation(): ?\DateTimeInterface
+    public function getCreation(): ?\DateTimeImmutable
     {
         return $this->creation;
     }
 
     public function setCreation(?\DateTimeInterface $creation): self
     {
-        $this->creation = $creation;
+        $this->creation = null === $creation ? null : \DateTimeImmutable::createFromInterface($creation);
 
         return $this;
     }
 
-    public function getModification(): ?\DateTimeInterface
+    public function getModification(): ?\DateTimeImmutable
     {
         return $this->modification;
     }
 
     public function setModification(?\DateTimeInterface $modification): self
     {
-        $this->modification = $modification;
+        $this->modification = null === $modification ? null : \DateTimeImmutable::createFromInterface($modification);
 
         return $this;
     }

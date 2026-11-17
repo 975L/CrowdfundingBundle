@@ -89,7 +89,7 @@ class CrowdfundingSocialContentSource implements BrowsableSocialContentSourceInt
             return false;
         }
 
-        $today = new \DateTime()->format('Ymd');
+        $today = new \DateTimeImmutable()->format('Ymd');
 
         return $beginDate->format('Ymd') <= $today && $endDate->format('Ymd') >= $today;
     }

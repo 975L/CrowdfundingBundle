@@ -73,12 +73,12 @@ class CrowdfundingBasketItemProvider implements RefundableBasketItemProviderInte
             return $this->translator->trans('label.unavailable', [], 'crowdfunding');
         }
 
-        $beginDatetime = new \DateTime($item->getCrowdfunding()->getBeginDate()->format('Y-m-d 00:00:00'));
-        $endDatetime = new \DateTime($item->getCrowdfunding()->getEndDate()->format('Y-m-d 23:59:59'));
-        if ($beginDatetime > new \DateTime()) {
+        $beginDatetime = new \DateTimeImmutable($item->getCrowdfunding()->getBeginDate()->format('Y-m-d 00:00:00'));
+        $endDatetime = new \DateTimeImmutable($item->getCrowdfunding()->getEndDate()->format('Y-m-d 23:59:59'));
+        if ($beginDatetime > new \DateTimeImmutable()) {
             return $this->translator->trans('label.crowdfunding_not_started', [], 'crowdfunding');
         }
-        if (new \DateTime() > $endDatetime) {
+        if (new \DateTimeImmutable() > $endDatetime) {
             return $this->translator->trans('label.crowdfunding_ended', [], 'crowdfunding');
         }
 
@@ -184,7 +184,7 @@ class CrowdfundingBasketItemProvider implements RefundableBasketItemProviderInte
         foreach ($this->groupByCampaign($basket, $itemsOfThisKind) as $group) {
             if ($group['amount'] > 0) {
                 $this->crowdfundingRepository->addAchieved($group['crowdfunding'], $group['amount']);
-                $group['crowdfunding']->setModification(new \DateTime());
+                $group['crowdfunding']->setModification(new \DateTimeImmutable());
             }
 
             // What onBasketValidated() handed over, kept on the basket by PaymentBundle - an order placed before it existed, or one given for nothing, writes no public contributor
@@ -214,11 +214,11 @@ class CrowdfundingBasketItemProvider implements RefundableBasketItemProviderInte
         foreach ($this->groupByCampaign($basket, $itemsOfThisKind, false) as $group) {
             if ($group['amount'] > 0) {
                 $this->crowdfundingRepository->releaseAchieved($group['crowdfunding'], $group['amount']);
-                $group['crowdfunding']->setModification(new \DateTime());
+                $group['crowdfunding']->setModification(new \DateTimeImmutable());
             }
             foreach ($group['lines'] as [$counterpart, $quantity]) {
                 $this->crowdfundingCounterpartRepository->releaseOrdered($counterpart, $quantity);
-                $counterpart->setModification(new \DateTime());
+                $counterpart->setModification(new \DateTimeImmutable());
             }
         }
 
@@ -268,8 +268,8 @@ class CrowdfundingBasketItemProvider implements RefundableBasketItemProviderInte
         $contributor->setEmail((string) ($checkoutData['email'] ?? $basket->getEmail()));
         // The language the order was placed in, which is the only thing that will still say it when the lottery is drawn months later
         $contributor->setLocale($basket->getLocale());
-        $contributor->setCreation(new \DateTime());
-        $contributor->setModification(new \DateTime());
+        $contributor->setCreation(new \DateTimeImmutable());
+        $contributor->setModification(new \DateTimeImmutable());
         $contributor->setBasket($basket);
         $group['crowdfunding']->addContributor($contributor);
         $this->entityManager->persist($contributor);
@@ -330,7 +330,7 @@ class CrowdfundingBasketItemProvider implements RefundableBasketItemProviderInte
             return;
         }
 
-        $counterpart->setModification(new \DateTime());
+        $counterpart->setModification(new \DateTimeImmutable());
 
         if ($this->crowdfundingCounterpartRepository->claimOrdered($counterpart, $quantity)) {
             return;

@@ -24,19 +24,19 @@ class CrowdfundingNewsListener
     // "preUpdate" and not "preFlush": Doctrine calls an entity's preFlush listener for the whole identity map, so every news the campaign page had merely read was stamped again on any later flush of the same request. UnitOfWork recomputes the change set itself right after calling this, so nothing has to be recomputed here
     public function preUpdate(CrowdfundingNews $entity, PreUpdateEventArgs $event): void
     {
-        $entity->setModification(new \DateTime());
+        $entity->setModification(new \DateTimeImmutable());
     }
 
     // The publication date is only defaulted, never imposed: a news reaching here with one already set - a fixture, an import, a later screen offering the field - keeps it
     public function prePersist(CrowdfundingNews $entity, PrePersistEventArgs $event): void
     {
-        $entity->setCreation(new \DateTime());
+        $entity->setCreation(new \DateTimeImmutable());
 
         // The column is not nullable and "preUpdate" never runs on an insert: without this, a news written in the back office would reach the table with no modification date at all
-        $entity->setModification(new \DateTime());
+        $entity->setModification(new \DateTimeImmutable());
 
         if (null === $entity->getPublishedDate()) {
-            $entity->setPublishedDate(new \DateTime());
+            $entity->setPublishedDate(new \DateTimeImmutable());
         }
     }
 }

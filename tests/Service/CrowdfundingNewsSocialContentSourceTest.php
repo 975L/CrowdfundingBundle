@@ -35,7 +35,7 @@ class CrowdfundingNewsSocialContentSourceTest extends TestCase
 
     private function addNews(int $id, string $published): CrowdfundingNews
     {
-        $news = new CrowdfundingNews()->setTitle('Nouvelle ' . $id)->setContent('<p>Les planches sont finies</p>')->setPublishedDate(new \DateTime($published)->setTime(0, 0))->setCrowdfunding($this->crowdfunding);
+        $news = new CrowdfundingNews()->setTitle('Nouvelle ' . $id)->setContent('<p>Les planches sont finies</p>')->setPublishedDate(new \DateTimeImmutable($published)->setTime(0, 0))->setCrowdfunding($this->crowdfunding);
         new \ReflectionProperty(CrowdfundingNews::class, 'id')->setValue($news, $id);
         $this->crowdfunding->getNews()->add($news);
 
@@ -119,7 +119,7 @@ class CrowdfundingNewsSocialContentSourceTest extends TestCase
 
         $this->assertSame(['2', '1'], array_map(static fn (SocialContent $content): string => $content->sourceId, $contents));
         $this->assertSame(['7'], $this->excludedIds);
-        $this->assertSame(new \DateTime('-30 days')->format('Y-m-d 00:00:00'), $this->since?->format('Y-m-d H:i:s'));
+        $this->assertSame(new \DateTimeImmutable('-30 days')->format('Y-m-d 00:00:00'), $this->since?->format('Y-m-d H:i:s'));
         $this->assertSame([], $this->createSource(campaignRunning: false)->findContents([], [], 48));
     }
 

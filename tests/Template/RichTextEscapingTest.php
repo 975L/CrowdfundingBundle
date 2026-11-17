@@ -72,7 +72,7 @@ class RichTextEscapingTest extends TestCase
     public function testAContributorsMessageIsEscapedAndKeepsItsLineBreaks(): void
     {
         $html = $this->render('components/Crowdfunding/Contributor.html.twig', [
-            'contributor' => ['message' => self::ATTACK . "\nsecond line", 'name' => self::ATTACK, 'creation' => new \DateTime()],
+            'contributor' => ['message' => self::ATTACK . "\nsecond line", 'name' => self::ATTACK, 'creation' => new \DateTimeImmutable()],
         ]);
 
         $this->assertStringNotContainsString('<img', $html);

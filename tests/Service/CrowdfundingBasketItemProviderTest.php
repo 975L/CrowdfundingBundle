@@ -624,8 +624,8 @@ class CrowdfundingBasketItemProviderTest extends TestCase
     {
         $crowdfunding = new Crowdfunding();
         $crowdfunding->setHidden(false);
-        $crowdfunding->setBeginDate(new \DateTime($beginDate));
-        $crowdfunding->setEndDate(new \DateTime($endDate));
+        $crowdfunding->setBeginDate(new \DateTimeImmutable($beginDate));
+        $crowdfunding->setEndDate(new \DateTimeImmutable($endDate));
         $crowdfunding->setAmountAchieved(0);
 
         $counterpart = new CrowdfundingCounterpart();

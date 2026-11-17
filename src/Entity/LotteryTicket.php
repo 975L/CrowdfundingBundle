@@ -42,8 +42,8 @@ class LotteryTicket implements \Stringable
     #[ORM\JoinColumn(nullable: false)]
     private ?CrowdfundingCounterpart $counterpart = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $creation = null;
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
+    private ?\DateTimeImmutable $creation = null;
 
     public function __toString(): string
     {
@@ -103,14 +103,14 @@ class LotteryTicket implements \Stringable
         return $this;
     }
 
-    public function getCreation(): ?\DateTimeInterface
+    public function getCreation(): ?\DateTimeImmutable
     {
         return $this->creation;
     }
 
     public function setCreation(\DateTimeInterface $creation): self
     {
-        $this->creation = $creation;
+        $this->creation = \DateTimeImmutable::createFromInterface($creation);
 
         return $this;
     }

@@ -63,7 +63,7 @@ class CrowdfundingSitemapProvider implements SitemapProviderInterface
             }
 
             // A campaign still collecting changes often (news, counters); a finished one is an archive page that no longer moves
-            $isRunning = null === $crowdfunding->getEndDate() || $crowdfunding->getEndDate() >= new \DateTime('today');
+            $isRunning = null === $crowdfunding->getEndDate() || $crowdfunding->getEndDate() >= new \DateTimeImmutable('today');
 
             // The group names only the languages the campaign's own title is written in, the url answering in every one of them regardless (see CrowdfundingTranslator::translatedLocales): naming the others would hand a search engine the writing language's words under another language's address
             $urls = [...$urls, ...$this->localized([

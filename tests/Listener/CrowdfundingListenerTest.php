@@ -54,22 +54,22 @@ class CrowdfundingListenerTest extends TestCase
         $this->assertSame(3, $crowdfunding->getPosition());
     }
 
-    // DATETIME_MUTABLE columns, both set on an insert since preUpdate never runs on one
+    // Immutable dates, both set on an insert since preUpdate never runs on one
     public function testPrePersistStampsBothDatesWithMutableDates(): void
     {
         $crowdfunding = new Crowdfunding();
 
         $this->createListener()->prePersist($crowdfunding, $this->persistArgs($crowdfunding));
 
-        $this->assertInstanceOf(\DateTime::class, $crowdfunding->getCreation());
-        $this->assertInstanceOf(\DateTime::class, $crowdfunding->getModification());
+        $this->assertInstanceOf(\DateTimeImmutable::class, $crowdfunding->getCreation());
+        $this->assertInstanceOf(\DateTimeImmutable::class, $crowdfunding->getModification());
     }
 
     // A campaign built with its own dates (the demo dataset) keeps them
     public function testPrePersistKeepsTheDatesItCarries(): void
     {
         $crowdfunding = new Crowdfunding();
-        $crowdfunding->setCreation(new \DateTime('2026-02-01'));
+        $crowdfunding->setCreation(new \DateTimeImmutable('2026-02-01'));
 
         $this->createListener()->prePersist($crowdfunding, $this->persistArgs($crowdfunding));
 
@@ -113,9 +113,9 @@ class CrowdfundingListenerTest extends TestCase
     {
         $author = $this->createStub(UserInterface::class);
         $crowdfunding = new Crowdfunding()->setUser($author)->setPosition(5);
-        $crowdfunding->setModification(new \DateTime('2026-01-12'));
+        $crowdfunding->setModification(new \DateTimeImmutable('2026-01-12'));
 
-        $this->createListener(user: $this->createStub(UserInterface::class))->preUpdate($crowdfunding, $this->updateArgs($crowdfunding, ['modification' => [null, new \DateTime()]]));
+        $this->createListener(user: $this->createStub(UserInterface::class))->preUpdate($crowdfunding, $this->updateArgs($crowdfunding, ['modification' => [null, new \DateTimeImmutable()]]));
 
         $this->assertSame($author, $crowdfunding->getUser());
         $this->assertSame('2026-01-12', $crowdfunding->getModification()->format('Y-m-d'));

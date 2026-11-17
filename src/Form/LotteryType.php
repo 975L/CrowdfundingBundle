@@ -55,6 +55,7 @@ class LotteryType extends AbstractType
                 'label' => 'label.draw_date',
                 'required' => false,
                 'widget' => 'single_text',
+                'input' => 'datetime_immutable',
             ])
             ->add('videos', CollectionType::class, [
                 'entry_type' => LotteryVideoType::class,

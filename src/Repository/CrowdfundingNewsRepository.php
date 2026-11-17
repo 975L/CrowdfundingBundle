@@ -36,7 +36,7 @@ class CrowdfundingNewsRepository extends ServiceEntityRepository
         $qb = CrowdfundingRepository::addRunningCriteria($this->createQueryBuilder('n')->innerJoin('n.crowdfunding', 'c')->addSelect('c'), 'c')
             ->andWhere('n.publishedDate >= :since')
             ->andWhere('n.publishedDate <= :today')
-            ->setParameter('since', $since, Types::DATE_MUTABLE)
+            ->setParameter('since', \DateTimeImmutable::createFromInterface($since), Types::DATE_IMMUTABLE)
             ->orderBy('n.publishedDate', \SortDirection::Descending)
             ->addOrderBy('n.id', \SortDirection::Descending)
             ->setMaxResults($limit)

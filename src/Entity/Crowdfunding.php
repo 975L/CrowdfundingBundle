@@ -83,11 +83,11 @@ class Crowdfunding implements HasBlocksInterface, TrashableInterface, \Stringabl
     #[ORM\Column(type: Types::TEXT)]
     private ?string $useFor = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $beginDate = null;
+    #[ORM\Column(type: Types::DATE_IMMUTABLE, nullable: true)]
+    private ?\DateTimeImmutable $beginDate = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $endDate = null;
+    #[ORM\Column(type: Types::DATE_IMMUTABLE, nullable: true)]
+    private ?\DateTimeImmutable $endDate = null;
 
     #[ORM\Column(nullable: true)]
     private ?int $position = null;
@@ -128,11 +128,11 @@ class Crowdfunding implements HasBlocksInterface, TrashableInterface, \Stringabl
     #[ORM\Column(options: ['default' => false])]
     private bool $hidden = true;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $creation = null;
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
+    private ?\DateTimeImmutable $creation = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $modification = null;
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
+    private ?\DateTimeImmutable $modification = null;
 
     public function __construct()
     {
@@ -316,26 +316,26 @@ class Crowdfunding implements HasBlocksInterface, TrashableInterface, \Stringabl
         return $this;
     }
 
-    public function getBeginDate(): ?\DateTimeInterface
+    public function getBeginDate(): ?\DateTimeImmutable
     {
         return $this->beginDate;
     }
 
     public function setBeginDate(?\DateTimeInterface $beginDate): static
     {
-        $this->beginDate = $beginDate;
+        $this->beginDate = null === $beginDate ? null : \DateTimeImmutable::createFromInterface($beginDate);
 
         return $this;
     }
 
-    public function getEndDate(): ?\DateTimeInterface
+    public function getEndDate(): ?\DateTimeImmutable
     {
         return $this->endDate;
     }
 
     public function setEndDate(?\DateTimeInterface $endDate): static
     {
-        $this->endDate = $endDate;
+        $this->endDate = null === $endDate ? null : \DateTimeImmutable::createFromInterface($endDate);
 
         return $this;
     }
@@ -578,26 +578,26 @@ class Crowdfunding implements HasBlocksInterface, TrashableInterface, \Stringabl
         return $this;
     }
 
-    public function getCreation(): ?\DateTimeInterface
+    public function getCreation(): ?\DateTimeImmutable
     {
         return $this->creation;
     }
 
     public function setCreation(\DateTimeInterface $creation): static
     {
-        $this->creation = $creation;
+        $this->creation = \DateTimeImmutable::createFromInterface($creation);
 
         return $this;
     }
 
-    public function getModification(): ?\DateTimeInterface
+    public function getModification(): ?\DateTimeImmutable
     {
         return $this->modification;
     }
 
     public function setModification(\DateTimeInterface $modification): static
     {
-        $this->modification = $modification;
+        $this->modification = \DateTimeImmutable::createFromInterface($modification);
 
         return $this;
     }

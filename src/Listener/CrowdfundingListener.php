@@ -41,10 +41,10 @@ class CrowdfundingListener
         $this->placeLast($entity);
         // A date the row already carries is kept, so a frozen demo dataset or an import keeps its own
         if (null === $entity->getCreation()) {
-            $entity->setCreation(new \DateTime());
+            $entity->setCreation(new \DateTimeImmutable());
         }
         if (null === $entity->getModification()) {
-            $entity->setModification(new \DateTime());
+            $entity->setModification(new \DateTimeImmutable());
         }
         $this->stampUser($entity, false);
     }
@@ -57,7 +57,7 @@ class CrowdfundingListener
         }
 
         $this->placeLast($entity);
-        $entity->setModification(new \DateTime());
+        $entity->setModification(new \DateTimeImmutable());
         $this->stampUser($entity, true);
     }
 

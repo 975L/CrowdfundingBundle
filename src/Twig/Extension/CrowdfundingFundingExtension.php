@@ -37,8 +37,8 @@ class CrowdfundingFundingExtension
 
         // The two states read the way the page has always read them: the beginning of the first day, the end of the last
         $now = new \DateTimeImmutable();
-        $begin = \DateTimeImmutable::createFromInterface($beginDate)->setTime(0, 0);
-        $end = \DateTimeImmutable::createFromInterface($endDate)->setTime(23, 59, 59);
+        $begin = $beginDate->setTime(0, 0);
+        $end = $endDate->setTime(23, 59, 59);
 
         return [
             'isStarted' => $now > $begin,

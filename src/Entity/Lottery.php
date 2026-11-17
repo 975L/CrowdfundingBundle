@@ -37,8 +37,8 @@ class Lottery
     #[Assert\Length(max: 13)]
     private ?string $identifier = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $drawDate = null;
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
+    private ?\DateTimeImmutable $drawDate = null;
 
     #[ORM\Column(type: 'boolean')]
     private bool $isActive = true;
@@ -56,11 +56,11 @@ class Lottery
     #[ORM\OrderBy(['id' => \SortDirection::Ascending])]
     private Collection $videos;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $creation = null;
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
+    private ?\DateTimeImmutable $creation = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $modification = null;
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
+    private ?\DateTimeImmutable $modification = null;
 
     public function __construct()
     {
@@ -98,14 +98,14 @@ class Lottery
         return $this;
     }
 
-    public function getDrawDate(): ?\DateTimeInterface
+    public function getDrawDate(): ?\DateTimeImmutable
     {
         return $this->drawDate;
     }
 
     public function setDrawDate(?\DateTimeInterface $drawDate): self
     {
-        $this->drawDate = $drawDate;
+        $this->drawDate = null === $drawDate ? null : \DateTimeImmutable::createFromInterface($drawDate);
 
         return $this;
     }
@@ -200,26 +200,26 @@ class Lottery
         return $this;
     }
 
-    public function getCreation(): ?\DateTimeInterface
+    public function getCreation(): ?\DateTimeImmutable
     {
         return $this->creation;
     }
 
     public function setCreation(?\DateTimeInterface $creation): self
     {
-        $this->creation = $creation;
+        $this->creation = null === $creation ? null : \DateTimeImmutable::createFromInterface($creation);
 
         return $this;
     }
 
-    public function getModification(): ?\DateTimeInterface
+    public function getModification(): ?\DateTimeImmutable
     {
         return $this->modification;
     }
 
     public function setModification(?\DateTimeInterface $modification): self
     {
-        $this->modification = $modification;
+        $this->modification = null === $modification ? null : \DateTimeImmutable::createFromInterface($modification);
 
         return $this;
     }

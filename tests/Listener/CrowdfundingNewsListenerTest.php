@@ -20,15 +20,15 @@ use PHPUnit\Framework\TestCase;
 // The dates of a news, wherever it is written - the campaign page or the campaign's edit form
 class CrowdfundingNewsListenerTest extends TestCase
 {
-    // Three DATETIME_MUTABLE columns: an immutable stamp on any of them is refused by Doctrine at the very flush that follows
+    // Three immutable dates: a mutable stamp on any of them is refused by Doctrine at the very flush that follows
     public function testPrePersistStampsTheDatesWithMutableOnes(): void
     {
         $news = new CrowdfundingNews();
 
         new CrowdfundingNewsListener()->prePersist($news, $this->createPrePersistArgs());
 
-        $this->assertInstanceOf(\DateTime::class, $news->getCreation());
-        $this->assertInstanceOf(\DateTime::class, $news->getPublishedDate());
+        $this->assertInstanceOf(\DateTimeImmutable::class, $news->getCreation());
+        $this->assertInstanceOf(\DateTimeImmutable::class, $news->getPublishedDate());
     }
 
     // Published straight away: the campaign page's form has no draft state, and a news nobody reads has no reason to be written
@@ -44,13 +44,13 @@ class CrowdfundingNewsListenerTest extends TestCase
     // A news reaching here with a date already set - a fixture, an import - keeps it: the default fills a gap, it does not impose
     public function testPrePersistKeepsADateAlreadySet(): void
     {
-        $typed = new \DateTime('2026-01-15');
+        $typed = new \DateTimeImmutable('2026-01-15');
         $news = new CrowdfundingNews();
         $news->setPublishedDate($typed);
 
         new CrowdfundingNewsListener()->prePersist($news, $this->createPrePersistArgs());
 
-        $this->assertSame($typed, $news->getPublishedDate());
+        $this->assertEquals($typed, $news->getPublishedDate());
     }
 
     // "preUpdate" and not "preFlush": Doctrine hands the latter every news of the identity map, so one merely read by the campaign page was stamped again on any later flush
@@ -60,7 +60,7 @@ class CrowdfundingNewsListenerTest extends TestCase
 
         new CrowdfundingNewsListener()->preUpdate($news, $this->createPreUpdateArgs($news));
 
-        $this->assertInstanceOf(\DateTime::class, $news->getModification());
+        $this->assertInstanceOf(\DateTimeImmutable::class, $news->getModification());
     }
 
     // The column is not nullable and "preUpdate" never runs on an insert, so the stamp has to be written here too
@@ -70,7 +70,7 @@ class CrowdfundingNewsListenerTest extends TestCase
 
         new CrowdfundingNewsListener()->prePersist($news, $this->createPrePersistArgs());
 
-        $this->assertInstanceOf(\DateTime::class, $news->getModification());
+        $this->assertInstanceOf(\DateTimeImmutable::class, $news->getModification());
     }
 
     private function createPrePersistArgs(): PrePersistEventArgs

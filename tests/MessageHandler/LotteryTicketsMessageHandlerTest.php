@@ -28,7 +28,7 @@ class LotteryTicketsMessageHandlerTest extends TestCase
     public function testItSendsEveryTicketOfTheContributorInOneEmail(): void
     {
         $contributor = new CrowdfundingContributor()->setEmail('camille@example.com')->setLocale('fr');
-        $drawDate = new \DateTime('2026-12-24 18:00:00');
+        $drawDate = new \DateTimeImmutable('2026-12-24 18:00:00');
 
         $tickets = [
             $this->createTicket('AB-1234-CDE', 'BCD-1A2B-3C4D', $drawDate, 'Sauver les chats', 'sauver-les-chats'),
@@ -53,7 +53,7 @@ class LotteryTicketsMessageHandlerTest extends TestCase
         $this->createHandler($tickets, $contributor, $sender)(new LotteryTicketsMessage(1));
 
         $this->assertCount(2, $sent);
-        $this->assertSame([
+        $this->assertEquals([
             'lotteryIdentifier' => 'BCD-1A2B-3C4D',
             'number' => 'AB-1234-CDE',
             'drawDate' => $drawDate,

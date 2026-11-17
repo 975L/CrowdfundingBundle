@@ -23,7 +23,7 @@ class CrowdfundingNewsRepositoryTest extends TestCase
     public function testFindFreshLatestKeepsTheFreshNewsOfTheRunningCampaigns(): void
     {
         $repository = $this->createRepository();
-        $since = new \DateTime('-30 days');
+        $since = new \DateTimeImmutable('-30 days');
 
         $repository->findFreshLatest(['7'], $since, 48);
 
@@ -31,9 +31,21 @@ class CrowdfundingNewsRepositoryTest extends TestCase
             $this->assertStringContainsString($part, $repository->dql);
         }
 
-        $this->assertSame($since, $repository->parameter('since'));
+        $this->assertEquals($since, $repository->parameter('since'));
         $this->assertSame([7], $repository->parameter('excluded'));
         $this->assertSame(48, $repository->maxResults());
+    }
+
+    // A mutable day handed over is bound immutable, the type the date column's parameter converts
+    public function testFindFreshLatestBindsAMutableDayAsImmutable(): void
+    {
+        $repository = $this->createRepository();
+
+        $repository->findFreshLatest([], new \DateTime('2026-01-15'), 48);
+
+        $since = $repository->parameter('since');
+        $this->assertInstanceOf(\DateTimeImmutable::class, $since);
+        $this->assertSame('2026-01-15', $since->format('Y-m-d'));
     }
 
     // Nothing posted yet: no exclusion at all rather than an empty IN, which some databases refuse
@@ -41,7 +53,7 @@ class CrowdfundingNewsRepositoryTest extends TestCase
     {
         $repository = $this->createRepository();
 
-        $repository->findFreshLatest([], new \DateTime('-30 days'), 48);
+        $repository->findFreshLatest([], new \DateTimeImmutable('-30 days'), 48);
 
         $this->assertStringNotContainsString('NOT IN', $repository->dql);
     }

@@ -44,7 +44,7 @@ class CrowdfundingCounterpartListenerTest extends TestCase
         $this->createListener($user)->preUpdate($counterpart, $this->updateArgs($counterpart, ['title' => ['Item 1', 'Item 2']]));
 
         $this->assertSame('item-2', $counterpart->getSlug());
-        $this->assertInstanceOf(\DateTime::class, $counterpart->getModification());
+        $this->assertInstanceOf(\DateTimeImmutable::class, $counterpart->getModification());
         $this->assertSame($user, $counterpart->getUser());
     }
 
@@ -53,7 +53,7 @@ class CrowdfundingCounterpartListenerTest extends TestCase
     {
         $author = $this->createStub(UserInterface::class);
         $counterpart = new CrowdfundingCounterpart()->setTitle('Item 1')->setSlug('item-1')->setUser($author);
-        $counterpart->setModification(new \DateTime('2026-01-12'));
+        $counterpart->setModification(new \DateTimeImmutable('2026-01-12'));
 
         $this->createListener($this->createStub(UserInterface::class))->preUpdate($counterpart, $this->updateArgs($counterpart, ['orderedQuantity' => [1, 2], 'modification' => [null, null]]));
 
@@ -103,15 +103,15 @@ class CrowdfundingCounterpartListenerTest extends TestCase
         $this->assertSame($media, $counterpart->getMedia());
     }
 
-    // DATETIME_MUTABLE columns, both set on an insert since preUpdate never runs on one
+    // Immutable dates, both set on an insert since preUpdate never runs on one
     public function testPrePersistStampsBothDatesWithMutableDates(): void
     {
         $counterpart = new CrowdfundingCounterpart();
 
         $this->createListener()->prePersist($counterpart, $this->persistArgs($counterpart));
 
-        $this->assertInstanceOf(\DateTime::class, $counterpart->getCreation());
-        $this->assertInstanceOf(\DateTime::class, $counterpart->getModification());
+        $this->assertInstanceOf(\DateTimeImmutable::class, $counterpart->getCreation());
+        $this->assertInstanceOf(\DateTimeImmutable::class, $counterpart->getModification());
     }
 
     private function persistArgs(object $entity): PrePersistEventArgs

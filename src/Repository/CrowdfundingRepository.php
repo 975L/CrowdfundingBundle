@@ -55,7 +55,7 @@ class CrowdfundingRepository extends ServiceEntityRepository
             ->andWhere($alias . '.isDeleted = false')
             ->andWhere($alias . '.beginDate <= :today')
             ->andWhere($alias . '.endDate >= :today')
-            ->setParameter('today', new \DateTime('today'), Types::DATE_MUTABLE)
+            ->setParameter('today', new \DateTimeImmutable('today'), Types::DATE_IMMUTABLE)
         ;
     }
 

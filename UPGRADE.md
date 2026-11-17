@@ -1,5 +1,12 @@
 # Upgrade
 
+## v1.12.0
+
+**Entity dates are immutable** (same SQL columns, no migration): their getters return `\DateTimeImmutable`.
+Code calling `modify()`, `setTime()`, `add()`... on them must use the returned date
+(`$date = $date->modify('+1 day')`), the call no longer changing the entity's own. The setters still accept a
+`\DateTime`; a form field mapped to one of these dates needs `'input' => 'datetime_immutable'`.
+
 ## v1.11.0
 
 **`CrowdfundingVideo::getYoutubeUrl()`/`setYoutubeUrl()` are now `getVideoUrl()`/`setVideoUrl()`**, and the form field `videoUrl`: nothing to migrate, the column is still `youtube_url`. A site overriding `components/Crowdfunding/Video.html.twig` frames `video.videoEmbedUrl`.
