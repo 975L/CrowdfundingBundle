@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.13.1
+
+`php-http/discovery` plugin allowed in `allow-plugins`
+
+- `php-http/discovery` plugin allowed in `allow-plugins`, as in the other bundles, so `composer install` runs it instead of disabling it (21/11/2026)
+
 ## v1.13.0
 
 Campaign tools on the site's MCP endpoint
