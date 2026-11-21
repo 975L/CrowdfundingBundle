@@ -26,7 +26,7 @@ Add CrowdfundingBundle on top of the shared [UiBundle](https://github.com/975L/U
 ## Contents
 
 - **Setup** — [requirements](#requirements) · [installation](#installation) · [assets](#install-assets) · [config values](#load-configuration-values) · [routes](#enable-routes)
-- **Using it** — [sitemap](#sitemap) · [linking a campaign](#linking-a-campaign-from-a-menu) · [composing a campaign page](#composing-a-campaign-page) · [a campaign in every language](#a-campaign-in-every-language) · [posting a campaign](#posting-a-campaign-and-its-news) · [status report](#status-report) · [emails](#emails) · [backup](#backup) · [translations](#translations) · [what it does not contribute](#what-this-bundle-deliberately-does-not-contribute) · [AI agent skills](#ai-agent-skills) · [data compatibility with ShopBundle](#data-compatibility-with-existing-shopbundle-installations)
+- **Using it** — [sitemap](#sitemap) · [linking a campaign](#linking-a-campaign-from-a-menu) · [composing a campaign page](#composing-a-campaign-page) · [a campaign in every language](#a-campaign-in-every-language) · [posting a campaign](#posting-a-campaign-and-its-news) · [status report](#status-report) · [emails](#emails) · [backup](#backup) · [translations](#translations) · [what it does not contribute](#what-this-bundle-deliberately-does-not-contribute) · [MCP tools](#mcp-tools) · [AI agent skills](#ai-agent-skills) · [data compatibility with ShopBundle](#data-compatibility-with-existing-shopbundle-installations)
 
 ## Features
 
@@ -552,6 +552,19 @@ answer — it is only worth writing down:
 | Import / export | a campaign is not a catalogue: it is written once, read for a few weeks and archived |
 
 ---
+
+## MCP tools
+
+The campaigns bring their tools to the site's MCP endpoint, `/api/mcp`, which c975l/core-bundle serves and opens (see its README, "Opening the site to AI agents"): `Mcp\CrowdfundingMcpProvider`, under the `crowdfunding` key of the agent tokens, for an account holding `site-role-editor` as on the back office. Amounts are given in cents.
+
+| Tool | Does |
+| --- | --- |
+| `crowdfunding_list` | The campaigns whose title holds the `search` words, every campaign without them, hidden ones included, in the site's order |
+| `crowdfunding_get` | A `crowdfunding`: its texts, goal and amount achieved, progress and days left, contributors counted, its counterparts and its news |
+| `crowdfunding_edit` | Only the `title`, `description`, `authorPresentation` or `useFor` given of a `crowdfunding` changed |
+| `crowdfunding_news_edit` | Only the `title` or `content` given of a `news` changed, its publication day kept |
+
+Goals, prices, dates, slug, visibility, contributors and the lottery stay a human's, and no news is added: a news has no draft, it shows on the campaign page and may be posted to the networks as soon as it is written.
 
 ## AI agent skills
 

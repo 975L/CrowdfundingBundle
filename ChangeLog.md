@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.13.0
+
+Campaign tools on the site's MCP endpoint
+
+- `CrowdfundingMcpProvider`: an agent lists and reads the campaigns with their progress, and writes their texts and those of their news, with the rights of its token's account (21/11/2026)
+- Requires `c975l/core-bundle` ^1.96, which serves the MCP endpoint (21/11/2026)
+- `php-http/discovery` plugin declared disabled in `allow-plugins`, so `composer qa` no longer stops on its prompt (21/11/2026)
+
 ## v1.12.0
 
 [BC-Break] Crowdfunding, news, counterparts, contributors and lottery dates stored as immutable dates
