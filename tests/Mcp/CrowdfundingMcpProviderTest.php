@@ -30,6 +30,7 @@ class CrowdfundingMcpProviderTest extends TestCase
         $tools = iterator_to_array($this->provider()->getMcpTools(), false);
 
         $this->assertSame('crowdfunding', $this->provider()->getMcpKey());
+        $this->assertStringContainsString('at once', $this->provider()->getMcpInstructions());
         $this->assertSame(['crowdfunding_list', 'crowdfunding_get', 'crowdfunding_edit', 'crowdfunding_news_edit'], array_map(static fn ($tool): string => $tool->name, $tools));
         $this->assertSame([false, false, true, true], array_map(static fn ($tool): bool => $tool->writes, $tools));
     }

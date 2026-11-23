@@ -48,7 +48,7 @@ class CrowdfundingMcpProvider implements McpToolProviderInterface
     // How the campaigns' tools go together
     public function getMcpInstructions(): string
     {
-        return 'Crowdfunding campaigns collect contributions against counterparts. Amounts are in cents. An agent reads the campaigns and writes their texts and those of their news; goals, prices, dates, visibility and the lottery stay a human\'s, on the back office.';
+        return 'Crowdfunding campaigns collect contributions against counterparts. Amounts are in cents. An agent reads the campaigns and writes their texts and those of their news; goals, prices, dates, visibility and the lottery stay a human\'s, on the back office. An edit of a campaign or a news already visible shows on the site at once.';
     }
 
     // The tools of the campaigns, the writing ones flagged
@@ -56,8 +56,8 @@ class CrowdfundingMcpProvider implements McpToolProviderInterface
     {
         yield new McpTool('crowdfunding_list', 'Campaigns', 'The campaigns whose title holds the search words, every campaign without them, hidden ones included, in the order the site lists them.', $this->list(...));
         yield new McpTool('crowdfunding_get', 'Campaign', 'A campaign: its texts, its goal and amount achieved in cents, its progress and days left, its counterparts and its news.', $this->get(...));
-        yield new McpTool('crowdfunding_edit', 'Write a campaign', 'Changes only the title, description, author presentation or use of funds given of a campaign.', $this->edit(...), true);
-        yield new McpTool('crowdfunding_news_edit', 'Write a news', 'Changes only the title or content given of a campaign\'s news.', $this->editNews(...), true);
+        yield new McpTool('crowdfunding_edit', 'Write a campaign', 'Changes only the title, description, author presentation or use of funds given of a campaign, at once on the site when it is visible.', $this->edit(...), true);
+        yield new McpTool('crowdfunding_news_edit', 'Write a news', 'Changes only the title or content given of a campaign\'s news, at once on the site when it is visible.', $this->editNews(...), true);
     }
 
     // The campaigns whose title holds the words, every one without them, the trash left aside

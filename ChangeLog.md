@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.13.2
+
+Agents told their campaign edits are live
+
+- The MCP instructions and the edit tools say an edit of a campaign or news already visible shows on the site at once (23/11/2026)
+
 ## v1.13.1
 
 `php-http/discovery` plugin allowed in `allow-plugins`

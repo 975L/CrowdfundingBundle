@@ -555,7 +555,7 @@ answer — it is only worth writing down:
 
 ## MCP tools
 
-The campaigns bring their tools to the site's MCP endpoint, `/api/mcp`, which c975l/core-bundle serves and opens (see its README, "Opening the site to AI agents"): `Mcp\CrowdfundingMcpProvider`, under the `crowdfunding` key of the agent tokens, for an account holding `site-role-editor` as on the back office. Amounts are given in cents.
+The campaigns bring their tools to the site's MCP endpoint, `/api/mcp`, which c975l/core-bundle serves and opens (see its README, "Opening the site to AI agents"): `Mcp\CrowdfundingMcpProvider`, under the `crowdfunding` key of the agent tokens, for an account holding `site-role-editor` as on the back office. An agent's edit of a campaign or news already visible shows on the site at once, as an editor's would. Amounts are given in cents.
 
 | Tool | Does |
 | --- | --- |
