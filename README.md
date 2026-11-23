@@ -5,11 +5,15 @@
 [![PHP Version](https://img.shields.io/packagist/php-v/c975l/crowdfunding-bundle)](https://packagist.org/packages/c975l/crowdfunding-bundle)
 [![Codacy Grade](https://app.codacy.com/project/badge/Grade/f668a77371744512a084e627fcb751bd)](https://app.codacy.com/gh/975L/CrowdfundingBundle/dashboard)
 
-![CrowdfundingBundle](.github/images/CrowdfundingBundle.svg)
+<p align="center"><img src=".github/images/CrowdfundingBundle.svg" alt="CrowdfundingBundle"></p>
 
 **Crowdfunding campaigns on your site: counterparts, contributors, news and an optional lottery, paid through the site's basket.**
 
 **[Bundle page](https://bundles.975l.com/en/pages/crowdfunding-bundle) · [Tutorials](https://bundles.975l.com/en/tutoriels/crowdfunding-bundle) · [Block kinds](https://bundles.975l.com/en/pages/blocks/Crowdfunding) · [Live demo](https://bundles.975l.com/demo/) · [Demo back-office](https://bundles.975l.com/demo/login)**
+
+[![Watch the CrowdfundingBundle film](.github/images/showcase.jpg)](https://youtu.be/XqVT1qZvD_M)
+
+▶ [Watch the film](https://youtu.be/XqVT1qZvD_M) · [CrowdfundingBundle's page](https://bundles.975l.com/en/pages/crowdfunding-bundle)
 
 > **BUNDLE UNDER DEVELOPMENT — USE AT YOUR OWN RISK**
 
@@ -44,19 +48,24 @@ The full [installation](#installation) section below walks through the remaining
 
 > **For developers** — Crowdfunding campaigns (counterparts, contributors, news, media) plus a lottery tied to a campaign. Checkout isn't here: contributions flow through PaymentBundle's Basket engine via `BasketItemProviderInterface`. Extracted from ShopBundle in its v2.0, with the same table names.
 
-<details>
-<summary>Contents</summary>
+### Contents
 
 - **Setup** — [requirements](#requirements) · [installation](#installation) · [assets](#install-assets) · [config values](#load-configuration-values) · [routes](#enable-routes)
 - **Using it** — [sitemap](#sitemap) · [linking a campaign](#linking-a-campaign-from-a-menu) · [composing a campaign page](#composing-a-campaign-page) · [a campaign in every language](#a-campaign-in-every-language) · [posting a campaign](#posting-a-campaign-and-its-news) · [status report](#status-report) · [emails](#emails) · [backup](#backup) · [translations](#translations) · [what it does not contribute](#what-this-bundle-deliberately-does-not-contribute) · [MCP tools](#mcp-tools) · [AI agent skills](#ai-agent-skills) · [data compatibility with ShopBundle](#data-compatibility-with-existing-shopbundle-installations)
-
-</details>
 
 ---
 
 ## Why CrowdfundingBundle
 
 Add CrowdfundingBundle on top of the shared [UiBundle](https://github.com/975L/UiBundle) + [ConfigBundle](https://github.com/975L/ConfigBundle) foundation to get crowdfunding campaigns and a tied-in lottery. Checkout flows through [PaymentBundle](https://github.com/975L/PaymentBundle)'s Basket/checkout engine (`BasketItemProviderInterface`) instead of duplicating one, and media uploads reuse UiBundle's own `VichMediaTrait`.
+
+> [!TIP]
+> If this project **helps you save development time**:
+>
+> - [**star** it on GitHub](https://github.com/975L/CrowdfundingBundle) — helps others find it
+> - [**open an issue**](https://github.com/975L/CrowdfundingBundle/issues/new) to share how you use it — genuinely useful feedback
+>
+> And if you'd like to support the work directly, the **Sponsor** button at the top of the GitHub page is there for that. Thank you!
 
 ---
 
@@ -624,13 +633,3 @@ ln -s ../../vendor/c975l/crowdfunding-bundle/skills/c975l-crowdfunding .claude/s
 `Tests\SkillsTest` keeps the file honest: every path, route, config slug, command, class member, Twig
 function, block kind and component it quotes is checked against the sources, so renaming any of them
 fails the build rather than leaving an agent confidently wrong.
-
----
-
-> [!TIP]
-> If this project **helps you save development time**:
->
-> - [**star** it on GitHub](https://github.com/975L/CrowdfundingBundle) — helps others find it
-> - [**open an issue**](https://github.com/975L/CrowdfundingBundle/issues/new) to share how you use it — genuinely useful feedback
->
-> And if you'd like to support the work directly, the **Sponsor** button at the top of the GitHub page is there for that. Thank you!
