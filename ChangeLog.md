@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.13.3
+
+README opened on a short overview for humans
+
+- README opened on a short overview for humans, the reference folded below it (23/11/2026)
+
 ## v1.13.2
 
 Agents told their campaign edits are live

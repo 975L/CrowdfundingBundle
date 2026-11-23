@@ -1,32 +1,64 @@
 # CrowdfundingBundle
 
-Symfony bundle for crowdfunding campaigns on the c975L core — counterparts, contributors, news and media, plus an optional lottery tied to a campaign. Checkout is delegated to [c975L/PaymentBundle](https://github.com/975L/PaymentBundle).
-
 [![GitHub](https://img.shields.io/github/license/975L/CrowdfundingBundle)](https://github.com/975L/CrowdfundingBundle/blob/main/LICENSE)
 [![Packagist Version](https://img.shields.io/packagist/v/c975l/crowdfunding-bundle)](https://packagist.org/packages/c975l/crowdfunding-bundle)
 [![PHP Version](https://img.shields.io/packagist/php-v/c975l/crowdfunding-bundle)](https://packagist.org/packages/c975l/crowdfunding-bundle)
 [![Codacy Grade](https://app.codacy.com/project/badge/Grade/f668a77371744512a084e627fcb751bd)](https://app.codacy.com/gh/975L/CrowdfundingBundle/dashboard)
 
+![CrowdfundingBundle](.github/images/CrowdfundingBundle.svg)
+
+**Crowdfunding campaigns on your site: counterparts, contributors, news and an optional lottery, paid through the site's basket.**
+
 **[Bundle page](https://bundles.975l.com/en/pages/crowdfunding-bundle) · [Tutorials](https://bundles.975l.com/en/tutoriels/crowdfunding-bundle) · [Block kinds](https://bundles.975l.com/en/pages/blocks/Crowdfunding) · [Live demo](https://bundles.975l.com/demo/) · [Demo back-office](https://bundles.975l.com/demo/login)**
 
 > **BUNDLE UNDER DEVELOPMENT — USE AT YOUR OWN RISK**
+
+> **TL;DR** — CrowdfundingBundle runs crowdfunding campaigns on a c975L site: counterparts to choose from, contributors counted, news posted along the way, and a lottery when wanted. It rests on CoreBundle and on PaymentBundle, which takes the payments; no shop is needed. Install it with Composer, then follow the installation steps below.
+
+## What you get
+
+- Campaigns with counterparts, contributors, news and videos
+- An optional lottery tied to a campaign, with prizes, tickets and a winner draw
+- Contributions paid through PaymentBundle's basket, counting what was really paid and taken back on a full refund
+- A campaign kept hidden until it opens, previewed from the back office and deleted through a recycle bin
+- Every public screen and every campaign in each language the site declares
+- Campaign pages composed in the back office with blocks
+- Three transactional e-mails written in the back office
+- Running campaigns and their news offered for posting on the social networks
+
+## Quick start
+
+```bash
+composer require c975l/crowdfunding-bundle
+```
+
+The full [installation](#installation) section below walks through the remaining steps.
+
+## For AI agents
+
+- **Skills** — read straight from `vendor/` by the coding agent of the site installing this bundle (see [AI agent skills](#ai-agent-skills)):
+  - [c975l-crowdfunding](skills/c975l-crowdfunding/SKILL.md) — how payments, the basket and the lottery draw work, with the routes, entities, hooks and components
+- **MCP** — an AI agent works with the campaigns through the site's MCP endpoint (CoreBundle's `/api/mcp`), with the rights of its token's account: `crowdfunding_list`, `crowdfunding_get`, `crowdfunding_edit`, `crowdfunding_news_edit` (see [MCP tools](#mcp-tools)).
+
+## Reference
+
+> **For developers** — Crowdfunding campaigns (counterparts, contributors, news, media) plus a lottery tied to a campaign. Checkout isn't here: contributions flow through PaymentBundle's Basket engine via `BasketItemProviderInterface`. Extracted from ShopBundle in its v2.0, with the same table names.
+
+<details>
+<summary>Contents</summary>
+
+- **Setup** — [requirements](#requirements) · [installation](#installation) · [assets](#install-assets) · [config values](#load-configuration-values) · [routes](#enable-routes)
+- **Using it** — [sitemap](#sitemap) · [linking a campaign](#linking-a-campaign-from-a-menu) · [composing a campaign page](#composing-a-campaign-page) · [a campaign in every language](#a-campaign-in-every-language) · [posting a campaign](#posting-a-campaign-and-its-news) · [status report](#status-report) · [emails](#emails) · [backup](#backup) · [translations](#translations) · [what it does not contribute](#what-this-bundle-deliberately-does-not-contribute) · [MCP tools](#mcp-tools) · [AI agent skills](#ai-agent-skills) · [data compatibility with ShopBundle](#data-compatibility-with-existing-shopbundle-installations)
+
+</details>
 
 ---
 
 ## Why CrowdfundingBundle
 
-![CrowdfundingBundle](.github/images/CrowdfundingBundle.svg)
-
 Add CrowdfundingBundle on top of the shared [UiBundle](https://github.com/975L/UiBundle) + [ConfigBundle](https://github.com/975L/ConfigBundle) foundation to get crowdfunding campaigns and a tied-in lottery. Checkout flows through [PaymentBundle](https://github.com/975L/PaymentBundle)'s Basket/checkout engine (`BasketItemProviderInterface`) instead of duplicating one, and media uploads reuse UiBundle's own `VichMediaTrait`.
 
 ---
-
-> **TL;DR** — Crowdfunding campaigns (counterparts, contributors, news, media) plus a lottery tied to a campaign. Checkout isn't here: contributions flow through PaymentBundle's Basket engine via `BasketItemProviderInterface`. Extracted from ShopBundle in its v2.0, with the same table names.
-
-## Contents
-
-- **Setup** — [requirements](#requirements) · [installation](#installation) · [assets](#install-assets) · [config values](#load-configuration-values) · [routes](#enable-routes)
-- **Using it** — [sitemap](#sitemap) · [linking a campaign](#linking-a-campaign-from-a-menu) · [composing a campaign page](#composing-a-campaign-page) · [a campaign in every language](#a-campaign-in-every-language) · [posting a campaign](#posting-a-campaign-and-its-news) · [status report](#status-report) · [emails](#emails) · [backup](#backup) · [translations](#translations) · [what it does not contribute](#what-this-bundle-deliberately-does-not-contribute) · [MCP tools](#mcp-tools) · [AI agent skills](#ai-agent-skills) · [data compatibility with ShopBundle](#data-compatibility-with-existing-shopbundle-installations)
 
 ## Features
 
